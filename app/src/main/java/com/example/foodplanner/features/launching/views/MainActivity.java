@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_home_screen);
-/*        tv = findViewById(R.id.app_name_tv);
+        setContentView(R.layout.activity_main);
+        tv = findViewById(R.id.app_name_tv);
      AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f ) ;
      AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-*/
+
        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
