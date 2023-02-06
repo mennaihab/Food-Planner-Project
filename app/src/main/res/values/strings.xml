@@ -2,12 +2,10 @@
     <string name="app_name">Food Planner</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="personalized_recipe_discovery">Personalized Recipe</string>
+    <string name="personalized_recipe_discovery">Personalized Recipe\nDiscovery</string>
     <string name="land_page_description_1">Tell us your food preferences and we will serve you delicious recipes ideas</string>
     <string name="next_btn">NEXT</string>
-    <string name="discovery">Discovery</string>
-    <string name="grocery_list">Grocery List For When</string>
-    <string name="you_shop">You Shop</string>
+    <string name="grocery_list">Grocery List For When\nYou Shop</string>
     <string name="land_page_description_2">Take the grocery list from your cart to your nearest grocery store and buy the ingredients.</string>
     <string name="all_your_favourite">All your Favourite Recipes In One Place</string>
     <string name="in_one_place">In One Place</string>

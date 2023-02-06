@@ -4,39 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.launching.views.MainActivity">
+    tools:context=".features.main.MainActivity">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="295dp"
-        android:layout_height="109dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="48dp"
-        android:text="@string/shop_ingredients"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="#000000"
-        android:textSize="34sp"
-        android:textStyle="normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_name_tv" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="392dp"
-        android:layout_height="386dp"
-        app:srcCompat="@drawable/launch_background" />
-
-    <TextView
-        android:id="@+id/app_name_tv"
-        android:layout_width="198dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/app_logo"
-        android:textColor="#C57037"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
 </androidx.constraintlayout.widget.ConstraintLayout>
