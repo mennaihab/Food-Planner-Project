@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#72DDD9D9"
+    android:orientation="vertical">
+    <!-- activity_screen_slide.xml -->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.viewpager2.widget.ViewPager2>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linear"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/skip_tv"
+            android:layout_width="68dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
+            android:textColorHighlight="#C5C1C1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/dot1"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/tab_selector"
+            android:visibility="visible">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/dot2"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/tab_selector">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/dot3"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/tab_selector">
+
+        </ImageView>
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="92dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="60dp"
+            android:textColor="#FFFFFF"
+            android:text="@string/next_btn"
+            android:background="@drawable/next_shape"
+            android:textSize="16sp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="334dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/next_shape"
+        android:text="@string/get_started_btn"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

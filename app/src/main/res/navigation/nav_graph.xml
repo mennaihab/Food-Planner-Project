@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeScreenFragment">
+    <fragment
+        android:id="@+id/landingPageFragment2"
+        android:name="com.example.foodplanner.LandingPageFirstFragment"
+        android:label="fragment_landing_page"
+        tools:layout="@layout/fragment_first_landing_page" >
+        <action
+            android:id="@+id/action_landingPageFragment2_to_landingPageSecondFragment"
+            app:destination="@id/landingPageSecondFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landingPageSecondFragment"
+        android:name="com.example.foodplanner.LandingPageSecondFragment"
+        android:label="fragment_landing_page_second"
+        tools:layout="@layout/fragment_landing_page_second" >
+        <action
+            android:id="@+id/action_landingPageSecondFragment_to_landingPageThirdFragment"
+            app:destination="@id/landingPageThirdFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landingPageThirdFragment"
+        android:name="com.example.foodplanner.LandingPageThirdFragment"
+        android:label="fragment_landing_page_third"
+        tools:layout="@layout/fragment_landing_page_third" />
+    <fragment
+        android:id="@+id/homeScreenFragment"
+        android:name="com.example.foodplanner.HomeScreenFragment"
+        android:label="fragment_home_screen"
+        tools:layout="@layout/fragment_home_screen" >
+        <action
+            android:id="@+id/action_homeScreenFragment_to_landingPageFragment2"
+            app:destination="@id/landingPageFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.foodplanner.features.authenticatuin.views.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+</navigation>
