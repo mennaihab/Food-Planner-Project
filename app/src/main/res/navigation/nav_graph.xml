@@ -3,42 +3,89 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeScreenFragment">
+    app:startDestination="@id/launching_fragment">
     <fragment
-        android:id="@+id/landingPageFragment2"
-        android:name="com.example.foodplanner.LandingPageFirstFragment"
-        android:label="fragment_landing_page"
-        tools:layout="@layout/fragment_first_landing_page" >
-        <action
-            android:id="@+id/action_landingPageFragment2_to_landingPageSecondFragment"
-            app:destination="@id/landingPageSecondFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/landingPageSecondFragment"
-        android:name="com.example.foodplanner.LandingPageSecondFragment"
-        android:label="fragment_landing_page_second"
-        tools:layout="@layout/fragment_landing_page_second" >
-        <action
-            android:id="@+id/action_landingPageSecondFragment_to_landingPageThirdFragment"
-            app:destination="@id/landingPageThirdFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/landingPageThirdFragment"
-        android:name="com.example.foodplanner.LandingPageThirdFragment"
-        android:label="fragment_landing_page_third"
-        tools:layout="@layout/fragment_landing_page_third" />
-    <fragment
-        android:id="@+id/homeScreenFragment"
-        android:name="com.example.foodplanner.HomeScreenFragment"
-        android:label="fragment_home_screen"
-        tools:layout="@layout/fragment_home_screen" >
-        <action
-            android:id="@+id/action_homeScreenFragment_to_landingPageFragment2"
-            app:destination="@id/landingPageFragment2" />
-    </fragment>
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.example.foodplanner.features.authenticatuin.views.SignUpFragment"
+        android:id="@+id/signup_fragment"
+        android:name="com.example.foodplanner.features.authentication.views.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_signup" />
+
+    <fragment
+        android:id="@+id/launching_fragment"
+        android:name="com.example.foodplanner.features.launching.views.LaunchingFragment"
+        android:label="fragment_launching"
+        tools:layout="@layout/fragment_launching" >
+        <action
+            android:id="@+id/action_launching_to_landing"
+            app:destination="@id/landing_fragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_launching_to_home"
+            app:destination="@id/home_meal_fragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_launching_to_authentication"
+            app:destination="@id/authentication_fragment"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/landing_fragment"
+        android:name="com.example.foodplanner.features.landing.views.LandingFragment"
+        android:label="LandingFragment"
+        tools:layout="@layout/fragment_landing" >
+        <action
+            android:id="@+id/action_landing_to_authentication"
+            app:destination="@id/authentication_fragment"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/home_search_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_search"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/home_favourites_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_favourites"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/home_plan_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_plan"
+        tools:layout="@layout/fragment_placeholder" />
+    <fragment
+        android:id="@+id/home_meal_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_meal"
+        tools:layout="@layout/fragment_placeholder" />
+    <fragment
+        android:id="@+id/authentication_fragment"
+        android:name="com.example.foodplanner.features.authentication.views.AuthenticationFragment"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_authentication" >
+        <action
+            android:id="@+id/action_authentication_to_signup"
+            app:destination="@id/signup_fragment" />
+        <action
+            android:id="@+id/action_authentication_to_login"
+            app:destination="@id/login_fragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_authentication_fragment_to_home_meal_fragment"
+            app:destination="@id/home_meal_fragment"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.example.foodplanner.features.authentication.views.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" />
+    <action
+        android:id="@+id/action_global_signup"
+        app:destination="@id/signup_fragment"
+        app:launchSingleTop="true" />
 </navigation>

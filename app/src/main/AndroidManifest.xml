@@ -11,9 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodPlanner"
         tools:targetApi="31">
-
         <activity
-            android:name=".features.launching.views.MainActivity"
+            android:name=".features.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,9 +20,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".features.landing.views.LandingPageSlide"
-            android:exported="true"></activity>
     </application>
-
 </manifest>
