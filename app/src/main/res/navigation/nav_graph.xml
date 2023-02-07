@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_placeholder" />
     <fragment
         android:id="@+id/home_meal_fragment"
-        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:name="com.example.foodplanner.features.mealofday.views.MealOfDayFragment"
         android:label="@string/title_home_meal"
         tools:layout="@layout/fragment_placeholder" />
     <fragment
