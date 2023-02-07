@@ -31,4 +31,7 @@
     <string name="title_home_search">Search</string>
     <string name="title_home_favourites">Favourites</string>
     <string name="title_home_plan">Plan</string>
+    <string name="skip">Skip</string>
+    <string name="signup_with_email">Sign up with email</string>
+    <string name="slogan">Cook with Confidence</string>
 </resources>

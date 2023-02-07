@@ -20,12 +20,11 @@
 
     <TextView
         android:id="@+id/app_name_tv"
+        style="@style/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_logo"
         android:textColor="#C57037"
-        android:textSize="48sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/v_spacer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
