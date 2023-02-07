@@ -1,13 +1,7 @@
 package com.example.foodplanner.features.landing.views;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -28,6 +23,7 @@ import com.example.foodplanner.features.common.views.OnBackPressedListener;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class LandingFragment extends Fragment implements OnBackPressedListener {
 
@@ -41,7 +37,7 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewPager = view.findViewById(R.id.pager);
         Button nextBtn = view.findViewById(R.id.next_btn);
-        Button getStartedBtn  = view.findViewById(R.id.button2);
+        Button getStartedBtn  = view.findViewById(R.id.get_started_btn);
         TextView skipTV = view.findViewById(R.id.skip_tv);
 
         viewPager.setAdapter(new LandingPageSlideAdapter(Arrays.asList(
@@ -57,8 +53,8 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                boolean lastPage = position == 3;
-                for (int i = 0; i < 3; i++) {
+                boolean lastPage = position == Objects.requireNonNull(viewPager.getAdapter()).getItemCount() - 1;
+                for (int i = 0; i < viewPager.getAdapter().getItemCount(); i++) {
                     if (lastPage) {
                         dots[i].setVisibility(View.GONE);
                     } else {
@@ -77,10 +73,12 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
                     skipTV.setVisibility(View.VISIBLE);
                     getStartedBtn.setVisibility(View.GONE);
                 }
-
             }
         });
 
+
+        nextBtn.setOnClickListener(e -> viewPager.setCurrentItem(viewPager.getCurrentItem() + 1));
+        getStartedBtn.setOnClickListener(e -> Navigation.findNavController(e).navigate(LandingFragmentDirections.actionLandingToAuthentication()));
         underlineSkip(skipTV);
     }
 
@@ -96,7 +94,7 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
 
     public void underlineSkip(TextView textView){
         textView.setText(SpanUtils.createSpannable("SKIP", TextSpan.of(SpanUtils.createClickableSpan(e -> {
-            //startActivity(new Intent(getContext(), MainActivity.class));
+            Navigation.findNavController(textView).navigate(LandingFragmentDirections.actionLandingToAuthentication());
         }))));
         TextUtils.makeClickable(textView);
     }

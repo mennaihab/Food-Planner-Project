@@ -1,26 +1,51 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Base application theme. -->
-    <style name="Theme.FoodPlanner" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.FoodPlanner" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/light_grey</item>
+        <item name="colorPrimaryVariant">@color/dark_grey</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/pale_orange</item>
+        <item name="colorSecondaryVariant">@color/dark_orange</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
+        <item name="android:textColorSecondary">@color/dark_grey</item>
+
+        <item name="colorTertiary">@color/pale_orange</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="android:textColorTertiary">@color/white</item>
+
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/black</item>
+        <item name="bottomNavigationStyle">@style/Theme.FoodPlanner.BottomNavigationView</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/Widget.FoodPlanner.ActionMode</item>
+        <item name="toolbarStyle">@style/Theme.FoodPlanner.ToolbarStyle</item>
+
+        <item name="textInputStyle">@style/Theme.FoodPlanner.TextInputLayout</item>
+
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.FoodPlanner.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.FoodPlanner.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.FoodPlanner.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.FoodPlanner.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.FoodPlanner.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.FoodPlanner.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.FoodPlanner.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.FoodPlanner.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.FoodPlanner.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.FoodPlanner.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.FoodPlanner.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.FoodPlanner.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.FoodPlanner.Overline</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.FoodPlanner.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.FoodPlanner.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.FoodPlanner.LargeComponent</item>
     </style>
-
-    <style name="Theme.FoodPlanner.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.FoodPlanner.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.FoodPlanner.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
