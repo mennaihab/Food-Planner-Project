@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -77,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements WindowPainter {
         });
 
         navView.setOnItemSelectedListener(item -> {
-            // TODO handle with respect to authentication
-            return true;
+            // TODO handle with regard to authentication
+            return NavigationUI.onNavDestinationSelected(item, navController);
         });
     }
 
@@ -126,9 +127,10 @@ public class MainActivity extends AppCompatActivity implements WindowPainter {
 
     @Override public void onBackPressed() {
         final Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-        if (!(currentFragment instanceof OnBackPressedListener) ||
-                !((OnBackPressedListener) currentFragment).onBackPressed() ||
-                !navController.popBackStack()) {
+        if ((currentFragment instanceof OnBackPressedListener) && !((OnBackPressedListener) currentFragment).onBackPressed()) {
+            return;
+        }
+        if (!navController.popBackStack()) {
             super.onBackPressed();
         }
     }

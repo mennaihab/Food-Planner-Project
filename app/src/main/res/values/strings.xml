@@ -9,20 +9,11 @@
     <string name="grocery_list">Grocery List For When\nYou Shop</string>
     <string name="land_page_description_2">Take the grocery list from your cart to your nearest grocery store and buy the ingredients.</string>
     <string name="all_your_favourite">All your Favourite Recipes In One Place</string>
-    <string name="in_one_place">In One Place</string>
     <string name="land_page_description_3">Save time on planning by having your favourite recipes within reach</string>
     <string name="get_started_btn">Get Started</string>
     <string name="app_logo">FOODA</string>
     <string name="shop_ingredients">Shop Ingredients For Any Recipe</string>
-    <string name="title_activity_sign_up">SignUp</string>
 
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="sign_up_tv">Sign Up</string>
     <string name="save_delicious">Save delicious recipes and get personalized content.</string>
     <string name="email_check_box">I would like to receive recipe inspiration.meal plans,updates,and more!</string>
@@ -34,4 +25,5 @@
     <string name="skip">Skip</string>
     <string name="signup_with_email">Sign up with email</string>
     <string name="slogan">Cook with Confidence</string>
+    <string name="search">Search</string>
 </resources>
