@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Food Planner</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="personalized_recipe_discovery">Personalized Recipe\nDiscovery</string>
     <string name="land_page_description_1">Tell us your food preferences and we will serve you delicious recipes ideas</string>
@@ -14,7 +15,7 @@
     <string name="app_logo">FOODA</string>
     <string name="shop_ingredients">Shop Ingredients For Any Recipe</string>
     <string name="title_activity_sign_up">SignUp</string>
-    <!-- Strings used for fragments for navigation -->
+
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
@@ -24,5 +25,10 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="sign_up_tv">Sign Up</string>
     <string name="save_delicious">Save delicious recipes and get personalized content.</string>
-    <string name="email_check_box">I would like to recieve recipe inspiration.meal plans,updates,and more!</string>
+    <string name="email_check_box">I would like to receive recipe inspiration.meal plans,updates,and more!</string>
+
+    <string name="title_home_meal">Featured</string>
+    <string name="title_home_search">Search</string>
+    <string name="title_home_favourites">Favourites</string>
+    <string name="title_home_plan">Plan</string>
 </resources>

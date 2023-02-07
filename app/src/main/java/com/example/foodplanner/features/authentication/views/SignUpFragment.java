@@ -1,4 +1,4 @@
-package com.example.foodplanner.features.authenticatuin.views;
+package com.example.foodplanner.features.authentication.views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

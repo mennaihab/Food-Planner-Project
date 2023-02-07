@@ -3,15 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_fragment">
-    <fragment
-        android:id="@+id/home_fragment"
-        android:name="com.example.foodplanner.HomeScreenFragment"
-        android:label="fragment_home_screen"
-        tools:layout="@layout/fragment_home_screen" />
+    app:startDestination="@id/launching_fragment">
     <fragment
         android:id="@+id/signup_fragment"
-        android:name="com.example.foodplanner.features.authenticatuin.views.SignUpFragment"
+        android:name="com.example.foodplanner.features.authentication.views.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_signup" />
 
@@ -19,11 +14,78 @@
         android:id="@+id/launching_fragment"
         android:name="com.example.foodplanner.features.launching.views.LaunchingFragment"
         android:label="fragment_launching"
-        tools:layout="@layout/fragment_launching" />
+        tools:layout="@layout/fragment_launching" >
+        <action
+            android:id="@+id/action_launching_to_landing"
+            app:destination="@id/landing_fragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_launching_to_home"
+            app:destination="@id/home_meal_fragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_launching_to_authentication"
+            app:destination="@id/authentication_fragment"
+            app:launchSingleTop="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/landing_fragment"
         android:name="com.example.foodplanner.features.landing.views.LandingFragment"
         android:label="LandingFragment"
-        tools:layout="@layout/fragment_landing" />
+        tools:layout="@layout/fragment_landing" >
+        <action
+            android:id="@+id/action_landing_to_authentication"
+            app:destination="@id/authentication_fragment"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/home_search_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_search"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/home_favourites_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_favourites"
+        tools:layout="@layout/fragment_placeholder" />
+
+    <fragment
+        android:id="@+id/home_plan_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_plan"
+        tools:layout="@layout/fragment_placeholder" />
+    <fragment
+        android:id="@+id/home_meal_fragment"
+        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:label="@string/title_home_meal"
+        tools:layout="@layout/fragment_placeholder" />
+    <fragment
+        android:id="@+id/authentication_fragment"
+        android:name="com.example.foodplanner.features.authentication.views.AuthenticationFragment"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_authentication" >
+        <action
+            android:id="@+id/action_authentication_to_signup"
+            app:destination="@id/signup_fragment" />
+        <action
+            android:id="@+id/action_authentication_to_login"
+            app:destination="@id/login_fragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_authentication_fragment_to_home_meal_fragment"
+            app:destination="@id/home_meal_fragment"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.example.foodplanner.features.authentication.views.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" />
+    <action
+        android:id="@+id/action_global_signup"
+        app:destination="@id/signup_fragment"
+        app:launchSingleTop="true" />
 </navigation>
