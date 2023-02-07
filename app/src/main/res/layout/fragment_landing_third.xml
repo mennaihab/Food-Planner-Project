@@ -27,6 +27,7 @@
         android:id="@+id/app_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/land_page_description_3"
         android:textAlignment="center"
         android:textSize="20sp"
