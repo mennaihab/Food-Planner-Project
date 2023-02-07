@@ -7,6 +7,7 @@ import androidx.annotation.ColorInt;
 public interface WindowPainter {
     void setToolbarVisibility(boolean visible);
     void setBottomNavVisibility(boolean visible);
+    void setStatusBarVisibility(boolean visible);
 
     void setStatusBarColor(@ColorInt int color);
 

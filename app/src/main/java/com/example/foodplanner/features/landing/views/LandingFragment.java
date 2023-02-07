@@ -21,6 +21,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.helpers.TextSpan;
+import com.example.foodplanner.core.utils.SpanUtils;
+import com.example.foodplanner.core.utils.TextUtils;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
 
 import java.util.Arrays;
@@ -92,22 +95,10 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
     }
 
     public void underlineSkip(TextView textView){
-        SpannableString spannableString = new SpannableString("SKIP");
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                //startActivity(new Intent(getContext(), MainActivity.class));
-            }
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(true);
-            }
-        };
-        spannableString.setSpan(clickableSpan, 0, 4, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        textView.setText(spannableString);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setHighlightColor(Color.GRAY);
+        textView.setText(SpanUtils.createSpannable("SKIP", TextSpan.of(SpanUtils.createClickableSpan(e -> {
+            //startActivity(new Intent(getContext(), MainActivity.class));
+        }))));
+        TextUtils.makeClickable(textView);
     }
 
     private class LandingPageSlideAdapter extends FragmentStateAdapter {

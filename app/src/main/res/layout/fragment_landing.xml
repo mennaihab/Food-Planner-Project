@@ -67,29 +67,27 @@
 
         </ImageView>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/next_btn"
             android:layout_width="92dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginStart="60dp"
             android:textColor="#FFFFFF"
             android:text="@string/next_btn"
-            android:background="@drawable/next_shape"
             android:textSize="16sp"
-
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:shapeAppearanceOverlay="@style/capsuleShape" />
 
     </LinearLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="46dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/next_shape"
         android:text="@string/get_started_btn"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
@@ -97,8 +95,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
-
+        tools:visibility="visible"
+        app:shapeAppearanceOverlay="@style/capsuleShape" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

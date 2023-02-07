@@ -18,15 +18,21 @@
         <action
             android:id="@+id/action_launching_to_landing"
             app:destination="@id/landing_fragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/launching_fragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_launching_to_home"
             app:destination="@id/home_meal_fragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/launching_fragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_launching_to_authentication"
             app:destination="@id/authentication_fragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/launching_fragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -37,7 +43,9 @@
         <action
             android:id="@+id/action_landing_to_authentication"
             app:destination="@id/authentication_fragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/landing_fragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -75,9 +83,11 @@
             app:destination="@id/login_fragment"
             app:launchSingleTop="true" />
         <action
-            android:id="@+id/action_authentication_fragment_to_home_meal_fragment"
+            android:id="@+id/action_authentication_to_home_meal"
             app:destination="@id/home_meal_fragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/authentication_fragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/login_fragment"

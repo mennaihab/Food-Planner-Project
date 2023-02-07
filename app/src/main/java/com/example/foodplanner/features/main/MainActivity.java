@@ -5,6 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -68,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements WindowPainter {
             boolean decorShouldShow = Arrays.stream(homeFragmentsIds).anyMatch(id -> navDestination.getId() == id);
             setToolbarVisibility(decorShouldShow);
             setBottomNavVisibility(decorShouldShow);
+            if (decorShouldShow) {
+                setStatusBarVisibility(true);
+                clearStatusBarColor();
+            }
         });
     }
 
@@ -79,6 +87,17 @@ public class MainActivity extends AppCompatActivity implements WindowPainter {
     @Override
     public void setBottomNavVisibility(boolean visible) {
         navView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setStatusBarVisibility(boolean visible) {
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (visible) {
+            windowInsetsController.show(WindowInsetsCompat.Type.statusBars());
+        } else {
+            windowInsetsController.hide(WindowInsetsCompat.Type.statusBars());
+        }
     }
 
     @Override
