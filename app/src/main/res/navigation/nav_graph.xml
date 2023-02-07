@@ -50,9 +50,9 @@
 
     <fragment
         android:id="@+id/home_search_fragment"
-        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:name="com.example.foodplanner.features.search.views.SearchFragment"
         android:label="@string/title_home_search"
-        tools:layout="@layout/fragment_placeholder" />
+        tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/home_favourites_fragment"

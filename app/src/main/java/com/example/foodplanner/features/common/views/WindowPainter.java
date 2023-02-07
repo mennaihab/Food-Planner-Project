@@ -11,5 +11,8 @@ public interface WindowPainter {
 
     void setStatusBarColor(@ColorInt int color);
 
+    void setToolbarColor(@ColorInt int color);
+    void clearToolbarColor();
+
     void clearStatusBarColor();
 }

@@ -35,6 +35,7 @@ public class LaunchingFragment extends Fragment {
         tv.startAnimation(fadeIn);
 
         windowPainter.setStatusBarColor(Color.TRANSPARENT);
+        windowPainter.setStatusBarVisibility(false);
 
         view.postDelayed(() -> {
             Navigation.findNavController(view)

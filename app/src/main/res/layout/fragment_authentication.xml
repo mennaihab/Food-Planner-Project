@@ -47,11 +47,11 @@
         app:backgroundTint="@color/black_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/capsuleShape" />
+        app:shapeAppearanceOverlay="@style/CapsuleShape" />
 
     <TextView
         android:id="@+id/app_name_tv"
-        style="@style/appName"
+        style="@style/AppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -66,7 +66,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signup_btn"
-        style="@style/authButton"
+        style="@style/AuthButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -78,11 +78,11 @@
         app:layout_constraintBottom_toTopOf="@+id/login_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/capsuleShape" />
+        app:shapeAppearanceOverlay="@style/CapsuleShape" />
 
     <TextView
         android:id="@+id/login_tv"
-        style="@style/authText"
+        style="@style/AuthText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -97,7 +97,7 @@
 
     <TextView
         android:id="@+id/slogan_tv"
-        style="@style/authSlogan"
+        style="@style/AuthSlogan"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -113,7 +113,7 @@
 
     <TextView
         android:id="@+id/disclaimer_tv"
-        style="@style/authText"
+        style="@style/AuthText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
