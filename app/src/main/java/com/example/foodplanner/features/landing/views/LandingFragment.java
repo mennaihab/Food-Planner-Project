@@ -2,11 +2,14 @@ package com.example.foodplanner.features.landing.views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -41,9 +44,9 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
         TextView skipTV = view.findViewById(R.id.skip_tv);
 
         viewPager.setAdapter(new LandingPageSlideAdapter(Arrays.asList(
-                new LandingPageFirstFragment(),
-                new LandingPageSecondFragment(),
-                new LandingPageThirdFragment()
+                LandingPageFragment.newInstance(R.layout.fragment_landing_first),
+                LandingPageFragment.newInstance(R.layout.fragment_landing_second),
+                LandingPageFragment.newInstance(R.layout.fragment_landing_third)
         )));
 
         ImageView[] dots = new ImageView[] {view.findViewById(R.id.dot1), view.findViewById(R.id.dot2), view.findViewById(R.id.dot3)};
@@ -119,23 +122,20 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
         }
     }
 
-    public static class LandingPageFirstFragment extends Fragment {
-        public LandingPageFirstFragment() {
-            super(R.layout.fragment_landing_first);
-        }
-    }
-
-    public static class LandingPageSecondFragment extends Fragment {
-
-        public LandingPageSecondFragment() {
-            super(R.layout.fragment_landing_second);
+    public static class LandingPageFragment extends Fragment {
+        private static final String LAYOUT = "layout";
+        public static LandingPageFragment newInstance(@LayoutRes int layoutResource) {
+            LandingPageFragment fragment = new LandingPageFragment();
+            Bundle args = new Bundle();
+            args.putInt(LAYOUT, layoutResource);
+            fragment.setArguments(args);
+            return fragment;
         }
 
-    }
-
-    public static class LandingPageThirdFragment extends Fragment {
-        public LandingPageThirdFragment() {
-            super(R.layout.fragment_landing_third);
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(requireArguments().getInt(LAYOUT), container, false);
         }
     }
 }
