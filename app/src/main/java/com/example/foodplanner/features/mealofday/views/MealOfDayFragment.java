@@ -1,5 +1,7 @@
 package com.example.foodplanner.features.mealofday.views;
 
+import static java.lang.Math.abs;
+
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -17,6 +19,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,44 +111,28 @@ public class MealOfDayFragment extends Fragment implements OnBackPressedListener
     }
 
     private static class DepthPageTransformer implements ViewPager2.PageTransformer {
-        private static final float MIN_SCALE = 0.75f;
-        private static final float MAX_SCALE = 0.9f;
-
         public void transformPage(View view, float position) {
-            int pageWidth = view.getWidth();
 
-            if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
-                view.setAlpha(0f);
 
-            } else if (position <= 0) { // [-1,0]
-                // Use the default slide transition when moving to the left page.
-                view.setAlpha(1f);
-                view.setTranslationX(0f);
-                view.setTranslationZ(0f);
-                view.setScaleX(MIN_SCALE);
-                view.setScaleY(MIN_SCALE);
+             float DEFAULT_TRANSLATION_X = .0f;
+             float DEFAULT_TRANSLATION_FACTOR = 1.2f;
+             float SCALE_FACTOR = .14f;
+             float DEFAULT_SCALE = 1f;
+             float DEFAULT_ALPHA = 1f;
+             float scaleFactor = SCALE_FACTOR * position + DEFAULT_SCALE;
 
-            } else if (position <= 1) { // (0,1]
-                // Fade the page out.
-                view.setAlpha(1.5f - position);
+         if (position <=2 ) {
 
-                // Counteract the default slide transition.
-                view.setTranslationX(pageWidth * -position);
-                // Move it behind the left page
-                view.setTranslationZ(-1f);
-
-                // Scale the page down (between MIN_SCALE and MAX_SCALE).
-                float scaleFactor = MIN_SCALE
-                        + (MAX_SCALE - MIN_SCALE) * Math.abs(position);
-                view.setScaleX(scaleFactor);
-                view.setScaleY(scaleFactor);
-
-            } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
-                view.setAlpha(0.7f);
-                view.setTranslationZ(-1f);
-            }
+            view.setScaleX( scaleFactor);
+            view.setScaleY( scaleFactor);
+            view.setTranslationX(- (view.getWidth() / DEFAULT_TRANSLATION_FACTOR) *(position));
+            view.setAlpha( DEFAULT_ALPHA);
         }
-    }
-}
+        else {
+            view.setTranslationX(DEFAULT_TRANSLATION_X);
+            view.setScaleX( DEFAULT_SCALE);
+            view.setScaleY( DEFAULT_SCALE);
+            view.setAlpha(DEFAULT_ALPHA);
+
+        }
+}}}
