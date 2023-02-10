@@ -93,9 +93,18 @@
         android:id="@+id/login_fragment"
         android:name="com.example.foodplanner.features.authentication.views.LoginFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_fragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+    </fragment>
     <action
         android:id="@+id/action_global_signup"
         app:destination="@id/signup_fragment"
         app:launchSingleTop="true" />
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.foodplanner.features.authentication.views.ForgotPasswordFragment"
+        android:label="fragment_forgot_password"
+        tools:layout="@layout/fragment_forgot_password" />
 </navigation>

@@ -26,4 +26,11 @@
     <string name="signup_with_email">Sign up with email</string>
     <string name="slogan">Cook with Confidence</string>
     <string name="search">Search</string>
+    <string name="login_tv">Log In</string>
+    <string name="welcome_back">Welcome back! you are just a tab away from something delicious.</string>
+    <string name="login_btn">Start Cooking!</string>
+    <string name="forgot_password">I FORGOT MY PASSWORD</string>
+    <string name="password_reset">Password Reset</string>
+    <string name="password_text">We have been there.Type in your email and we will send you a reset email.</string>
+    <string name="reset_btn">RESET</string>
 </resources>
