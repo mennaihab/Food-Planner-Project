@@ -3,14 +3,21 @@ package com.example.foodplanner.features.authentication.views;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.helpers.TextSpan;
+import com.example.foodplanner.core.utils.SpanUtils;
+import com.example.foodplanner.core.utils.TextUtils;
 import com.google.android.material.internal.TextWatcherAdapter;
 
 import java.util.function.Function;
@@ -28,17 +35,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EditText name = view.findViewById(R.id.name_edit_text);
+        setupForgotPassword(view.findViewById(R.id.forgot_password_tv));
         EditText email = view.findViewById(R.id.email_edit_text);
-        EditText password = view.findViewById(R.id.password_edit_text);
-        EditText confirmPassword = view.findViewById(R.id.confirm_password_edit_text);
-
-        attachValidator(name, nameText -> {
-            if (nameText.length() <= 0) {
-                return "enter your name";
-            }
-            return null;
-        });
 
         attachValidator(email, emailText -> {
             if (emailText.length() <= 0) {
@@ -54,34 +52,19 @@ public class LoginFragment extends Fragment {
             return null;
         });
 
-        attachValidator(password, passwordText -> {
-            String regex = "\n" +
-                    "^(?=.*\\\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$\n";
-            Pattern pattern = Pattern.compile(regex); // TODO: Scope to activity
-            Matcher matcher = pattern.matcher(passwordText);
-            if (passwordText.length() <= 0) {
-                return "enter your password";
-            } else if (!matcher.matches()) {
-                return "password length should be at least 8 char\n" +
-                        "one upper char\n" +
-                        "one lower char" +
-                        "one special char\n" +
-                        "one numeric number";
-            }
-            return null;
-        });
-
-        attachValidator(confirmPassword, confirmPasswordText -> {
-            String passwordText = password.getText().toString();
-
-            if (confirmPasswordText.length() <= 0) {
-                return "enter your confirm password";
-            } else if (!passwordText.equals(confirmPasswordText)) {
-                return "your password and confirm password should match";
-            }
-            return null;
-        });
     }
+
+    private void setupForgotPassword(TextView textView) {
+        SpannableString spannableString = SpanUtils.createSpannable("I FORGOT MY PASSWORD!",
+                TextSpan.of(SpanUtils.createClickableSpan(e -> {
+                    Navigation.findNavController(e).navigate(LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment());
+                }), 0)
+        );
+        textView.setText(spannableString);
+        TextUtils.makeClickable(textView);
+    }
+
+
 
     @SuppressLint("RestrictedApi")
     private void attachValidator(EditText editText, Function<String, String> validator) {
