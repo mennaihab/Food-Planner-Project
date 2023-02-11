@@ -22,7 +22,7 @@
         <item name="android:windowBackground">@color/black</item>
         <item name="bottomNavigationStyle">@style/Theme.FoodPlanner.BottomNavigationView</item>
 
-        <item name="buttonStyle">@style/Theme.FoodPlanner.Button</item>
+        <item name="materialButtonStyle">@style/Theme.FoodPlanner.Button</item>
 
         <item name="ratingBarStyle">@style/Theme.FoodPlanner.RatingBar</item>
 

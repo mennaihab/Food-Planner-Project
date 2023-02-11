@@ -131,6 +131,11 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.FoodPlanner.Oval" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
     <style name="Widget.FoodPlanner.ActionMode" parent="Widget.AppCompat.ActionMode">
         <item name="titleTextStyle">?attr/textAppearanceHeadline6</item>
         <item name="subtitleTextStyle">?attr/textAppearanceSubtitle1</item>
@@ -168,17 +173,33 @@
         <item name="shapeAppearanceOverlay">
             @style/ThemeOverlay.FoodPlanner.TextInputLayout.ShapeAppearanceOverlay
         </item>
-        <item name="boxBackgroundColor">@color/dark_grey</item>
         <item name="boxStrokeWidth">0.5dp</item>
+        <item name="hintTextColor">@drawable/hint_selector</item>
+        <item name="boxBackgroundColor">#CFCBCB</item>
+        <item name="boxStrokeColor">@drawable/hint_selector</item>
+        <item name="counterTextColor">@drawable/edit_text_selector</item>
+        <item name="errorTextColor">#FF1313</item>
     </style>
 
     <style name="ThemeOverlay.FoodPlanner.TextInputLayout.ShapeAppearanceOverlay" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
     <style name="ThemeOverlay.FoodPlanner.TextInputLayout" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="colorOnSurface">@color/white</item>
+    </style>
+
+    <style name="Theme.FoodPlanner.TextInputLayout.Search" parent="">
+        <item name="shapeAppearanceOverlay">
+            @style/ThemeOverlay.FoodPlanner.TextInputLayout.Search.ShapeAppearanceOverlay
+        </item>
+        <item name="boxBackgroundColor">@color/dark_grey</item>
+    </style>
+
+    <style name="ThemeOverlay.FoodPlanner.TextInputLayout.Search.ShapeAppearanceOverlay" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
     <style name="Theme.FoodPlanner.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -189,11 +210,24 @@
         <item name="elevation">10dp</item>
     </style>
 
-    <style name="ThemeOverlay.FoodPlanner.Button" parent=""></style>
+    <style name="ThemeOverlay.FoodPlanner.Button" parent="" />
 
     <style name="ThemeOverlay.FoodPlanner.Button.ShapeAppearanceOverlay" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Theme.FoodPlanner.Button.Fat" parent="">
+        <item name="android:padding">18dp</item>
+    </style>
+
+    <style name="Theme.FoodPlanner.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button.Text</item>
+        <item name="elevation">10dp</item>
+    </style>
+
+    <style name="ThemeOverlay.FoodPlanner.Button.Text" parent="" >
+        <item name="colorPrimary">?attr/colorSecondary</item>
     </style>
 
     <style name="Theme.FoodPlanner.CardView" parent="Widget.MaterialComponents.CardView">
