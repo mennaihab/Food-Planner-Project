@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class Category implements Parcelable {
 
     @SerializedName("idCategory")
@@ -69,5 +71,18 @@ public class Category implements Parcelable {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(thumbnail, category.thumbnail) && Objects.equals(description, category.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, thumbnail, description);
     }
 }
