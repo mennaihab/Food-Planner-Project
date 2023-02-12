@@ -9,15 +9,21 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
 
-public class SearchIngredientsModelImpl extends SearchModelBase<Ingredient> implements SearchIngredientsModel {
+public class SearchIngredientsModelImpl implements SearchIngredientsModel {
     private static final String INGREDIENTS = "INGREDIENTS";
+    private final SearchModelDelegate<Ingredient> delegate;
     public SearchIngredientsModelImpl(Bundle savedInstanceState, MealRemoteService ingredientService) {
-        super(savedInstanceState, INGREDIENTS, ingredientService.listIngredients());
+        delegate = new SearchModelDelegate<>(savedInstanceState, INGREDIENTS, ingredientService.listIngredients());
+    }
+
+    @Override
+    public void saveInstance(Bundle outBundle) {
+        delegate.saveInstance(outBundle);
     }
 
     @Override
     public Flowable<List<Ingredient>> getIngredients() {
-        return data;
+        return delegate.data;
     }
 
 }
