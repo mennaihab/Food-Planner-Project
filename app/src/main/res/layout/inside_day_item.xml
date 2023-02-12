@@ -21,8 +21,8 @@
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="299dp"
-            android:layout_height="324dp"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:src="@drawable/food"
             app:layout_constraintBottom_toTopOf="@+id/guideline"

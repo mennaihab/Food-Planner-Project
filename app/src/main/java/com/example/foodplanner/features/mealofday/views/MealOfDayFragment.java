@@ -26,7 +26,7 @@ public class MealOfDayFragment extends Fragment implements OnBackPressedListener
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewPager = view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.meals_pager);
         viewPager.setOffscreenPageLimit(6);
         viewPager.setPageTransformer(new DepthPageTransformer());
         viewPager.setAdapter(new MealOfDayFragment.MealOfDaySlideAdapter(Arrays.asList(

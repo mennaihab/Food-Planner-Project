@@ -16,23 +16,17 @@ public class DayData {
     private String ParentItemTitle;
     private List<MealItem> ChildItemList;
 
-
-    public DayData(
-            String ParentItemTitle,
-            List<MealItem> ChildItemList)
-    {
-
+    public DayData(String ParentItemTitle, List<MealItem> ChildItemList) {
         this.ParentItemTitle = ParentItemTitle;
         this.ChildItemList = ChildItemList;
     }
-    public List<MealItem> getChildItemList()
-    {
+
+    public List<MealItem> getChildItemList() {
         return ChildItemList;
     }
 
     public void setChildItemList(
-            List<MealItem> childItemList)
-    {
+            List<MealItem> childItemList) {
         ChildItemList = childItemList;
     }
 }

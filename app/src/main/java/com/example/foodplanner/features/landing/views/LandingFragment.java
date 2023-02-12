@@ -38,7 +38,7 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewPager = view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.landing_pager);
         Button nextBtn = view.findViewById(R.id.next_btn);
         Button getStartedBtn  = view.findViewById(R.id.get_started_btn);
         TextView skipTV = view.findViewById(R.id.skip_tv);
