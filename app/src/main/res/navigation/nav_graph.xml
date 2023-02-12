@@ -33,6 +33,9 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/launching_fragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_launching_fragment_to_planFragment"
+            app:destination="@id/planFragment" />
     </fragment>
 
     <fragment
@@ -107,4 +110,14 @@
         android:name="com.example.foodplanner.features.authentication.views.ForgotPasswordFragment"
         android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" />
+    <fragment
+        android:id="@+id/planFragment"
+        android:name="com.example.foodplanner.features.plan.views.PlanFragment"
+        android:label="fragment_plan"
+        tools:layout="@layout/fragment_plan" />
+    <fragment
+        android:id="@+id/weekFragment"
+        android:name="com.example.foodplanner.features.plan.views.weekFragment"
+        android:label="fragment_week"
+        tools:layout="@layout/fragment_week" />
 </navigation>
