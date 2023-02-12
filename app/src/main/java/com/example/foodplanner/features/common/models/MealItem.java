@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class MealItem implements Parcelable {
 
     @SerializedName("idMeal")
@@ -60,5 +62,18 @@ public class MealItem implements Parcelable {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MealItem mealItem = (MealItem) o;
+        return Objects.equals(id, mealItem.id) && Objects.equals(name, mealItem.name) && Objects.equals(thumbnail, mealItem.thumbnail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, thumbnail);
     }
 }

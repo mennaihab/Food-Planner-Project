@@ -230,6 +230,17 @@
         <item name="colorPrimary">?attr/colorSecondary</item>
     </style>
 
+    <style name="Theme.FoodPlanner.Button.Icon" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+<!--        <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button.Icon</item>-->
+        <item name="elevation">10dp</item>
+        <item name="iconGravity">textTop</item>
+    </style>
+
+<!--    <style name="ThemeOverlay.FoodPlanner.Button.Icon" parent="" >-->
+<!--&lt;!&ndash;        <item name="colorPrimary">?attr/colorPrimary</item>&ndash;&gt;-->
+<!--        <item name="colorOnPrimary">?attr/colorSecondary</item>-->
+<!--    </style>-->
+
     <style name="Theme.FoodPlanner.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.CardView</item>
         <item name="shapeAppearance">@style/ShapeAppearance.FoodPlanner.CardView</item>
