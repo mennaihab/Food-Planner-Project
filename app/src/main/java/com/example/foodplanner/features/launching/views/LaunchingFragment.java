@@ -39,7 +39,8 @@ public class LaunchingFragment extends Fragment {
 
         view.postDelayed(() -> {
             Navigation.findNavController(view)
-                    .navigate(LaunchingFragmentDirections.actionLaunchingToLanding());
+                   // .navigate(LaunchingFragmentDirections.actionLaunchingToLanding());
+             .navigate(LaunchingFragmentDirections.actionLaunchingFragmentToPlanFragment());
         }, 5000);
     }
 
