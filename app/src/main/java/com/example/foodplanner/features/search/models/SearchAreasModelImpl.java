@@ -10,15 +10,22 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Flowable;
 
-public class SearchAreasModelImpl extends SearchModelBase<Area> implements SearchAreasModel {
+public class SearchAreasModelImpl implements SearchAreasModel {
     private static final String AREAS = "AREAS";
+
+    private final SearchModelDelegate<Area> delegate;
     public SearchAreasModelImpl(Bundle savedInstanceState, MealRemoteService mealRemoteService) {
-        super(savedInstanceState, AREAS, mealRemoteService.listAreas());
+        delegate = new SearchModelDelegate<>(savedInstanceState, AREAS, mealRemoteService.listAreas());
+    }
+
+    @Override
+    public void saveInstance(Bundle outBundle) {
+        delegate.saveInstance(outBundle);
     }
 
     @Override
     public Flowable<List<String>> getAreas() {
-        return data.map(areas -> areas.stream().map(Area::getName).collect(Collectors.toList()));
+        return delegate.data.map(areas -> areas.stream().map(Area::getName).collect(Collectors.toList()));
     }
 
 }
