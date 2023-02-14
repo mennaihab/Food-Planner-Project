@@ -1,4 +1,4 @@
-package com.example.foodplanner.features.plan.helpers;
+package com.example.foodplanner.features.favourites.helpers;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,12 +18,12 @@ import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
 
-public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMealsViewHolder> {
+public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouritesViewHolder> {
 
     private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
     private final Context context;
 
-    public DayMealsAdapter(Context context) {
+    public FavouritesAdapter(Context context) {
         this.context = context;
     }
 
@@ -31,19 +31,18 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
         mDiffer.submitList(items);
     }
 
+
     @NonNull
     @Override
-    public DayMealsAdapter.DayMealsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FavouritesAdapter.FavouritesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        // Inflate the layout
-        View photoView = inflater.inflate(R.layout.day_meals_item, parent, false);
-        return new DayMealsViewHolder(photoView);
+        View photoView = inflater.inflate(R.layout.favourite_item, parent, false);
+        return new FavouritesAdapter.FavouritesViewHolder(photoView);
     }
 
-
     @Override
-    public void onBindViewHolder(DayMealsAdapter.DayMealsViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final FavouritesAdapter.FavouritesViewHolder viewHolder, final int position) {
         viewHolder.bindData(mDiffer.getCurrentList().get(position));
     }
 
@@ -52,11 +51,11 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
         return mDiffer.getCurrentList().size();
     }
 
-    public static class DayMealsViewHolder extends RecyclerView.ViewHolder {
+    public class FavouritesViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final ImageView img;
 
-        private DayMealsViewHolder(View itemView) {
+        private FavouritesViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             img = itemView.findViewById(R.id.img);
@@ -67,6 +66,7 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
             Glide.with(img).load(item.getThumbnail()).into(img);
         }
     }
+
 
     private static final DiffUtil.ItemCallback<MealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MealItem>() {
         @Override
@@ -81,6 +81,3 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
     };
 
 }
-
-
-

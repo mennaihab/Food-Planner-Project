@@ -1,11 +1,14 @@
 package com.example.foodplanner.features.plan.views;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -36,6 +39,7 @@ public class PlanFragment extends Fragment implements OnBackPressedListener {
     public PlanFragment() {
         super(R.layout.fragment_plan);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -98,6 +102,7 @@ public class PlanFragment extends Fragment implements OnBackPressedListener {
             super(PlanFragment.this);
             this.currentWeekStart = currentWeekStart;
         }
+
 
         @NonNull
         @Override

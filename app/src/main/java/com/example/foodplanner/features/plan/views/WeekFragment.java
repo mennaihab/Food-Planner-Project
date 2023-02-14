@@ -15,11 +15,14 @@ import android.view.ViewGroup;
 
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.MealItem;
+import com.example.foodplanner.features.plan.helpers.DayMealsAdapter;
 import com.example.foodplanner.features.plan.helpers.WeekDayAdapter;
+import com.example.foodplanner.features.plan.models.DayData;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,9 +74,10 @@ public class WeekFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         LocalDate weekStart = (LocalDate) requireArguments().getSerializable(WEEK_DAY);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        WeekDayAdapter parentItemAdapter = new WeekDayAdapter(parentItemList(weekStart), getContext());
+        WeekDayAdapter parentItemAdapter = new WeekDayAdapter(getContext());
         recyclerView.setAdapter(parentItemAdapter);
         recyclerView.setLayoutManager(layoutManager);
+        parentItemAdapter.updateList((parentItemList(weekStart)));
     }
 
     private List<DayData> parentItemList(LocalDate weekStart) {

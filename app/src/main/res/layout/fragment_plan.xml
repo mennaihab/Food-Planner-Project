@@ -27,6 +27,8 @@
         android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/left_btn"
         app:layout_constraintEnd_toStartOf="@+id/rigth_btn"
         app:layout_constraintStart_toEndOf="@+id/left_btn"
