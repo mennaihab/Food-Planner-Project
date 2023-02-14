@@ -63,9 +63,9 @@
 
     <fragment
         android:id="@+id/home_favourites_fragment"
-        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:name="com.example.foodplanner.features.favourites.views.FavouritesFragment"
         android:label="@string/title_home_favourites"
-        tools:layout="@layout/fragment_placeholder" />
+        tools:layout="@layout/fragment_favourites" />
 
     <fragment
         android:id="@+id/home_plan_fragment"

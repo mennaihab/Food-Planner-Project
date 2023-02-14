@@ -75,6 +75,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_criteria_wrapper"
-        layout="@layout/search_list" />
+        layout="@layout/items_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

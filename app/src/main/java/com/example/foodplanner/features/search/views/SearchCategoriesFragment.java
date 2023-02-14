@@ -16,7 +16,6 @@ import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.Category;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
-import com.example.foodplanner.features.search.adapters.AreasListAdapter;
 import com.example.foodplanner.features.search.adapters.CategoriesListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchCategoriesModelImpl;
@@ -32,7 +31,7 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     private SearchCategoriesPresenter presenter;
 
     public SearchCategoriesFragment() {
-        super(R.layout.search_list);
+        super(R.layout.items_list);
     }
 
     @Override

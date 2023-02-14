@@ -1,6 +1,10 @@
 package com.example.foodplanner.features.plan.views;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,15 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.MealItem;
-import com.example.foodplanner.features.plan.helpers.DayData;
 import com.example.foodplanner.features.plan.adapters.WeekDayAdapter;
+import com.example.foodplanner.features.plan.helpers.DayData;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

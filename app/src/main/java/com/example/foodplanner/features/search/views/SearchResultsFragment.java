@@ -63,7 +63,7 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
 
         list = view.findViewById(R.id.items_list);
         list.addItemDecoration(
-                new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 4), 1, LinearLayoutManager.HORIZONTAL)
+                new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 16), 2, LinearLayoutManager.VERTICAL)
         );
         listAdapter = new SearchListAdapter();
         list.setAdapter(listAdapter);

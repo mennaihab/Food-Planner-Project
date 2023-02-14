@@ -31,7 +31,7 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
     private SearchAreasPresenter presenter;
 
     public SearchAreasFragment() {
-        super(R.layout.search_list);
+        super(R.layout.items_list);
     }
 
     @Override

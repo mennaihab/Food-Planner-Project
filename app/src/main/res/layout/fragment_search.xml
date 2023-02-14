@@ -65,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_criteria"
-        tools:layout="@layout/search_list" />
+        tools:layout="@layout/items_list" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button3"
@@ -87,7 +87,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout="@layout/search_list" />
+        tools:layout="@layout/items_list" />
 
     <TextView
         android:id="@+id/textView4"
@@ -109,7 +109,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        tools:layout="@layout/search_list" />
+        tools:layout="@layout/items_list" />
 
     <TextView
         android:id="@+id/search_criteria"
