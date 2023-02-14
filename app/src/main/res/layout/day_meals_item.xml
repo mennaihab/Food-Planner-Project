@@ -5,9 +5,10 @@
     android:id="@+id/cardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="30dp"
     android:clickable="true"
     android:paddingBottom="20dp"
-    android:layout_marginRight="30dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:minWidth="300dp">
@@ -15,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clipChildren="true">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -43,6 +44,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
+<<<<<<<< HEAD:app/src/main/res/layout/day_meals_item.xml
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/favorite"
             android:layout_width="wrap_content"
@@ -54,6 +56,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline" />
 
+========
+>>>>>>>> origin/favourites:app/src/main/res/layout/favourite_item.xml
         <TextView
             android:id="@+id/name"
             android:layout_width="185dp"
@@ -77,5 +81,19 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.7" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/circle_grey"
+            android:src="@drawable/baseline_close_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </com.google.android.material.card.MaterialCardView>
