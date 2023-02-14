@@ -31,7 +31,7 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.DayViewH
     @Override
     public DayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View photoView = inflater.inflate(R.layout.day_card, parent, false);
+        View photoView = inflater.inflate(R.layout.item_day, parent, false);
         return new DayViewHolder(photoView);
     }
 
