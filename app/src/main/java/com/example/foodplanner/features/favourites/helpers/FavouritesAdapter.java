@@ -18,11 +18,7 @@ import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
 
-<<<<<<<< HEAD:app/src/main/java/com/example/foodplanner/features/favourites/helpers/FavouritesAdapter.java
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouritesViewHolder> {
-========
-public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMealsViewHolder> {
->>>>>>>> origin/favourites:app/src/main/java/com/example/foodplanner/features/plan/helpers/DayMealsAdapter.java
 
     private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
@@ -36,28 +32,15 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
 
     @NonNull
     @Override
-<<<<<<<< HEAD:app/src/main/java/com/example/foodplanner/features/favourites/helpers/FavouritesAdapter.java
     public FavouritesAdapter.FavouritesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View photoView = inflater.inflate(R.layout.item_favourite, parent, false);
         return new FavouritesAdapter.FavouritesViewHolder(photoView);
-========
-    public DayMealsAdapter.DayMealsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        // Inflate the layout
-        View photoView = inflater.inflate(R.layout.day_meals_item, parent, false);
-        return new DayMealsViewHolder(photoView);
->>>>>>>> origin/favourites:app/src/main/java/com/example/foodplanner/features/plan/helpers/DayMealsAdapter.java
     }
 
     @Override
-<<<<<<<< HEAD:app/src/main/java/com/example/foodplanner/features/favourites/helpers/FavouritesAdapter.java
     public void onBindViewHolder(final FavouritesAdapter.FavouritesViewHolder viewHolder, final int position) {
-========
-    public void onBindViewHolder(DayMealsAdapter.DayMealsViewHolder viewHolder, int position) {
->>>>>>>> origin/favourites:app/src/main/java/com/example/foodplanner/features/plan/helpers/DayMealsAdapter.java
         viewHolder.bindData(mDiffer.getCurrentList().get(position));
     }
 
@@ -66,19 +49,11 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
         return mDiffer.getCurrentList().size();
     }
 
-<<<<<<<< HEAD:app/src/main/java/com/example/foodplanner/features/favourites/helpers/FavouritesAdapter.java
     public class FavouritesViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final ImageView img;
 
         private FavouritesViewHolder(View itemView) {
-========
-    public static class DayMealsViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final ImageView img;
-
-        private DayMealsViewHolder(View itemView) {
->>>>>>>> origin/favourites:app/src/main/java/com/example/foodplanner/features/plan/helpers/DayMealsAdapter.java
             super(itemView);
             name = itemView.findViewById(R.id.meal_name);
             img = itemView.findViewById(R.id.meal_img);
