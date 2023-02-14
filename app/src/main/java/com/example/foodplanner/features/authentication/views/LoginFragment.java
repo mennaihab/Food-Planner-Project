@@ -57,7 +57,7 @@ public class LoginFragment extends Fragment {
     private void setupForgotPassword(TextView textView) {
         SpannableString spannableString = SpanUtils.createSpannable("I FORGOT MY PASSWORD!",
                 TextSpan.of(SpanUtils.createClickableSpan(e -> {
-                    Navigation.findNavController(e).navigate(LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment());
+                    Navigation.findNavController(e).navigate(LoginFragmentDirections.actionLoginToForgotPassword());
                 }), 0)
         );
         textView.setText(spannableString);

@@ -13,19 +13,22 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SearchModelDelegate<T extends Parcelable> {
+public class SearchFilterModelDelegate<T extends Parcelable> {
     protected final Flowable<List<T>> data;
     private final String key;
 
-    public SearchModelDelegate(Bundle savedInstanceState, String key, Single<? extends RemoteModelWrapper<T>> remoteSource) {
+    public SearchFilterModelDelegate(Bundle savedInstanceState, String key, Single<? extends RemoteModelWrapper<T>> remoteSource) {
         this.key = key;
         if (savedInstanceState != null && savedInstanceState.containsKey(key)) {
             data = Flowable.just(savedInstanceState.getParcelableArrayList(key));
         } else {
             data = Flowable.fromSingle(
                     remoteSource
-                    .subscribeOn(Schedulers.io())
-                    .map(RemoteModelWrapper::getItems)
+                            .subscribeOn(Schedulers.io())
+                            .map(list -> {
+                                if (list.getItems() != null) return list.getItems();
+                                return new ArrayList<>();
+                            })
             );
         }
     }

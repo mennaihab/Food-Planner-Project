@@ -261,4 +261,7 @@
         <item name="maxHeight">16dp</item>
     </style>
 
+    <style name="Theme.FoodPlanner.Chip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
+    </style>
+
 </resources>
