@@ -34,8 +34,8 @@
             app:popUpTo="@id/launching_fragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_launching_fragment_to_planFragment"
-            app:destination="@id/planFragment" />
+            android:id="@+id/action_launching_to_plan"
+            app:destination="@id/home_plan_fragment" />
     </fragment>
 
     <fragment
@@ -55,7 +55,11 @@
         android:id="@+id/home_search_fragment"
         android:name="com.example.foodplanner.features.search.views.SearchFragment"
         android:label="@string/title_home_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_search_to_searchResults"
+            app:destination="@id/searchResults_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/home_favourites_fragment"
@@ -65,9 +69,10 @@
 
     <fragment
         android:id="@+id/home_plan_fragment"
-        android:name="com.example.foodplanner.features.main.Placeholder"
+        android:name="com.example.foodplanner.features.plan.views.PlanFragment"
         android:label="@string/title_home_plan"
-        tools:layout="@layout/fragment_placeholder" />
+        tools:layout="@layout/fragment_plan" />
+
     <fragment
         android:id="@+id/home_meal_fragment"
         android:name="com.example.foodplanner.features.mealofday.views.MealOfDayFragment"
@@ -86,7 +91,7 @@
             app:destination="@id/login_fragment"
             app:launchSingleTop="true" />
         <action
-            android:id="@+id/action_authentication_to_home_meal"
+            android:id="@+id/action_authentication_to_homeMeal"
             app:destination="@id/home_meal_fragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/authentication_fragment"
@@ -98,26 +103,24 @@
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_login_fragment_to_forgotPasswordFragment"
-            app:destination="@id/forgotPasswordFragment" />
+            android:id="@+id/action_login_to_forgotPassword"
+            app:destination="@id/forgotPassword_fragment" />
     </fragment>
     <action
         android:id="@+id/action_global_signup"
         app:destination="@id/signup_fragment"
         app:launchSingleTop="true" />
     <fragment
-        android:id="@+id/forgotPasswordFragment"
+        android:id="@+id/forgotPassword_fragment"
         android:name="com.example.foodplanner.features.authentication.views.ForgotPasswordFragment"
         android:label="fragment_forgot_password"
         tools:layout="@layout/fragment_forgot_password" />
     <fragment
-        android:id="@+id/planFragment"
-        android:name="com.example.foodplanner.features.plan.views.PlanFragment"
-        android:label="fragment_plan"
-        tools:layout="@layout/fragment_plan" />
-    <fragment
-        android:id="@+id/weekFragment"
-        android:name="com.example.foodplanner.features.plan.views.WeekFragment"
-        android:label="fragment_week"
-        tools:layout="@layout/fragment_week" />
+        android:id="@+id/searchResults_fragment"
+        android:name="com.example.foodplanner.features.search.views.SearchResultsFragment"
+        android:label="SearchResultsFragment" >
+        <argument
+            android:name="criteria"
+            app:argType="com.example.foodplanner.features.search.helpers.SearchCriteria" />
+    </fragment>
 </navigation>

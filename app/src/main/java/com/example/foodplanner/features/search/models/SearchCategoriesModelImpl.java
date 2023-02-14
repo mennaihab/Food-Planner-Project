@@ -11,9 +11,9 @@ import io.reactivex.rxjava3.core.Flowable;
 
 public class SearchCategoriesModelImpl implements SearchCategoriesModel {
     private static final String CATEGORIES = "CATEGORIES";
-    private final SearchModelDelegate<Category> delegate;
+    private final SearchFilterModelDelegate<Category> delegate;
     public SearchCategoriesModelImpl(Bundle savedInstanceState, MealRemoteService ingredientService) {
-        delegate = new SearchModelDelegate<>(savedInstanceState, CATEGORIES, ingredientService.listCategories());
+        delegate = new SearchFilterModelDelegate<>(savedInstanceState, CATEGORIES, ingredientService.listCategories());
     }
 
     @Override

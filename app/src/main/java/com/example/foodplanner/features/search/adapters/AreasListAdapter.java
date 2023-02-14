@@ -1,6 +1,5 @@
 package com.example.foodplanner.features.search.adapters;
 
-import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -9,22 +8,25 @@ import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodplanner.features.common.helpers.ItemClickListener;
+import com.example.foodplanner.features.common.models.Area;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
 public class AreasListAdapter extends RecyclerView.Adapter<AreasListAdapter.ViewHolder> {
     private final AsyncListDiffer<String> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
-    private final Context context;
 
-    public AreasListAdapter(Context context) {
-        this.context = context;
+    private final ItemClickListener<String> itemListener;
+
+    public AreasListAdapter(ItemClickListener<String> itemListener) {
+        this.itemListener = itemListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Button button = new MaterialButton(context);
+        Button button = new MaterialButton(parent.getContext());
         button.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -57,7 +59,7 @@ public class AreasListAdapter extends RecyclerView.Adapter<AreasListAdapter.View
         }
     };
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private final Button button;
         private ViewHolder(@NonNull Button itemView) {
             super(itemView);
@@ -66,6 +68,9 @@ public class AreasListAdapter extends RecyclerView.Adapter<AreasListAdapter.View
 
         private void bind(String area) {
             button.setText(area);
+            button.setOnClickListener( e -> {
+                itemListener.onClick(area);
+            });
         }
     }
 }

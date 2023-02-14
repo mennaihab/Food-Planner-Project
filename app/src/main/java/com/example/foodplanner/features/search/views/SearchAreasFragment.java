@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.search.adapters.AreasListAdapter;
+import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchAreasModelImpl;
 import com.example.foodplanner.features.search.presenters.SearchAreasPresenter;
 
@@ -29,7 +31,7 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
     private SearchAreasPresenter presenter;
 
     public SearchAreasFragment() {
-        super(R.layout.search_filter_list);
+        super(R.layout.search_list);
     }
 
     @Override
@@ -44,7 +46,11 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 8), 1, LinearLayoutManager.HORIZONTAL)
         );
-        listAdapter = new AreasListAdapter(requireContext());
+        listAdapter = new AreasListAdapter(area -> {
+            Navigation.findNavController(view).navigate(
+                    SearchFragmentDirections.actionSearchToSearchResults(new SearchCriteria(SearchCriteria.Type.AREA, area))
+            );
+        });
         list.setAdapter(listAdapter);
         LinearLayoutManager areasLayout = new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false);
         list.setLayoutManager(areasLayout);

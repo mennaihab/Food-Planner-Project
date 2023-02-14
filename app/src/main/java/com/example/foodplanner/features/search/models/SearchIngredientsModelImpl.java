@@ -11,9 +11,9 @@ import io.reactivex.rxjava3.core.Flowable;
 
 public class SearchIngredientsModelImpl implements SearchIngredientsModel {
     private static final String INGREDIENTS = "INGREDIENTS";
-    private final SearchModelDelegate<Ingredient> delegate;
+    private final SearchFilterModelDelegate<Ingredient> delegate;
     public SearchIngredientsModelImpl(Bundle savedInstanceState, MealRemoteService ingredientService) {
-        delegate = new SearchModelDelegate<>(savedInstanceState, INGREDIENTS, ingredientService.listIngredients());
+        delegate = new SearchFilterModelDelegate<>(savedInstanceState, INGREDIENTS, ingredientService.listIngredients());
     }
 
     @Override

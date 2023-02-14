@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,7 +15,9 @@ import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.Ingredient;
+import com.example.foodplanner.features.search.adapters.CategoriesListAdapter;
 import com.example.foodplanner.features.search.adapters.IngredientsListAdapter;
+import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchIngredientsModelImpl;
 import com.example.foodplanner.features.search.presenters.SearchIngredientsPresenter;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
@@ -30,7 +33,7 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
     private SearchIngredientsPresenter presenter;
 
     public SearchIngredientsFragment() {
-        super(R.layout.search_filter_list);
+        super(R.layout.search_list);
     }
 
     @Override
@@ -46,7 +49,11 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 4), 1, LinearLayoutManager.HORIZONTAL)
         );
-        listAdapter = new IngredientsListAdapter(requireContext());
+        listAdapter = new IngredientsListAdapter(area -> {
+            Navigation.findNavController(view).navigate(
+                    SearchFragmentDirections.actionSearchToSearchResults(new SearchCriteria(SearchCriteria.Type.INGREDIENT, area.getName()))
+            );
+        });
         list.setAdapter(listAdapter);
         LinearLayoutManager ingredientsLayout = new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false);
         list.setLayoutManager(ingredientsLayout);

@@ -1,6 +1,5 @@
 package com.example.foodplanner.features.search.adapters;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,22 +21,24 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.foodplanner.R;
+import com.example.foodplanner.features.common.helpers.ItemClickListener;
 import com.example.foodplanner.features.common.models.Category;
 
 import java.util.List;
 
 public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAdapter.ViewHolder> {
     private final AsyncListDiffer<Category> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
-    private final Context context;
 
-    public CategoriesListAdapter(Context context) {
-        this.context = context;
+    private final ItemClickListener<Category> itemListener;
+
+    public CategoriesListAdapter(ItemClickListener<Category> itemListener) {
+        this.itemListener = itemListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.card_item_h, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item_h, parent, false);
         return new ViewHolder(view);
     }
 
@@ -66,7 +67,7 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
         }
     };
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private final CardView itemWrapper;
         private final ImageView image;
         private final TextView name;
@@ -79,6 +80,9 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
 
         private void bind(Category category) {
             name.setText(category.getName());
+            itemView.setOnClickListener(e -> {
+                itemListener.onClick(category);
+            });
             Glide.with(itemView)
                     .asBitmap()
                  .load(category.getThumbnail())

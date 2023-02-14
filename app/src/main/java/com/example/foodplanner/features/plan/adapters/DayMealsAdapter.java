@@ -1,6 +1,5 @@
-package com.example.foodplanner.features.plan.helpers;
+package com.example.foodplanner.features.plan.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,9 @@ import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
 
-public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.InsideDayViewHolder> {
+public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMealViewHolder> {
 
     private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
-    private final Context context;
-
-    public DayMealsAdapter(Context context) {
-        this.context = context;
-    }
 
     public void updateList(List<MealItem> items) {
         mDiffer.submitList(items);
@@ -33,17 +27,15 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.Inside
 
     @NonNull
     @Override
-    public DayMealsAdapter.InsideDayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        // Inflate the layout
-        View photoView = inflater.inflate(R.layout.inside_day_item, parent, false);
-        return new InsideDayViewHolder(photoView);
+    public DayMealViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View photoView = inflater.inflate(R.layout.item_plan_meal, parent, false);
+        return new DayMealViewHolder(photoView);
     }
 
 
     @Override
-    public void onBindViewHolder(DayMealsAdapter.InsideDayViewHolder viewHolder, int position) {
+    public void onBindViewHolder(DayMealViewHolder viewHolder, int position) {
         viewHolder.bindData(mDiffer.getCurrentList().get(position));
     }
 
@@ -52,14 +44,14 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.Inside
         return mDiffer.getCurrentList().size();
     }
 
-    public static class InsideDayViewHolder extends RecyclerView.ViewHolder {
+    public static class DayMealViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final ImageView img;
 
-        private InsideDayViewHolder(View itemView) {
+        private DayMealViewHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.name);
-            img = itemView.findViewById(R.id.img);
+            name = itemView.findViewById(R.id.meal_name);
+            img = itemView.findViewById(R.id.meal_img);
         }
 
         private void bindData(MealItem item) {

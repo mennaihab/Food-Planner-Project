@@ -15,17 +15,13 @@ import android.view.ViewGroup;
 
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.MealItem;
-import com.example.foodplanner.features.plan.helpers.WeekDayAdapter;
+import com.example.foodplanner.features.plan.helpers.DayData;
+import com.example.foodplanner.features.plan.adapters.WeekDayAdapter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WeekFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WeekFragment extends Fragment {
 
     private static final String WEEK_DAY = "WEEK_DAY";
@@ -71,7 +67,8 @@ public class WeekFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         LocalDate weekStart = (LocalDate) requireArguments().getSerializable(WEEK_DAY);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        WeekDayAdapter parentItemAdapter = new WeekDayAdapter(parentItemList(weekStart), getContext());
+        WeekDayAdapter parentItemAdapter = new WeekDayAdapter();
+        parentItemAdapter.submitList(parentItemList(weekStart));
         recyclerView.setAdapter(parentItemAdapter);
         recyclerView.setLayoutManager(layoutManager);
     }
@@ -80,14 +77,14 @@ public class WeekFragment extends Fragment {
         List<DayData> itemList = new ArrayList<>(7);
         for (int i = 0; i < 7; i++) {
             LocalDate current = weekStart.plusDays(i);
-            DayData item = new DayData(current.getDayOfWeek().name(), childItemList());
+            DayData item = new DayData(current, childItemList());
             itemList.add(item);
         }
         return itemList;
     }
 
     private List<MealItem> childItemList() {
-        List<MealItem> ChildItemList = new ArrayList<>();
+        List<MealItem> ChildItemList = new ArrayList<>(4);
         ChildItemList.add(new MealItem("food 1", "food1", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));
         ChildItemList.add(new MealItem("food 2", "food2", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));
         ChildItemList.add(new MealItem("food 3", "food3", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));

@@ -7,8 +7,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodplanner.R;
@@ -16,10 +16,10 @@ import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.Category;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
+import com.example.foodplanner.features.search.adapters.AreasListAdapter;
 import com.example.foodplanner.features.search.adapters.CategoriesListAdapter;
-import com.example.foodplanner.features.search.models.SearchAreasModelImpl;
+import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchCategoriesModelImpl;
-import com.example.foodplanner.features.search.presenters.SearchAreasPresenter;
 import com.example.foodplanner.features.search.presenters.SearchCategoriesPresenter;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     private SearchCategoriesPresenter presenter;
 
     public SearchCategoriesFragment() {
-        super(R.layout.search_filter_list);
+        super(R.layout.search_list);
     }
 
     @Override
@@ -47,7 +47,11 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 8), 2)
         );
-        listAdapter = new CategoriesListAdapter(requireContext());
+        listAdapter = new CategoriesListAdapter(area -> {
+            Navigation.findNavController(view).navigate(
+                    SearchFragmentDirections.actionSearchToSearchResults(new SearchCriteria(SearchCriteria.Type.CATEGORY, area.getName()))
+            );
+        });
         list.setAdapter(listAdapter);
         GridLayoutManager categoriesLayout = new GridLayoutManager(requireContext(), 2);
         list.setLayoutManager(categoriesLayout);
