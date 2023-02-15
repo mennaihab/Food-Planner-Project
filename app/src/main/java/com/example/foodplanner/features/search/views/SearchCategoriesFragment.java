@@ -14,8 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.entities.AreaEntity;
+import com.example.foodplanner.features.common.entities.CategoryEntity;
+import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.models.Area;
 import com.example.foodplanner.features.common.models.Category;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
+import com.example.foodplanner.features.common.repositories.AreaRepository;
+import com.example.foodplanner.features.common.repositories.CategoryRepository;
+import com.example.foodplanner.features.common.services.AppDatabase;
 import com.example.foodplanner.features.search.adapters.CategoriesListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchCategoriesModelImpl;
@@ -39,7 +46,13 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
         presenter = new SearchCategoriesPresenter(
                 getViewLifecycleOwner(),
                 this,
-                new SearchCategoriesModelImpl(savedInstanceState, MealRemoteService.create())
+                new SearchCategoriesModelImpl(savedInstanceState,
+                        new CategoryRepository(
+                                MealRemoteService.create(),
+                                AppDatabase.getInstance(requireContext()).categoryDAO(),
+                                new BaseMapper<>(Category.class, CategoryEntity.class)
+                        )
+                )
         );
 
         list = view.findViewById(R.id.items_list);

@@ -19,16 +19,18 @@ import java.util.List;
 @JsonAdapter(value = Meal.Deserializer.class)
 public class Meal implements Parcelable {
 
-    private final String id;
-    private final String name;
-    private final String thumbnail;
-    private final String category;
-    private final String area;
-    private final String instructions;
-    private final List<String> tags;
-    private final String youtube;
-    private final String source;
-    private final List<Ingredient> ingredients;
+    private String id;
+    private String name;
+    private String thumbnail;
+    private String category;
+    private String area;
+    private String instructions;
+    private List<String> tags;
+    private String youtube;
+    private String source;
+    private List<Ingredient> ingredients;
+
+    public Meal() { }
 
     public Meal(String id, String name, String thumbnail, String category, String area,
                 String instructions, List<String> tags, String youtube, String source,
@@ -45,6 +47,85 @@ public class Meal implements Parcelable {
         this.ingredients = ingredients;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getYoutube() {
+        return youtube;
+    }
+
+    public void setYoutube(String youtube) {
+        this.youtube = youtube;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
 
     public static class Ingredient implements Parcelable {
         private final String ingredient;

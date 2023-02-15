@@ -2,9 +2,8 @@ package com.example.foodplanner.features.search.models;
 
 import android.os.Bundle;
 
-import com.example.foodplanner.features.common.helpers.RemoteMealWrapper;
 import com.example.foodplanner.features.common.models.MealItem;
-import com.example.foodplanner.features.common.remote.MealRemoteService;
+import com.example.foodplanner.features.common.repositories.MealItemRepository;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 
 import java.util.ArrayList;
@@ -23,12 +22,12 @@ public class SearchResultsModelImpl implements SearchResultsModel {
     private static final String SEARCH_RESULTS = "SEARCH_RESULTS";
     private static final String SEARCH_CRITERIA = "SEARCH_CRITERIA";
     private final BehaviorSubject<Optional<List<MealItem>>> searchResults;
-    private final MealRemoteService mealService;
+    private final MealItemRepository mealItemRepository;
     private Disposable lastOperation;
     private SearchCriteria criteria;
 
-    public SearchResultsModelImpl(Bundle savedInstanceState, SearchCriteria criteria, MealRemoteService mealService) {
-        this.mealService = mealService;
+    public SearchResultsModelImpl(Bundle savedInstanceState, SearchCriteria criteria, MealItemRepository mealItemRepository) {
+        this.mealItemRepository = mealItemRepository;
         final Optional<List<MealItem>> data;
         if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_CRITERIA)) {
             this.criteria = savedInstanceState.getParcelable(SEARCH_CRITERIA);
@@ -53,29 +52,13 @@ public class SearchResultsModelImpl implements SearchResultsModel {
 
     @Override
     public void filter(SearchCriteria criteria) {
-        switch (criteria.getType()) {
-            case QUERY:
-                setCurrent(mealService.searchByName(criteria.getCriteria()));
-                break;
-            case INGREDIENT:
-                setCurrent(mealService.searchByIngredient(criteria.getCriteria()));
-                break;
-            case AREA:
-                setCurrent(mealService.searchByArea(criteria.getCriteria()));
-                break;
-            case CATEGORY:
-                setCurrent(mealService.searchByCategory(criteria.getCriteria()));
-                break;
-        }
+        setCurrent(mealItemRepository.filter(criteria));
         this.criteria = criteria;
     }
 
-    private void setCurrent(Single<RemoteMealWrapper<MealItem>> newSource) {
+    private void setCurrent(Flowable<List<MealItem>> newSource) {
         dispose();
-        Observable<Optional<List<MealItem>>> observable = newSource.map(list -> {
-                    if (list.getItems() != null) return list.getItems();
-                    return new ArrayList<MealItem>();
-                }).map(Optional::of)
+        Observable<Optional<List<MealItem>>> observable = newSource.map(Optional::of)
                 .toObservable()
                 .startWith(Single.just(Optional.empty()))
                 .subscribeOn(Schedulers.io());

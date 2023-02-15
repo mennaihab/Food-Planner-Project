@@ -10,11 +10,13 @@ import java.util.Objects;
 public class MealItem implements Parcelable {
 
     @SerializedName("idMeal")
-    private final String id;
+    private String id;
     @SerializedName("strMeal")
-    private final String name;
+    private String name;
     @SerializedName("strMealThumb")
-    private final String thumbnail;
+    private String thumbnail;
+
+    public MealItem() {}
 
     public MealItem(String id, String name, String thumbnail) {
         this.id = id;
@@ -56,12 +58,24 @@ public class MealItem implements Parcelable {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     @Override
