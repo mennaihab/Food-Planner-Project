@@ -1,4 +1,4 @@
-package com.example.foodplanner.features.search.adapters;
+package com.example.foodplanner.features.common.adapters;
 
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -30,15 +30,17 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
     private final AsyncListDiffer<Ingredient> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
     private final ItemClickListener<Ingredient> itemListener;
+    private final int layout;
 
-    public IngredientsListAdapter(ItemClickListener<Ingredient> itemListener) {
+    public IngredientsListAdapter(ItemClickListener<Ingredient> itemListener,int layout) {
         this.itemListener = itemListener;
+        this.layout = layout;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_v, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -76,7 +78,7 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.item_image);
-            name = itemView.findViewById(R.id.item_name);
+            name = itemView.findViewById(R.id.ingredient_name);
             imageWrapper = itemView.findViewById(R.id.item_image_wrapper);
         }
 

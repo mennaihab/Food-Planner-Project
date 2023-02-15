@@ -33,7 +33,6 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
         return new DayMealViewHolder(photoView);
     }
 
-
     @Override
     public void onBindViewHolder(DayMealViewHolder viewHolder, int position) {
         viewHolder.bindData(mDiffer.getCurrentList().get(position));
@@ -73,6 +72,3 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
     };
 
 }
-
-
-
