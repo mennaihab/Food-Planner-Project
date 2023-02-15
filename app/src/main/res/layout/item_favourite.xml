@@ -22,7 +22,7 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/circle_grey"
         android:elevation="2dp"
-        android:src="@drawable/baseline_close_24"
+        android:src="@drawable/ic_close"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.981"
         app:layout_constraintStart_toStartOf="parent"

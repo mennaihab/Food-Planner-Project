@@ -15,7 +15,7 @@ import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.Ingredient;
-import com.example.foodplanner.features.common.adapters.IngredientsListAdapter;
+import com.example.foodplanner.features.search.adapters.IngredientsListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchIngredientsModelImpl;
 import com.example.foodplanner.features.search.presenters.SearchIngredientsPresenter;
