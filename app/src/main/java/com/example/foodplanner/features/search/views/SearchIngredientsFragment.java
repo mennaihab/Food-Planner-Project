@@ -14,7 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.entities.AreaEntity;
+import com.example.foodplanner.features.common.entities.IngredientEntity;
+import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.models.Area;
 import com.example.foodplanner.features.common.models.Ingredient;
+import com.example.foodplanner.features.common.repositories.AreaRepository;
+import com.example.foodplanner.features.common.repositories.IngredientRepository;
+import com.example.foodplanner.features.common.services.AppDatabase;
 import com.example.foodplanner.features.search.adapters.IngredientsListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchIngredientsModelImpl;
@@ -41,7 +48,14 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
         presenter = new SearchIngredientsPresenter(
                 getViewLifecycleOwner(),
                 this,
-                new SearchIngredientsModelImpl(savedInstanceState, MealRemoteService.create())
+                new SearchIngredientsModelImpl(
+                        savedInstanceState,
+                        new IngredientRepository(
+                                MealRemoteService.create(),
+                                AppDatabase.getInstance(requireContext()).ingredientDAO(),
+                                new BaseMapper<>(Ingredient.class, IngredientEntity.class)
+                        )
+                )
         );
 
         list = view.findViewById(R.id.items_list);

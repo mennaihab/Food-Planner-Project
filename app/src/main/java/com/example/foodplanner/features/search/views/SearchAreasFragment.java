@@ -1,6 +1,7 @@
 package com.example.foodplanner.features.search.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,11 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.entities.AreaEntity;
+import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.models.Area;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
+import com.example.foodplanner.features.common.repositories.AreaRepository;
+import com.example.foodplanner.features.common.services.AppDatabase;
 import com.example.foodplanner.features.search.adapters.AreasListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchAreasModelImpl;
 import com.example.foodplanner.features.search.presenters.SearchAreasPresenter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -39,7 +46,13 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
         presenter = new SearchAreasPresenter(
                 getViewLifecycleOwner(),
                 this,
-                new SearchAreasModelImpl(savedInstanceState, MealRemoteService.create())
+                new SearchAreasModelImpl(savedInstanceState,
+                        new AreaRepository(
+                                MealRemoteService.create(),
+                                AppDatabase.getInstance(requireContext()).areaDAO(),
+                                new BaseMapper<>(Area.class, AreaEntity.class)
+                        )
+                )
         );
 
         list = view.findViewById(R.id.items_list);
@@ -70,6 +83,7 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
 
     @Override
     public void onLoadFailure(Throwable error) {
+        Log.e(TAG, error.getLocalizedMessage(), error);
         Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }

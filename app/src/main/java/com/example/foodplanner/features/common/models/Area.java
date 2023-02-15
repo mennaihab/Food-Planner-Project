@@ -10,7 +10,9 @@ import java.util.Objects;
 public class Area implements Parcelable {
 
     @SerializedName("strArea")
-    private final String name;
+    private String name;
+
+    public Area() {}
 
     public Area(String name) {
         this.name = name;
@@ -44,5 +46,9 @@ public class Area implements Parcelable {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
