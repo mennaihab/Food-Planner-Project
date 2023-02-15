@@ -1,12 +1,9 @@
 package com.example.foodplanner.features.search.views;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,15 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
-import com.example.foodplanner.features.common.models.Ingredient;
+import com.example.foodplanner.features.common.entities.MealItemEntity;
+import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
-import com.example.foodplanner.features.search.adapters.IngredientsListAdapter;
+import com.example.foodplanner.features.common.repositories.MealItemRepository;
+import com.example.foodplanner.features.common.services.AppDatabase;
 import com.example.foodplanner.features.search.adapters.SearchListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
-import com.example.foodplanner.features.search.models.SearchIngredientsModelImpl;
 import com.example.foodplanner.features.search.models.SearchResultsModelImpl;
-import com.example.foodplanner.features.search.presenters.SearchIngredientsPresenter;
 import com.example.foodplanner.features.search.presenters.SearchResultsPresenter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
@@ -57,7 +54,11 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
                 new SearchResultsModelImpl(
                         savedInstanceState,
                         criteria,
-                        MealRemoteService.create()
+                        new MealItemRepository(
+                                MealRemoteService.create(),
+                                AppDatabase.getInstance(requireContext()).mealItemDAO(),
+                                new BaseMapper<>(MealItem.class, MealItemEntity.class)
+                        )
                 )
         );
 

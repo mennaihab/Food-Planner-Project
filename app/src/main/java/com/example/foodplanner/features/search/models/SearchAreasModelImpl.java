@@ -3,7 +3,7 @@ package com.example.foodplanner.features.search.models;
 import android.os.Bundle;
 
 import com.example.foodplanner.features.common.models.Area;
-import com.example.foodplanner.features.common.remote.MealRemoteService;
+import com.example.foodplanner.features.common.repositories.AreaRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +13,9 @@ import io.reactivex.rxjava3.core.Flowable;
 public class SearchAreasModelImpl implements SearchAreasModel {
     private static final String AREAS = "AREAS";
 
-    private final SearchFilterModelDelegate<Area> delegate;
-    public SearchAreasModelImpl(Bundle savedInstanceState, MealRemoteService mealRemoteService) {
-        delegate = new SearchFilterModelDelegate<>(savedInstanceState, AREAS, mealRemoteService.listAreas());
+    private final SearchFilterModelRepositoryDelegate<Area> delegate;
+    public SearchAreasModelImpl(Bundle savedInstanceState, AreaRepository areaRepository) {
+        delegate = new SearchFilterModelRepositoryDelegate<>(savedInstanceState, AREAS, areaRepository.getAll());
     }
 
     @Override
