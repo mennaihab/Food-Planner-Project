@@ -13,9 +13,9 @@ import io.reactivex.rxjava3.core.Flowable;
 public class SearchAreasModelImpl implements SearchAreasModel {
     private static final String AREAS = "AREAS";
 
-    private final SearchFilterModelRepositoryDelegate<Area> delegate;
+    private final SearchFilterModelDelegate<Area> delegate;
     public SearchAreasModelImpl(Bundle savedInstanceState, AreaRepository areaRepository) {
-        delegate = new SearchFilterModelRepositoryDelegate<>(savedInstanceState, AREAS, areaRepository.getAll());
+        delegate = new SearchFilterModelDelegate<>(savedInstanceState, AREAS, areaRepository.getAll());
     }
 
     @Override
