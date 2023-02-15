@@ -74,7 +74,7 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.item_image);
-            name = itemView.findViewById(R.id.item_name);
+            name = itemView.findViewById(R.id.ingredient_name);
             itemWrapper = itemView.findViewById(R.id.item_wrapper);
         }
 

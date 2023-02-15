@@ -37,4 +37,8 @@
     <string name="search_by_meal">Search by Meal</string>
     <string name="view_all">View All</string>
     <string name="search_by_area">Search by Area</string>
+    <string name="recipe">RECIPE</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps</string>
+    <string name="steps_text">"Learn how to make this recipe</string>
 </resources>

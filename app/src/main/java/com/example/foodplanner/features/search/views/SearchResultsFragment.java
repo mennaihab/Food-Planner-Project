@@ -16,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.models.MealItem;
+import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.common.repositories.MealItemRepository;
 import com.example.foodplanner.features.common.services.AppDatabase;
+
 import com.example.foodplanner.features.search.adapters.SearchListAdapter;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchResultsModelImpl;

@@ -62,11 +62,9 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 4), 1, LinearLayoutManager.HORIZONTAL)
         );
-        listAdapter = new IngredientsListAdapter(area -> {
-            Navigation.findNavController(view).navigate(
-                    SearchFragmentDirections.actionSearchToSearchResults(new SearchCriteria(SearchCriteria.Type.INGREDIENT, area.getName()))
-            );
-        });
+        listAdapter = new IngredientsListAdapter(area -> Navigation.findNavController(view).navigate(
+                SearchFragmentDirections.actionSearchToSearchResults(new SearchCriteria(SearchCriteria.Type.INGREDIENT, area.getName()))
+        ),R.layout.item_v);
         list.setAdapter(listAdapter);
         LinearLayoutManager ingredientsLayout = new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false);
         list.setLayoutManager(ingredientsLayout);
