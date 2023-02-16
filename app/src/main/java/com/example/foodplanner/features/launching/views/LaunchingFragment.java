@@ -1,6 +1,7 @@
 package com.example.foodplanner.features.launching.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,11 @@ import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.features.common.views.WindowPainter;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LaunchingFragment extends Fragment {
 
@@ -39,8 +45,7 @@ public class LaunchingFragment extends Fragment {
 
         view.postDelayed(() -> {
             Navigation.findNavController(view)
-                   .navigate(LaunchingFragmentDirections.actionLaunchingFragmentToMealDetailsFragment());
-             //.navigate(LaunchingFragmentDirections.actionLaunchingToHome());
+             .navigate(LaunchingFragmentDirections.actionLaunchingToHome());
         }, 5000);
     }
 

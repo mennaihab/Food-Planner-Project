@@ -79,6 +79,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearanceOverlay="@style/CapsuleShape" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/facebook_btn"
+        style="@style/AuthButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/facebook_login"
+        android:textColor="@color/com_facebook_primary_button_text_color"
+        app:backgroundTint="@color/com_facebook_button_background_color_pressed"
+        app:icon="@drawable/ic_facebook_24"
+        app:iconTint="@color/com_facebook_primary_button_text_color"
+        app:layout_constraintBottom_toTopOf="@+id/signup_btn"
+        app:layout_constraintEnd_toStartOf="@+id/google_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/CapsuleShape" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/google_btn"
+        style="@style/AuthButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/google_login"
+        app:backgroundTint="@color/white"
+        app:icon="@drawable/ic_google_24"
+        app:iconTint="@null"
+        app:layout_constraintBottom_toTopOf="@+id/signup_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/facebook_btn"
+        app:shapeAppearanceOverlay="@style/CapsuleShape" />
+
     <TextView
         android:id="@+id/login_tv"
         style="@style/AuthText"
@@ -104,7 +137,7 @@
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:text="@string/slogan"
-        app:layout_constraintBottom_toTopOf="@+id/signup_btn"
+        app:layout_constraintBottom_toTopOf="@id/facebook_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
