@@ -138,4 +138,16 @@
             android:id="@+id/action_mealDetailsFragment_to_searchResults_fragment"
             app:destination="@id/searchResults_fragment" />
     </fragment>
+    <dialog
+        android:id="@+id/loading_fragment"
+        android:name="com.example.foodplanner.features.common.views.LoadingFragment"
+        android:label="LoadingFragment"
+        tools:layout="@layout/fragment_loading" >
+        <argument
+            android:name="operationKey"
+            app:argType="integer" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_loading"
+        app:destination="@id/loading_fragment" />
 </navigation>

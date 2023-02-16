@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.function.Consumer;
 
 
-public class PlanFragment extends Fragment implements OnBackPressedListener {
+public class PlanFragment extends Fragment {
 
 
     private ViewPager2 viewPager;
@@ -83,16 +83,6 @@ public class PlanFragment extends Fragment implements OnBackPressedListener {
         leftBtn.setOnClickListener(v -> {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
         });
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
-            return true;
-        } else {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-            return false;
-        }
     }
 
     private class WeekSlideAdapter extends FragmentStateAdapter {

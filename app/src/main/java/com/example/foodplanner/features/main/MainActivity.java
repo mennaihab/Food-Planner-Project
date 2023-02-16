@@ -1,6 +1,5 @@
 package com.example.foodplanner.features.main;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,28 +7,37 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.os.BuildCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.features.common.views.LoadingFragmentDirections;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
+import com.example.foodplanner.features.common.views.OperationSink;
 import com.example.foodplanner.features.common.views.WindowPainter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements WindowPainter {
+import io.reactivex.rxjava3.core.Completable;
+
+@OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
+public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink {
     private static final String TAG = "MainActivity";
 
     private NavHostFragment navHostFragment;
@@ -81,6 +89,16 @@ public class MainActivity extends AppCompatActivity implements WindowPainter {
             // TODO handle with regard to authentication
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
+
+        if (BuildCompat.isAtLeastT()) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    () -> {
+                        Log.d(TAG, "OnBackInvokedDispatcher: onBackPressed");
+                        onBackPressed();
+                    }
+            );
+        }
     }
 
     @Override
@@ -126,13 +144,32 @@ public class MainActivity extends AppCompatActivity implements WindowPainter {
     }
 
     @Override public void onBackPressed() {
-        final Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-        if ((currentFragment instanceof OnBackPressedListener) && !((OnBackPressedListener) currentFragment).onBackPressed()) {
-            return;
+        Log.d(TAG, "onBackPressed");
+        List<Fragment> fragments = navHostFragment.getChildFragmentManager().getFragments();
+        for (int i = fragments.size()-1; i >= 0; i--) {
+            final Fragment currentFragment = fragments.get(i);
+            Log.d(TAG, "onBackPressed: fragment " + currentFragment);
+            if ((currentFragment instanceof OnBackPressedListener) && ((OnBackPressedListener) currentFragment).onBackPressed()) {
+                return;
+            }
         }
         if (!navController.popBackStack()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public int submitOperation(Completable operation) {
+        int key = FoodPlannerApplication.from(this)
+                .getOperationManager().submitOperation(operation);
+        navController.navigate(LoadingFragmentDirections.actionGlobalLoading(key));
+        return key;
+    }
+
+    @Override
+    public Completable retrieve(int operationKey) {
+        return FoodPlannerApplication.from(this)
+                .getOperationManager().retrieve(operationKey);
     }
 
 
