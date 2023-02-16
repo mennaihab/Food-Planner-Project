@@ -16,11 +16,6 @@ import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.features.common.views.WindowPainter;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class LaunchingFragment extends Fragment {
 
