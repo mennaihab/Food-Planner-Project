@@ -88,10 +88,10 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
     @Override
     public boolean onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
-            return true;
+            return false;
         } else {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-            return false;
+            return true;
         }
     }
 

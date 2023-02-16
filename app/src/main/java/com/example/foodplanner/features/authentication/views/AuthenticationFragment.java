@@ -19,11 +19,17 @@ import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.TextSpan;
 import com.example.foodplanner.core.utils.SpanUtils;
 import com.example.foodplanner.core.utils.TextUtils;
+import com.example.foodplanner.features.common.views.OperationSink;
 import com.example.foodplanner.features.common.views.WindowPainter;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.core.Completable;
 
 public class AuthenticationFragment extends Fragment {
 
     private WindowPainter windowPainter;
+    private OperationSink operationSink;
 
     public AuthenticationFragment() {
         super(R.layout.fragment_authentication);
@@ -33,6 +39,7 @@ public class AuthenticationFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         windowPainter = (WindowPainter) context;
+        operationSink = (OperationSink) context;
     }
 
     @Override
@@ -42,6 +49,14 @@ public class AuthenticationFragment extends Fragment {
 
         setupLogin(view.findViewById(R.id.login_tv));
         setupDisclaimer(view.findViewById(R.id.disclaimer_tv));
+
+        view.findViewById(R.id.facebook_btn).setOnClickListener(e -> {
+            operationSink.submitOperation(Completable.timer(3000, TimeUnit.MILLISECONDS));
+        });
+
+        view.findViewById(R.id.google_btn).setOnClickListener(e -> {
+            operationSink.submitOperation(Completable.timer(3000, TimeUnit.MILLISECONDS));
+        });
 
         view.<Button>findViewById(R.id.skip_btn).setOnClickListener(e->{
             Navigation.findNavController(e).navigate(AuthenticationFragmentDirections.actionAuthenticationToHomeMeal());

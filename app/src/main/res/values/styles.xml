@@ -264,4 +264,18 @@
     <style name="Theme.FoodPlanner.Chip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
     </style>
 
+
+    <style name="MaterialAlertDialog.FoodPlanner" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/ShapeAppearance.FoodPlanner.MediumComponent</item>
+    </style>
+
+    <style name="MaterialAlertDialog.FoodPlanner.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/dark_orange</item>
+    </style>
+
+    <style name="Widget.FoodPlanner.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button.Text</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.FoodPlanner.SmallComponent</item>
+    </style>
+
 </resources>

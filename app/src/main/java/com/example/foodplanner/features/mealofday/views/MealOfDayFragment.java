@@ -17,7 +17,7 @@ import com.example.foodplanner.features.common.views.OnBackPressedListener;
 import java.util.Arrays;
 import java.util.List;
 
-public class MealOfDayFragment extends Fragment implements OnBackPressedListener {
+public class MealOfDayFragment extends Fragment {
     public MealOfDayFragment() {
         super(R.layout.fragment_meal_of_day);
     }
@@ -34,16 +34,6 @@ public class MealOfDayFragment extends Fragment implements OnBackPressedListener
                 new MealOfDayFragment.MealOfDayFirstFragment(),
                 new MealOfDayFragment.MealOfDayFirstFragment()
         )));
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
-            return true;
-        } else {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-            return false;
-        }
     }
 
     private class MealOfDaySlideAdapter extends FragmentStateAdapter {
