@@ -2,6 +2,8 @@ package com.example.foodplanner.features.authentication.services;
 
 import android.app.Activity;
 
+import androidx.activity.ComponentActivity;
+
 import com.example.foodplanner.features.authentication.helpers.AppAuthResult;
 import com.example.foodplanner.features.authentication.helpers.AuthenticationHelper;
 import com.example.foodplanner.features.authentication.helpers.EmailLoginCredentials;
@@ -31,7 +33,7 @@ public class GuestAuthService implements LoginServiceContract<Void> {
     }
 
     @Override
-    public void login(Activity activity, Void ignored) {
+    public void login(ComponentActivity activity, Void ignored) {
         authenticationHelper.onAuthTask(
                 AppAuthResult.Provider.GUEST,
                 firebaseAuth.signInAnonymously()

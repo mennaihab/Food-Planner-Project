@@ -5,17 +5,20 @@ import java.util.Map;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.subjects.CompletableSubject;
 
 public class OperationManagerImpl implements OperationManager {
 
     private final Map<Integer, Completable> operations = new HashMap<>();
-    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
     public int submitOperation(Completable operation) {
         int key = operation.hashCode();
-        disposable.add(operation.subscribe());
-        operations.put(key, operation);
+        operations.put(key, operation.doFinally(() -> {
+            synchronized (operations) {
+                operations.remove(key);
+            }
+        }));
         return key;
     }
 
@@ -26,7 +29,6 @@ public class OperationManagerImpl implements OperationManager {
 
     @Override
     public void close() {
-        disposable.dispose();
         operations.clear();
     }
 }

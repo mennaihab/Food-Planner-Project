@@ -2,6 +2,8 @@ package com.example.foodplanner.features.authentication.services;
 
 import android.app.Activity;
 
+import androidx.activity.ComponentActivity;
+
 import com.example.foodplanner.features.authentication.helpers.AppAuthResult;
 import com.example.foodplanner.features.authentication.helpers.AuthenticationHelper;
 import com.example.foodplanner.features.authentication.helpers.EmailLoginCredentials;
@@ -31,7 +33,7 @@ public class EmailAuthService implements LoginServiceContract<EmailLoginCredenti
     }
 
     @Override
-    public void signup(Activity activity, EmailSignupCredentials credentials) {
+    public void signup(ComponentActivity activity, EmailSignupCredentials credentials) {
         authenticationHelper.onAuthTask(
                 AppAuthResult.Provider.EMAIL,
                 firebaseAuth.createUserWithEmailAndPassword(
@@ -46,7 +48,7 @@ public class EmailAuthService implements LoginServiceContract<EmailLoginCredenti
     }
 
     @Override
-    public void login(Activity activity, EmailLoginCredentials credentials) {
+    public void login(ComponentActivity activity, EmailLoginCredentials credentials) {
         authenticationHelper.onAuthTask(
                 AppAuthResult.Provider.EMAIL,
                 firebaseAuth.signInWithEmailAndPassword(

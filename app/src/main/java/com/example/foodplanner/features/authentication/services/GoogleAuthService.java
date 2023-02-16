@@ -7,9 +7,15 @@ import android.content.IntentSender;
 import android.util.Log;
 
 import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistryOwner;
 import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.features.authentication.helpers.AppAuthResult;
@@ -32,6 +38,7 @@ public class GoogleAuthService implements LoginServiceContract<Void>, SignupServ
     private final AuthenticationHelper authenticationHelper;
     private SignInClient oneTapClient;
     private ActivityResultLauncher<IntentSenderRequest> launcher;
+
     private GoogleAuthService(Context context, AuthenticationHelper authenticationHelper) {
         this.authenticationHelper = authenticationHelper;
         signInRequest = BeginSignInRequest.builder()
@@ -56,17 +63,15 @@ public class GoogleAuthService implements LoginServiceContract<Void>, SignupServ
 
     public void init(ComponentActivity activity) {
         Log.d(TAG, "init");
-        launcher = activity.registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> {
-            onActivityResult(activity, result.getData(), REQ_ONE_TAP);
-        });
+
     }
 
-    public void onActivityResult(Activity activity, Intent intent, int requestCode) {
+    public void onActivityResult(Activity activity, int requestCode, Intent intent) {
         if (requestCode == REQ_ONE_TAP) {
             try {
                 SignInCredential credential = ensureHasClient(activity).getSignInCredentialFromIntent(intent);
                 String idToken = credential.getGoogleIdToken();
-                if (idToken !=  null) {
+                if (idToken != null) {
                     Log.d(TAG, "handleSignInResult:success");
                     AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
                     authenticationHelper.onAuthSuccess(AppAuthResult.Provider.GOOGLE, firebaseCredential);
@@ -81,32 +86,29 @@ public class GoogleAuthService implements LoginServiceContract<Void>, SignupServ
     }
 
     @Override
-    public void signup(Activity activity, Void ignored) {
+    public void signup(ComponentActivity activity, Void ignored) {
         authenticate(activity);
     }
 
     @Override
-    public void login(Activity activity, Void ignored) {
+    public void login(ComponentActivity activity, Void ignored) {
         authenticate(activity);
     }
 
-    public void authenticate(Activity activity) {
+    private void authenticate(ComponentActivity activity) {
         ensureHasClient(activity).beginSignIn(signInRequest).addOnCompleteListener(activity, task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "signInWithCredential:success");
-                if (launcher != null) {
-                    IntentSenderRequest request = new IntentSenderRequest.Builder(task.getResult().getPendingIntent()).build();
-                    launcher.launch(request);
-                } else {
+                launcher = activity.getActivityResultRegistry().register("google-login", new ActivityResultContracts.StartIntentSenderForResult(), result -> {
                     try {
-                        activity.startIntentSenderForResult(
-                                task.getResult().getPendingIntent().getIntentSender(), REQ_ONE_TAP,
-                                null, 0, 0, 0);
-                    } catch (IntentSender.SendIntentException e) {
-                        Log.w(TAG, "signInWithCredential:failure", e);
-                        authenticationHelper.onFailure(AppAuthResult.Provider.GOOGLE, e);
+                        onActivityResult(activity, REQ_ONE_TAP, result.getData());
+                    } finally {
+                        launcher.unregister();
+                        launcher = null;
                     }
-                }
+                });
+                IntentSenderRequest request = new IntentSenderRequest.Builder(task.getResult().getPendingIntent()).build();
+                launcher.launch(request);
             } else {
                 Log.w(TAG, "signInWithCredential:failure", task.getException());
                 authenticationHelper.onFailure(AppAuthResult.Provider.GOOGLE, task.getException());
