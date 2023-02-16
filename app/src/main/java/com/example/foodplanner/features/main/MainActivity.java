@@ -24,6 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.features.common.helpers.Operation;
 import com.example.foodplanner.features.common.views.LoadingFragmentDirections;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
 import com.example.foodplanner.features.common.views.OperationSink;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.subjects.CompletableSubject;
 
 @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
 public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink {
@@ -159,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
     }
 
     @Override
-    public int submitOperation(Completable operation) {
+    public int submitOperation(Operation<?> operation) {
         int key = FoodPlannerApplication.from(this)
                 .getOperationManager().submitOperation(operation);
         navController.navigate(LoadingFragmentDirections.actionGlobalLoading(key));
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
     }
 
     @Override
-    public Completable retrieve(int operationKey) {
+    public Operation<?> retrieve(int operationKey) {
         return FoodPlannerApplication.from(this)
                 .getOperationManager().retrieve(operationKey);
     }

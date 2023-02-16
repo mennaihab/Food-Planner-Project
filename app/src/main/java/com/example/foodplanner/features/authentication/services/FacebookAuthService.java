@@ -72,7 +72,7 @@ public class FacebookAuthService implements LoginServiceContract<Void>, SignupSe
         authenticate(activity);
     }
 
-    public void authenticate(Activity activity) {
+    private void authenticate(Activity activity) {
         loginManager.logIn(activity, Arrays.asList(permissions));
     }
 }

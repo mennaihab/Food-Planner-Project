@@ -9,18 +9,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class AuthenticationHelper {
     private static AuthenticationHelper instance;
     private static final String TAG = "FirebaseLoginService";
     private final FirebaseAuth firebaseAuth;
 
-    private final BehaviorSubject<AppAuthResult> authResult;
+    private final PublishSubject<AppAuthResult> authResult;
 
     private AuthenticationHelper(FirebaseAuth firebaseAuth) {
         this.firebaseAuth = firebaseAuth;
-        this.authResult = BehaviorSubject.create();
+        this.authResult = PublishSubject.create();
     }
 
     public synchronized static AuthenticationHelper create(FirebaseAuth firebaseAuth) {
@@ -31,7 +33,7 @@ public class AuthenticationHelper {
     }
 
     public Observable<AppAuthResult> getAuthResult() {
-        return authResult;
+        return authResult.subscribeOn(Schedulers.io());
     }
 
     public void onFailure(AppAuthResult.Provider provider, Throwable error) {

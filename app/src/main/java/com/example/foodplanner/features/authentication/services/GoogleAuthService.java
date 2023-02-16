@@ -57,11 +57,11 @@ public class GoogleAuthService implements LoginServiceContract<Void>, SignupServ
     public void init(ComponentActivity activity) {
         Log.d(TAG, "init");
         launcher = activity.registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), result -> {
-            onActivityResult(activity, result.getData(), REQ_ONE_TAP);
+            onActivityResult(activity, REQ_ONE_TAP, result.getData());
         });
     }
 
-    public void onActivityResult(Activity activity, Intent intent, int requestCode) {
+    public void onActivityResult(Activity activity, int requestCode, Intent intent) {
         if (requestCode == REQ_ONE_TAP) {
             try {
                 SignInCredential credential = ensureHasClient(activity).getSignInCredentialFromIntent(intent);
@@ -90,7 +90,7 @@ public class GoogleAuthService implements LoginServiceContract<Void>, SignupServ
         authenticate(activity);
     }
 
-    public void authenticate(Activity activity) {
+    private void authenticate(Activity activity) {
         ensureHasClient(activity).beginSignIn(signInRequest).addOnCompleteListener(activity, task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "signInWithCredential:success");

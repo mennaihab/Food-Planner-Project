@@ -1,32 +1,38 @@
 package com.example.foodplanner.features.common.helpers;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-
 public class OperationManagerImpl implements OperationManager {
 
-    private final Map<Integer, Completable> operations = new HashMap<>();
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private final Map<Integer, Operation<?>> operations = new HashMap<>();
+    private final Handler handler = new Handler(Looper.myLooper());
 
     @Override
-    public int submitOperation(Completable operation) {
+    public int submitOperation(Operation<?> operation) {
         int key = operation.hashCode();
-        disposable.add(operation.subscribe());
         operations.put(key, operation);
+        Operation.Canceller[] canceller = new Operation.Canceller[]{null};
+        canceller[0] = operation.addListener((a, e) -> handler.post(() -> {
+            synchronized (operations) {
+                operations.remove(key);
+                canceller[0].cancel();
+            }
+        }));
         return key;
     }
 
     @Override
-    public Completable retrieve(int operationKey) {
+    public Operation<?> retrieve(int operationKey) {
         return operations.get(operationKey);
     }
 
     @Override
     public void close() {
-        disposable.dispose();
         operations.clear();
+        handler.removeCallbacksAndMessages(null);
     }
 }
