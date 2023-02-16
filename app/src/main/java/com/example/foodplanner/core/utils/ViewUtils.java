@@ -1,6 +1,5 @@
 package com.example.foodplanner.core.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
@@ -28,4 +27,5 @@ public abstract class ViewUtils {
         InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
 }

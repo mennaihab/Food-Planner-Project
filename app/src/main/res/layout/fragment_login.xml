@@ -94,7 +94,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button"
+            android:id="@+id/login_btn"
             style="@style/Theme.FoodPlanner.Button.Fat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

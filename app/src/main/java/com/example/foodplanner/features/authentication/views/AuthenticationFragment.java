@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
@@ -29,6 +31,7 @@ import com.example.foodplanner.features.authentication.services.GoogleAuthServic
 import com.example.foodplanner.features.authentication.services.GuestAuthService;
 import com.example.foodplanner.features.common.views.OperationSink;
 import com.example.foodplanner.features.common.views.WindowPainter;
+import com.example.foodplanner.features.mealofday.views.MealOfDayFragmentDirections;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -60,7 +63,7 @@ public class AuthenticationFragment extends Fragment implements AuthenticationVi
         super.onViewCreated(view, savedInstanceState);
         windowPainter.setStatusBarVisibility(false);
 
-        presenter = AuthenticationPresenter.create(requireContext(), this, operationSink);
+        presenter = AuthenticationPresenter.create(requireContext(), getViewLifecycleOwner(), this, operationSink);
 
         setupLogin(view.findViewById(R.id.login_tv));
         setupDisclaimer(view.findViewById(R.id.disclaimer_tv));
@@ -80,12 +83,6 @@ public class AuthenticationFragment extends Fragment implements AuthenticationVi
         view.<Button>findViewById(R.id.signup_btn).setOnClickListener(e->{
             Navigation.findNavController(e).navigate(AuthenticationFragmentDirections.actionAuthenticationToSignup());
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        presenter.onActivityResult(requireActivity(), requestCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setupLogin(TextView textView) {
@@ -111,8 +108,7 @@ public class AuthenticationFragment extends Fragment implements AuthenticationVi
     public void onAuthResult(AppAuthResult authResult) {
         Log.d(TAG, "onAuthResult: " + authResult);
         if (authResult instanceof AppAuthResult.Success) {
-            Navigation.findNavController(requireView())
-                    .navigate(AuthenticationFragmentDirections.actionAuthenticationToHomeMeal());
+            Navigation.findNavController(requireView()).navigate(AuthenticationFragmentDirections.actionGlobalToHome());
         } else if (authResult instanceof AppAuthResult.Failure) {
             Throwable error = ((AppAuthResult.Failure) authResult).getError();
             if (error != null) {

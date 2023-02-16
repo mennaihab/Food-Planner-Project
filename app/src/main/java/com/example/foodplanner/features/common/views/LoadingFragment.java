@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.foodplanner.R;
-import com.example.foodplanner.features.common.helpers.Operation;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -25,7 +22,7 @@ public class LoadingFragment extends DialogFragment implements OnBackPressedList
     private final static String TAG = "LoadingFragment";
 
     private OperationSink operationSink;
-    private Operation.Canceller disposable;
+    private Disposable disposable;
 
     public LoadingFragment() {}
 
@@ -41,13 +38,12 @@ public class LoadingFragment extends DialogFragment implements OnBackPressedList
         super.onCreate(savedInstanceState);
         setCancelable(false);
         int operationKey = LoadingFragmentArgs.fromBundle(requireArguments()).getOperationKey();
-        Operation<?> operation = operationSink.retrieve(operationKey);
+        Completable operation = operationSink.retrieve(operationKey);
         if (operation == null) {
             dismiss();
         } else {
-            disposable = operation.addListener((a, b) -> {
-                new Handler(Looper.myLooper()).post(this::dismiss);
-            });
+            disposable = operation.observeOn(AndroidSchedulers.mainThread())
+                    .doFinally(this::dismiss).subscribe();
         }
     }
 
@@ -64,7 +60,7 @@ public class LoadingFragment extends DialogFragment implements OnBackPressedList
 
     @Override
     public void onDestroy() {
-        if (disposable != null) disposable.cancel();
+        if (disposable != null) disposable.dispose();
         super.onDestroy();
     }
 

@@ -1,8 +1,8 @@
 package com.example.foodplanner.features.authentication.services;
 
-import android.app.Activity;
 import android.util.Log;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 
 import com.example.foodplanner.features.authentication.helpers.AppAuthResult;
@@ -22,11 +22,13 @@ public class FacebookAuthService implements LoginServiceContract<Void>, SignupSe
     private static final String TAG = "FacebookLoginService";
     private static final String[] permissions = new String[]{"public_profile", "email"};
     private static FacebookAuthService instance;
+    private final CallbackManager callbackManager;
     private final LoginManager loginManager;
 
     private FacebookAuthService(AuthenticationHelper authenticationHelper,
                                 CallbackManager callbackManager,
                                 LoginManager loginManager) {
+        this.callbackManager = callbackManager;
         this.loginManager = loginManager;
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -63,16 +65,16 @@ public class FacebookAuthService implements LoginServiceContract<Void>, SignupSe
     }
 
     @Override
-    public void login(Activity activity, Void ignored) {
+    public void login(ComponentActivity activity, Void ignored) {
         authenticate(activity);
     }
 
     @Override
-    public void signup(Activity activity, Void ignored) {
+    public void signup(ComponentActivity activity, Void ignored) {
         authenticate(activity);
     }
 
-    private void authenticate(Activity activity) {
-        loginManager.logIn(activity, Arrays.asList(permissions));
+    private void authenticate(ComponentActivity activity) {
+        loginManager.logIn(activity, callbackManager, Arrays.asList(permissions));
     }
 }
