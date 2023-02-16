@@ -3,6 +3,7 @@ package com.example.foodplanner.features.common.remote;
 import com.example.foodplanner.features.common.helpers.RemoteMealWrapper;
 import com.example.foodplanner.features.common.models.Area;
 import com.example.foodplanner.features.common.models.Ingredient;
+import com.example.foodplanner.features.common.models.Meal;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.services.RemoteClient;
 import com.example.foodplanner.features.search.helpers.RemoteCategoriesWrapper;
@@ -26,6 +27,9 @@ public interface MealRemoteService {
 
     @GET("json/v1/1/categories.php")
     Single<RemoteCategoriesWrapper> listCategories();
+
+    @GET("json/v1/1/lookup.php")
+    Single<RemoteMealWrapper<Meal>>listMealDetails();
 
     @GET("json/v1/1/search.php")
     Single<RemoteMealWrapper<MealItem>> searchByName(@Query("s") String name);

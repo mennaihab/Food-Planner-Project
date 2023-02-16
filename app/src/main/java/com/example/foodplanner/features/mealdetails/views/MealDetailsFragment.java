@@ -1,9 +1,7 @@
 package com.example.foodplanner.features.mealdetails.views;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,38 +9,36 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
-import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.features.common.models.Meal;
-import com.example.foodplanner.features.common.models.MealItem;
-import com.example.foodplanner.features.search.adapters.IngredientsListAdapter;
-import com.example.foodplanner.features.search.helpers.SearchCriteria;
+import com.example.foodplanner.features.mealdetails.adapters.IngredientsAdapter;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MealDetailsFragment extends Fragment {
+public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     private RecyclerView recyclerView;
+    IngredientsAdapter listAdapter;
+    private static final String TAG = "MealDetailsFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +53,8 @@ public class MealDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.ingredients_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        IngredientsAdapter listAdapter = new IngredientsAdapter();
+        IngredientsAdapter listAdapter;
+        listAdapter = new IngredientsAdapter();
         recyclerView.setAdapter(listAdapter);
         listAdapter.updateList(itemList());
         recyclerView.setLayoutManager(layoutManager);
@@ -88,5 +85,21 @@ public class MealDetailsFragment extends Fragment {
         ChildItemList.add(new Meal.Ingredient("Oil", "30g"));
         ChildItemList.add(new Meal.Ingredient("Ginger", "20g"));
         return ChildItemList;
+    }
+
+
+
+    @Override
+    public void updateMealDetails(Meal meal) {
+        recyclerView.setVisibility(View.VISIBLE);
+        listAdapter.updateList(meal.getIngredients());
+    }
+
+
+
+    @Override
+    public void onLoadFailure(Throwable error) {
+        Log.e(TAG, error.getLocalizedMessage(), error);
+        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }
