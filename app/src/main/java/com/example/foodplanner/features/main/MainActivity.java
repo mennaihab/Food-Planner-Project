@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
         for (int i = fragments.size()-1; i >= 0; i--) {
             final Fragment currentFragment = fragments.get(i);
             Log.d(TAG, "onBackPressed: fragment " + currentFragment);
-            if ((currentFragment instanceof OnBackPressedListener) && ((OnBackPressedListener) currentFragment).onBackPressed()) {
+            if ((currentFragment instanceof OnBackPressedListener) &&
+                    ((OnBackPressedListener) currentFragment).onBackPressed()) {
                 return;
             }
         }

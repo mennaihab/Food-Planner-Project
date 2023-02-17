@@ -8,6 +8,7 @@ import com.example.foodplanner.features.authentication.helpers.AppAuthResult;
 import com.example.foodplanner.features.authentication.helpers.AuthenticationHelper;
 import com.example.foodplanner.features.authentication.helpers.EmailLoginCredentials;
 import com.example.foodplanner.features.authentication.helpers.EmailSignupCredentials;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -49,9 +50,9 @@ public class EmailAuthService implements LoginServiceContract<EmailLoginCredenti
 
     @Override
     public void login(ComponentActivity activity, EmailLoginCredentials credentials) {
-        authenticationHelper.onAuthTask(
+        authenticationHelper.onAuthSuccess(
                 AppAuthResult.Provider.EMAIL,
-                firebaseAuth.signInWithEmailAndPassword(
+                EmailAuthProvider.getCredential(
                         credentials.getEmail(),
                         credentials.getPassword()
                 )
