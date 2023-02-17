@@ -55,8 +55,7 @@ public class AuthenticationHelper {
         task.addOnCompleteListener(result -> {
             if (result.isSuccessful()) {
                 Log.d(TAG, "signInWithCredential:success");
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                authResult.onNext(new AppAuthResult.Success(provider, user));
+                authResult.onNext(new AppAuthResult.Success(provider, result.getResult().getUser()));
             } else {
                 Log.w(TAG, "signInWithCredential:failure", result.getException());
                 onFailure(provider, result.getException());

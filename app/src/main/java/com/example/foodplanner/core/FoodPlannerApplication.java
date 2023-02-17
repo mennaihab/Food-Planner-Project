@@ -3,19 +3,18 @@ package com.example.foodplanner.core;
 import android.app.Application;
 import android.content.Context;
 
-import com.example.foodplanner.features.common.helpers.OperationManager;
+import com.example.foodplanner.features.common.helpers.AuthenticationManagerImpl;
+import com.example.foodplanner.features.common.services.AuthenticationManager;
+import com.example.foodplanner.features.common.services.OperationManager;
 import com.example.foodplanner.features.common.helpers.OperationManagerImpl;
 import com.facebook.appevents.AppEventsLogger;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class FoodPlannerApplication extends Application {
 
     private final OperationManager operationManager = new OperationManagerImpl();
+    private AuthenticationManager authenticationManager;
 
     public static FoodPlannerApplication from(Context context) {
         return (FoodPlannerApplication) context.getApplicationContext();
@@ -24,7 +23,9 @@ public class FoodPlannerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseApp.initializeApp(this);
         AppEventsLogger.activateApp(this);
+        authenticationManager = new AuthenticationManagerImpl(FirebaseAuth.getInstance());
     }
 
     @Override
@@ -36,4 +37,5 @@ public class FoodPlannerApplication extends Application {
     public OperationManager getOperationManager() {
         return operationManager;
     }
+    public AuthenticationManager getAuthenticationManager() { return authenticationManager; }
 }
