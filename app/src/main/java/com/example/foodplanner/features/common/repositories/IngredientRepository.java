@@ -20,6 +20,7 @@ public class IngredientRepository {
         fetchDelegate = new RepositoryFetchDelegate<>(
                 a -> mealRemoteService.listIngredients(),
                 b -> ingredientDAO.getAll(),
+                null,
                 ingredientDAO::insertAll,
                 mapper
         );

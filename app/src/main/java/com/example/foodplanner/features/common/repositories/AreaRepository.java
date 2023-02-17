@@ -22,6 +22,7 @@ public class AreaRepository {
         fetchDelegate = new RepositoryFetchDelegate<>(
                 a -> mealRemoteService.listAreas(),
                 b -> areaDAO.getAll(),
+                null,
                 areaDAO::insertAll,
                 mapper
         );

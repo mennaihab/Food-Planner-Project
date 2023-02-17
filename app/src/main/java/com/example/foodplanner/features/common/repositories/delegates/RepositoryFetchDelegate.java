@@ -15,41 +15,65 @@ import io.reactivex.rxjava3.core.Single;
 public class RepositoryFetchDelegate<Arg, M, E> {
 
     private final Function<Arg, Single<? extends RemoteModelWrapper<M>>> remoteService;
+    private final Function<List<M>, Completable> remoteCacheService;
     private final Function<Arg, Flowable<List<E>>> localService;
     private final Function<List<E>, Completable> localCacheService;
     private final BaseMapper<M, E> mapper;
 
     public RepositoryFetchDelegate(Function<Arg, Single<? extends RemoteModelWrapper<M>>> remoteService,
                                    Function<Arg, Flowable<List<E>>> localService,
+                                   Function<List<M>, Completable> remoteCacheService,
                                    Function<List<E>, Completable> localCacheService,
                                    BaseMapper<M, E> mapper) {
         this.remoteService = remoteService;
         this.localService = localService;
+        this.remoteCacheService = remoteCacheService;
         this.localCacheService = localCacheService;
         this.mapper = mapper;
     }
 
     public Flowable<List<M>> fetch(Arg arg) {
-        Flowable<List<M>> fromRemote = fetchFromRemote(arg);
+        Flowable<List<M>> accumulation;
+        if (remoteService != null) {
+            accumulation = fetchFromRemote(arg);
+        } else {
+            accumulation = fetchFromLocal(arg);
+        }
+        return accumulation;
+    }
+
+    private Flowable<List<M>> fetchFromRemote(Arg arg) {
+        Flowable<List<M>> fromRemote = fetchFromRemoteImpl(arg).toFlowable();
+        if (localCacheService != null) {
+            fromRemote = fromRemote.flatMap(list -> cacheRemoteResults(list).andThen(Flowable.just(list)));
+        }
         if (localService != null) {
-            fromRemote = fromRemote.onErrorResumeWith(getFallback(arg));
+            fromRemote = fromRemote.onErrorResumeWith(getRemoteFallback(arg));
         }
         return fromRemote;
     }
 
-    private Flowable<List<M>> fetchFromRemote(Arg arg) {
-        Single<List<M>> fromRemote = remoteService.apply(arg).map(RemoteModelWrapper::getItems)
+    private Flowable<List<M>> fetchFromLocal(Arg arg) {
+        Flowable<List<M>> fromLocal = fetchFromLocalImpl(arg);
+        if (remoteCacheService != null) {
+            fromLocal = fromLocal.flatMap(list -> cacheLocalResults(list).andThen(Flowable.just(list)));
+        }
+        return fromLocal;
+    }
+
+    private Flowable<List<M>> getRemoteFallback(Arg arg) {
+        return fetchFromLocalImpl(arg);
+    }
+
+    private Single<List<M>> fetchFromRemoteImpl(Arg arg) {
+        return remoteService.apply(arg).map(RemoteModelWrapper::getItems)
                 .map(list -> {
                     if (list == null) return Collections.emptyList();
                     return list;
                 });
-        if (localCacheService != null) {
-            fromRemote = fromRemote.flatMap(list -> cacheRemoteResults(list).andThen(Single.just(list)));
-        }
-        return fromRemote.toFlowable();
     }
 
-    private Flowable<List<M>> getFallback(Arg arg) {
+    private Flowable<List<M>> fetchFromLocalImpl(Arg arg) {
         return localService.apply(arg).map(list -> list.stream()
                 .map(mapper::toModel).collect(Collectors.toList()));
     }
@@ -57,7 +81,11 @@ public class RepositoryFetchDelegate<Arg, M, E> {
     private Completable cacheRemoteResults(List<M> objects) {
         return localCacheService.apply(
                 objects.stream().map(mapper::toEntity)
-                .collect(Collectors.toList())
+                        .collect(Collectors.toList())
         );
+    }
+
+    private Completable cacheLocalResults(List<M> objects) {
+        return remoteCacheService.apply(objects);
     }
 }

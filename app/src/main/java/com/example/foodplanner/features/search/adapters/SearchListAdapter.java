@@ -1,34 +1,42 @@
 package com.example.foodplanner.features.search.adapters;
 
-import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestFutureTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.foodplanner.R;
-import com.example.foodplanner.features.common.models.Ingredient;
 import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
     private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+
+    private final SearchClickListener clickListener;
+
+    public SearchListAdapter(SearchClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
     @NonNull
     @Override
@@ -51,7 +59,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         mDiffer.submitList(list);
     }
 
-    public static final DiffUtil.ItemCallback<MealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MealItem>() {
+    private static final DiffUtil.ItemCallback<MealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MealItem>() {
         @Override
         public boolean areItemsTheSame(@NonNull MealItem oldIng, @NonNull MealItem newIng) {
             return oldIng.getId().equals(newIng.getId());
@@ -63,25 +71,39 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         }
     };
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView image;
         private final TextView name;
+        private final Button favourite;
 
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.meal_img);
             name = itemView.findViewById(R.id.meal_name);
-            itemView.findViewById(R.id.meal_rating).setVisibility(View.GONE);
+            favourite = itemView.findViewById(R.id.meal_favourite);
         }
 
-        private void bind(MealItem ingredient) {
-            name.setText(ingredient.getName());
+        private void bind(MealItem item) {
+            Log.d("TAG", "Updated!!!" + item.getName());
+            name.setText(item.getName());
             Glide.with(itemView)
                     .asBitmap()
-                    .load(ingredient.getThumbnail() + "/preview") // TODO: extract
+                    .load(item.getThumbnail() + "/preview") // TODO: extract
                     .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
                     .error(R.drawable.ic_launcher_background) // TODO: change
                     .into(image);
+
+            Glide.with(favourite)
+                    .load(item.isFavourite() ? R.drawable.favourite : R.drawable.ic_favorite_border)
+                    .into(new RequestFutureTarget<Drawable>(favourite.getWidth(), favourite.getHeight()) {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            favourite.setBackground(resource);
+                        }
+                    });
+
+            itemView.setOnClickListener(e -> clickListener.onClick(item));
+            favourite.setOnClickListener(e -> clickListener.onFavourite(item));
         }
     }
 }

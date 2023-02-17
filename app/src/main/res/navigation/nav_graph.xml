@@ -59,7 +59,13 @@
         android:id="@+id/home_favourites_fragment"
         android:name="com.example.foodplanner.features.favourites.views.FavouritesFragment"
         android:label="@string/title_home_favourites"
-        tools:layout="@layout/fragment_favourites" />
+        tools:layout="@layout/fragment_favourites" >
+        <argument
+            android:name="selectionResultKey"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/home_plan_fragment"

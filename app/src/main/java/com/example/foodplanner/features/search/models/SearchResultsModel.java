@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 public interface SearchResultsModel {
     /**
@@ -16,6 +17,7 @@ public interface SearchResultsModel {
      */
     Flowable<Optional<List<MealItem>>> getResults();
     void filter(SearchCriteria criteria);
+    Single<MealItem> updateFavourite(MealItem mealItem);
     void saveInstance(Bundle outBundle);
     void close();
 }
