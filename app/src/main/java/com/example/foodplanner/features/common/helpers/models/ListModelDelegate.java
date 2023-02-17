@@ -1,4 +1,4 @@
-package com.example.foodplanner.features.search.models;
+package com.example.foodplanner.features.common.helpers.models;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -10,17 +10,21 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SearchFilterModelDelegate<T extends Parcelable> {
+public class ListModelDelegate<T extends Parcelable> {
     protected final Flowable<List<T>> data;
     private final String key;
 
-    public SearchFilterModelDelegate(Bundle savedInstanceState, String key, Flowable<List<T>> remoteSource) {
+    public ListModelDelegate(Bundle savedInstanceState, String key, Flowable<List<T>> source) {
         this.key = key;
         if (savedInstanceState != null && savedInstanceState.containsKey(key)) {
             data = Flowable.just(savedInstanceState.getParcelableArrayList(key));
         } else {
-            data = remoteSource.subscribeOn(Schedulers.io());
+            data = source.subscribeOn(Schedulers.io());
         }
+    }
+
+    public Flowable<List<T>> getData() {
+        return data;
     }
 
     public void saveInstance(Bundle outBundle) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +23,12 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
     private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
-    public FavouritesAdapter() {
+    private final FavouriteClickListener clickListener;
+    private final boolean enableRemove;
+
+    public FavouritesAdapter(boolean enableRemove, FavouriteClickListener itemListener) {
+        this.clickListener = itemListener;
+        this.enableRemove = enableRemove;
     }
 
     public void updateList(List<MealItem> items) {
@@ -52,16 +58,23 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     public class FavouritesViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final ImageView img;
+        private final Button remove;
 
         private FavouritesViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.meal_name);
             img = itemView.findViewById(R.id.meal_img);
+            remove = itemView.findViewById(R.id.meal_remove);
+            if (!enableRemove) {
+                remove.setVisibility(View.GONE);
+            }
         }
 
         private void bindData(MealItem item) {
             name.setText(item.getName());
             Glide.with(img).load(item.getThumbnail()).into(img);
+            itemView.setOnClickListener(e -> clickListener.onClick(item));
+            remove.setOnClickListener(e -> clickListener.onFavourite(item));
         }
     }
 

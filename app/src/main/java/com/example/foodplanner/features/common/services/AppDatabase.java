@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 
 import com.example.foodplanner.features.common.entities.AreaEntity;
 import com.example.foodplanner.features.common.entities.CategoryEntity;
+import com.example.foodplanner.features.common.entities.FavouriteMealEntity;
 import com.example.foodplanner.features.common.entities.IngredientEntity;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.entities.PlanDayEntity;
@@ -18,6 +19,7 @@ import com.example.foodplanner.features.common.helpers.convertors.LocalDateConve
 import com.example.foodplanner.features.common.helpers.convertors.StringListConvertor;
 import com.example.foodplanner.features.common.local.AreaDAO;
 import com.example.foodplanner.features.common.local.CategoryDAO;
+import com.example.foodplanner.features.common.local.FavouriteMealDAO;
 import com.example.foodplanner.features.common.local.IngredientDAO;
 import com.example.foodplanner.features.common.local.MealItemDAO;
 import com.example.foodplanner.features.common.local.PlanDayDAO;
@@ -28,7 +30,13 @@ import com.example.foodplanner.features.common.local.PlanDayDAO;
         IngredientEntity.class,
         MealItemEntity.class,
         PlanDayEntity.class,
-}, exportSchema = false, version = 1)
+        FavouriteMealEntity.class,
+},
+views = {
+        PlanDayEntity.Full.class,
+        FavouriteMealEntity.Full.class,
+},
+exportSchema = false, version = 1)
 @TypeConverters({
         IngredientListConvertor.class,
         LocalDateConvertor.class,
@@ -51,4 +59,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract IngredientDAO ingredientDAO();
     public abstract MealItemDAO mealItemDAO();
     public abstract PlanDayDAO planDayDAO();
+
+    public abstract FavouriteMealDAO favouriteMealDAO();
 }

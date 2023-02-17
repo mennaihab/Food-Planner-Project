@@ -29,6 +29,9 @@ public class BaseMapper<M, E> {
             To model = toClass.newInstance();
             for (Field field: from.getClass().getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers())) {
+                    MapperInfo mapperInfo = field.getAnnotation(MapperInfo.class);
+                    if (mapperInfo != null && mapperInfo.ignored())
+                        continue;
                     try {
                         Field eField = model.getClass().getDeclaredField(field.getName());
                         field.setAccessible(true);

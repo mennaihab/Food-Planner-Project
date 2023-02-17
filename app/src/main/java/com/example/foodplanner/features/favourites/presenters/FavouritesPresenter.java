@@ -1,4 +1,4 @@
-package com.example.foodplanner.features.search.presenters;
+package com.example.foodplanner.features.favourites.presenters;
 
 import android.os.Bundle;
 
@@ -8,23 +8,21 @@ import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.foodplanner.features.common.models.MealItem;
-import com.example.foodplanner.features.search.helpers.SearchCriteria;
-import com.example.foodplanner.features.search.models.SearchIngredientsModel;
-import com.example.foodplanner.features.search.models.SearchResultsModel;
-import com.example.foodplanner.features.search.views.SearchIngredientsView;
-import com.example.foodplanner.features.search.views.SearchResultsView;
+import com.example.foodplanner.features.favourites.models.FavouriteMealsModel;
+import com.example.foodplanner.features.favourites.views.FavouritesView;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
-public class SearchResultsPresenter implements LifecycleEventObserver {
-    private final SearchResultsView view;
-    private final SearchResultsModel searchResultsModel;
+public class FavouritesPresenter implements LifecycleEventObserver {
+
+    private final FavouritesView view;
+    private final FavouriteMealsModel favouritesModel;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    public SearchResultsPresenter(LifecycleOwner lifecycleOwner, SearchResultsView view, SearchResultsModel searchResultsModel) {
+    public FavouritesPresenter(LifecycleOwner lifecycleOwner, FavouritesView view, FavouriteMealsModel favouritesModel) {
         this.view = view;
-        this.searchResultsModel = searchResultsModel;
+        this.favouritesModel = favouritesModel;
         lifecycleOwner.getLifecycle().addObserver(this);
     }
 
@@ -37,28 +35,23 @@ public class SearchResultsPresenter implements LifecycleEventObserver {
         }
     }
 
-    public void filter(SearchCriteria criteria) {
-        searchResultsModel.filter(criteria);
-    }
-
     public void updateFavourite(MealItem mealItem) {
-        disposable.add(searchResultsModel.updateFavourite(mealItem)
+        disposable.add(favouritesModel.updateFavourite(mealItem)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(view::onFavouriteSuccess, (e) -> view.onFavouriteFailure(mealItem, e)));
     }
 
     private void init() {
-        disposable.add(searchResultsModel.getResults()
+        disposable.add(favouritesModel.getMeals()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::updateResults, view::onLoadFailure));
+                .subscribe(view::updateFavourites, view::onLoadFailure));
     }
 
     private void close() {
         disposable.dispose();
-        searchResultsModel.close();
     }
 
     public void saveInstance(Bundle outState) {
-        searchResultsModel.saveInstance(outState);
+        favouritesModel.saveInstance(outState);
     }
 }

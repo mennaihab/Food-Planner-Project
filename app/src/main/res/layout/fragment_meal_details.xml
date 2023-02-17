@@ -203,7 +203,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ingredients_recycler" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/favorite"
+            android:id="@+id/meal_remove"
             android:layout_width="wrap_content"
             android:layout_height="37dp"
             android:layout_alignParentTop="true"

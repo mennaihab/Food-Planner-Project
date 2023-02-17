@@ -12,20 +12,19 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-16dp" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/meal_remove"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/circle_grey"
         android:elevation="2dp"
-        android:src="@drawable/ic_close"
+        android:foreground="@drawable/ic_close"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.981"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
