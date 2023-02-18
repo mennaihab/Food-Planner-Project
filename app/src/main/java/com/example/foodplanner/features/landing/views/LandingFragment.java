@@ -19,6 +19,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.helpers.TextSpan;
 import com.example.foodplanner.core.utils.SpanUtils;
 import com.example.foodplanner.core.utils.TextUtils;
@@ -81,7 +82,7 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
 
 
         nextBtn.setOnClickListener(e -> viewPager.setCurrentItem(viewPager.getCurrentItem() + 1));
-        getStartedBtn.setOnClickListener(e -> Navigation.findNavController(e).navigate(LandingFragmentDirections.actionLandingToAuthentication()));
+        getStartedBtn.setOnClickListener(this::gotoAuthentication);
         underlineSkip(skipTV);
     }
 
@@ -96,10 +97,13 @@ public class LandingFragment extends Fragment implements OnBackPressedListener {
     }
 
     public void underlineSkip(TextView textView){
-        textView.setText(SpanUtils.createSpannable("SKIP", TextSpan.of(SpanUtils.createClickableSpan(e -> {
-            Navigation.findNavController(textView).navigate(LandingFragmentDirections.actionLandingToAuthentication());
-        }))));
+        textView.setText(SpanUtils.createSpannable("SKIP", TextSpan.of(SpanUtils.createClickableSpan(this::gotoAuthentication))));
         TextUtils.makeClickable(textView);
+    }
+
+    private void gotoAuthentication(View view) {
+        FoodPlannerApplication.from(requireContext()).getSettingsManager().setHasShownLanding(true);
+        Navigation.findNavController(view).navigate(LandingFragmentDirections.actionLandingToAuthentication());
     }
 
     private class LandingPageSlideAdapter extends FragmentStateAdapter {

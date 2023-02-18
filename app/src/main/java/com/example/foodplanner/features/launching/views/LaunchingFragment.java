@@ -17,9 +17,11 @@ import androidx.navigation.Navigation;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.features.common.services.AuthenticationManager;
+import com.example.foodplanner.features.common.services.SettingsManager;
 import com.example.foodplanner.features.common.views.WindowPainter;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +60,7 @@ public class LaunchingFragment extends Fragment {
         windowPainter.setStatusBarVisibility(false);
 
         AuthenticationManager authManager = FoodPlannerApplication.from(requireContext()).getAuthenticationManager();
+        SettingsManager settingsManager = FoodPlannerApplication.from(requireContext()).getSettingsManager();
 
         disposable = Single.zip(
                 authManager.getCurrentUserObservable().firstOrError(),
@@ -66,6 +69,9 @@ public class LaunchingFragment extends Fragment {
             if (user.isPresent() && !user.get().isAnonymous()) {
                 Navigation.findNavController(view)
                         .navigate(LaunchingFragmentDirections.actionGlobalToHome());
+            } else if (Objects.equals(settingsManager.hasShownLanding(), true)){
+                Navigation.findNavController(view)
+                        .navigate(LaunchingFragmentDirections.actionLaunchingToAuthentication());
             } else {
                 Navigation.findNavController(view)
                         .navigate(LaunchingFragmentDirections.actionLaunchingToLanding());

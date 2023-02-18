@@ -1,23 +1,23 @@
-package com.example.foodplanner.features.common.helpers;
+package com.example.foodplanner.features.common.repositories;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.foodplanner.features.common.services.SettingsManager;
 
-public class SettingsManagerImpl implements SettingsManager {
+public class SettingsRepository implements SettingsManager {
     private static final String SETTINGS_FILE = "app_settings";
     private static final String HAS_SHOWN_LANDING = "HAS_SHOWN_LANDING";
 
     private final SharedPreferences preferences;
 
-    public SettingsManagerImpl(SharedPreferences preferences) {
+    public SettingsRepository(SharedPreferences preferences) {
         this.preferences = preferences;
     }
 
-    public static SettingsManagerImpl create(Context context) {
+    public static SettingsRepository create(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SETTINGS_FILE, Context.MODE_PRIVATE);
-        return new SettingsManagerImpl(sharedPreferences);
+        return new SettingsRepository(sharedPreferences);
     }
 
     @Override
