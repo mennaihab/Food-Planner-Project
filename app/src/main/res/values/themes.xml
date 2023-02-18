@@ -16,6 +16,9 @@
         <item name="colorOnTertiary">@color/white</item>
         <item name="android:textColorTertiary">@color/white</item>
 
+        <item name="colorSurface">@color/light_grey</item>
+        <item name="colorOnSurface">@color/pale_orange</item>
+
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <!-- Customize your theme here. -->
@@ -33,6 +36,8 @@
         <item name="toolbarStyle">@style/Theme.FoodPlanner.ToolbarStyle</item>
 
         <item name="textInputStyle">@style/Theme.FoodPlanner.TextInputLayout</item>
+
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.FoodPlanner.MaterialAlertDialog</item>
 
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.FoodPlanner.Headline1</item>
@@ -52,6 +57,17 @@
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.FoodPlanner.SmallComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.FoodPlanner.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.FoodPlanner.LargeComponent</item>
+    </style>
+
+    <style name="ThemeOverlay.FoodPlanner.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/light_grey</item>
+        <item name="colorSecondary">@color/pale_orange</item>
+        <item name="colorSurface">@color/light_grey</item>
+        <item name="colorOnSurface">@color/pale_orange</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.FoodPlanner</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.FoodPlanner.Title.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.FoodPlanner.Button</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.FoodPlanner.Button</item>
     </style>
 
 </resources>

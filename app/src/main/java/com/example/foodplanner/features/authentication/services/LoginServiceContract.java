@@ -10,7 +10,7 @@ import com.example.foodplanner.features.authentication.helpers.AuthenticationHel
 import com.google.firebase.auth.FirebaseAuth;
 
 public interface LoginServiceContract<T> {
-    void login(Activity activity, T credentials);
+    void login(ComponentActivity activity, T credentials);
 
     static LoginServiceContract<?> create(AppAuthResult.Provider provider,
                                            Context context,

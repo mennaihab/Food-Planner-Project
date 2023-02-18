@@ -15,14 +15,33 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.features.common.services.AuthenticationManager;
 import com.example.foodplanner.features.common.views.WindowPainter;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class LaunchingFragment extends Fragment {
 
     private WindowPainter windowPainter;
+    private Disposable disposable;
 
     public LaunchingFragment() {
         super(R.layout.fragment_launching);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        windowPainter = (WindowPainter) context;
     }
 
     @Override
@@ -38,17 +57,25 @@ public class LaunchingFragment extends Fragment {
         windowPainter.setStatusBarColor(Color.TRANSPARENT);
         windowPainter.setStatusBarVisibility(false);
 
-        view.postDelayed(() -> {
-            Navigation.findNavController(view)
-             .navigate(LaunchingFragmentDirections.actionLaunchingToHome());
-        }, 5000);
-    }
+        AuthenticationManager authManager = FoodPlannerApplication.from(requireContext()).getAuthenticationManager();
 
+        disposable = Single.zip(
+                authManager.getCurrentUserObservable().firstOrError(),
+                Single.timer(3000, TimeUnit.MILLISECONDS),
+                (user, ignored) -> user).observeOn(AndroidSchedulers.mainThread()).subscribe(user -> {
+            if (user.isPresent() && !user.get().isAnonymous()) {
+                Navigation.findNavController(view)
+                        .navigate(LaunchingFragmentDirections.actionGlobalToHome());
+            } else {
+                Navigation.findNavController(view)
+                        .navigate(LaunchingFragmentDirections.actionLaunchingToLanding());
+            }
+        });
+    }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        windowPainter = (WindowPainter) context;
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (disposable != null) disposable.dispose();
     }
-
 }

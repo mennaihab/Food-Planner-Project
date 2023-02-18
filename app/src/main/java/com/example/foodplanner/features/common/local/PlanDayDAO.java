@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.MapInfo;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.foodplanner.features.common.entities.MealItemEntity;
@@ -18,12 +19,18 @@ import io.reactivex.rxjava3.core.Flowable;
 
 @Dao
 public interface PlanDayDAO {
-    @Query("SELECT * FROM plandayentity JOIN mealitementity on plandayentity.mealId = mealitementity.id")
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND active = 1")
     @MapInfo(keyColumn = "day")
-    Flowable<Map<LocalDate, List<MealItemEntity>>> getAll();
+    Flowable<Map<LocalDate, List<MealItemEntity>>> getAllActive(String userId);
 
-    @Insert
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId")
+    Flowable<List<PlanDayEntity.Full>> getAll(String userId);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(PlanDayEntity... days);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Completable insertAll(List<PlanDayEntity> days);
 
     @Delete
     Completable delete(PlanDayEntity day);

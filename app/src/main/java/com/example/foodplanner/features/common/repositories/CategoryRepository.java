@@ -26,6 +26,7 @@ public class CategoryRepository {
         fetchDelegate = new RepositoryFetchDelegate<>(
                 a -> mealRemoteService.listCategories(),
                 b -> categoryDAO.getAll(),
+                null,
                 categoryDAO::insertAll,
                 mapper
         );

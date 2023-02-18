@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface SearchResultsView {
     void updateResults(Optional<List<MealItem>> results);
     void onLoadFailure(Throwable error);
+    void onFavouriteSuccess(MealItem mealItem);
+    void onFavouriteFailure(MealItem mealItem, Throwable error);
 }

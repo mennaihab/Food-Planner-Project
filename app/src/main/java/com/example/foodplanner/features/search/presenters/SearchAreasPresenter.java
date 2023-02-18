@@ -3,8 +3,10 @@ package com.example.foodplanner.features.search.presenters;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.foodplanner.features.search.models.SearchAreasModel;

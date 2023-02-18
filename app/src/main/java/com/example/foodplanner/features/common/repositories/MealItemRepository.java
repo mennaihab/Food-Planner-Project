@@ -24,11 +24,13 @@ public class MealItemRepository {
         fetchByNameDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByName,
                 mealItemDAO::getAllWhereNameContains,
+                null,
                 mealItemDAO::insertAll,
                 mapper
         );
         fetchByCategoryDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByCategory,
+                null,
                 null,
                 mealItemDAO::insertAll,
                 mapper
@@ -36,19 +38,17 @@ public class MealItemRepository {
         fetchByAreaDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByArea,
                 null,
+                null,
                 mealItemDAO::insertAll,
                 mapper
         );
         fetchByIngredientDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByIngredient,
                 null,
+                null,
                 mealItemDAO::insertAll,
                 mapper
         );
-    }
-
-    public Flowable<List<MealItem>> searchByName(String name) {
-        return fetchByNameDelegate.fetch(name);
     }
 
     public Flowable<List<MealItem>> filter(SearchCriteria criteria) {
