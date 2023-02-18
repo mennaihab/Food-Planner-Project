@@ -35,28 +35,20 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     IngredientsAdapter listAdapter;
     private static final String TAG = "MealDetailsFragment";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meal_details, container,
-                false);
+    public MealDetailsFragment(){
+        super(R.layout.fragment_meal_details);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         recyclerView = view.findViewById(R.id.ingredients_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         IngredientsAdapter listAdapter;
         listAdapter = new IngredientsAdapter();
         recyclerView.setAdapter(listAdapter);
-        listAdapter.updateList(itemList());
+        //listAdapter.updateList(itemList());
         recyclerView.setLayoutManager(layoutManager);
         ConstraintLayout constraintLayout = view.findViewById(R.id.constraintLayout);
         Flow flow = view.findViewById(R.id.flow);
@@ -93,6 +85,16 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     public void updateMealDetails(Meal meal) {
         recyclerView.setVisibility(View.VISIBLE);
         listAdapter.updateList(meal.getIngredients());
+        List<String> tags = meal.getTags();
+        for (int i = 0; i <tags.size(); i++) {
+            Chip chip = new Chip(getContext());
+            chip.setText(tags.get(i));
+            chip.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            chip.setId(View.generateViewId());
+            constraintLayout.addView(chip);
+            flow.addView(chip);
+
+        }
     }
 
 
