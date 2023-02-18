@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MealDetailsView {
 
-        void updateMealDetails(Meal meals);
+        void updateMealDetails(Meal meal);
         void onLoadFailure(Throwable error);
 
 }

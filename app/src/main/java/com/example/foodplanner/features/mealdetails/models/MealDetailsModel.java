@@ -9,6 +9,6 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Flowable;
 
 public interface MealDetailsModel {
-    Flowable<List<Meal>> getMealDetails();
+    Flowable<Meal> getMealDetails();
     void saveInstance(Bundle outBundle);
 }

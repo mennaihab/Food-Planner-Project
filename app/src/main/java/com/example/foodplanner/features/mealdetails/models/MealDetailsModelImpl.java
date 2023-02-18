@@ -1,16 +1,18 @@
 package com.example.foodplanner.features.mealdetails.models;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import com.example.foodplanner.features.common.models.Meal;
 import com.example.foodplanner.features.common.repositories.MealDetailsRepository;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MealDetailsModelImpl implements MealDetailsModel {
+public class MealDetailsModelImpl  implements  MealDetailsModel {
     protected final Flowable<List<Meal>> data;
     private static final String MEALDETAILS = "MEALDETAILS";
 
@@ -21,7 +23,6 @@ public class MealDetailsModelImpl implements MealDetailsModel {
             data = mealDetailsService.getAll().subscribeOn(Schedulers.io());
         }
     }
-
     @Override
     public void saveInstance(Bundle outBundle) {
         List<Meal> mealDetails = this.data.onErrorReturnItem(Collections.emptyList()).blockingSingle();
@@ -30,7 +31,12 @@ public class MealDetailsModelImpl implements MealDetailsModel {
         }
     }
     @Override
-    public Flowable<List<Meal>> getMealDetails() {
-        return data;
+    public Flowable<Meal> getMealDetails() {
+        Flowable<Meal> meal = data
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.get(0));
+
+        return meal;
     }
+
 }

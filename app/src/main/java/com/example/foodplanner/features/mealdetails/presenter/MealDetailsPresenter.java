@@ -1,15 +1,12 @@
 package com.example.foodplanner.features.mealdetails.presenter;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
-
 import com.example.foodplanner.features.mealdetails.models.MealDetailsModel;
 import com.example.foodplanner.features.mealdetails.views.MealDetailsView;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -37,7 +34,7 @@ public class MealDetailsPresenter implements LifecycleEventObserver {
     private void init() {
         disposable.add(mealDetailsModel.getMealDetails()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> view.updateMealDetails(meals.get(0)), view::onLoadFailure));
+                .subscribe(view::updateMealDetails, view::onLoadFailure));
     }
 
     private void close() {
