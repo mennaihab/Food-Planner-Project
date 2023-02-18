@@ -1,13 +1,8 @@
 package com.example.foodplanner.features.common.repositories;
 
-import com.example.foodplanner.features.common.entities.AreaEntity;
 import com.example.foodplanner.features.common.entities.CategoryEntity;
-import com.example.foodplanner.features.common.helpers.RemoteMealWrapper;
-import com.example.foodplanner.features.common.helpers.RemoteModelWrapper;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
-import com.example.foodplanner.features.common.local.AreaDAO;
 import com.example.foodplanner.features.common.local.CategoryDAO;
-import com.example.foodplanner.features.common.models.Area;
 import com.example.foodplanner.features.common.models.Category;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.common.repositories.delegates.RepositoryFetchDelegate;
