@@ -7,7 +7,7 @@
     android:layout_height="300dp">
 
     <include
-        android:id="@+id/include2"
+        android:id="@+id/meal_card"
         layout="@layout/meal_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
