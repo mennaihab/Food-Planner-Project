@@ -35,6 +35,7 @@ import com.example.foodplanner.features.favourites.models.FavouriteMealsModelImp
 import com.example.foodplanner.features.favourites.presenters.FavouritesPresenter;
 import com.example.foodplanner.features.search.models.SearchAreasModelImpl;
 import com.example.foodplanner.features.search.presenters.SearchAreasPresenter;
+import com.example.foodplanner.features.search.views.SearchResultsFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,7 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
             @Override
             public void onClick(MealItem item) {
                 if (selectionResultKey == null) {
-                    // TODO navigate to MealDetails
+                    Navigation.findNavController(view).navigate(FavouritesFragmentDirections.actionGlobalMeal(item.getId()));
                 } else {
                     NavigationUtils.setResult(view, selectionResultKey, item);
                     NavigationUtils.navigateUp(view);

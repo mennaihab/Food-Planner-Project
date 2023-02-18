@@ -2,8 +2,15 @@ package com.example.foodplanner.features.mealdetails.views;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.helper.widget.Flow;
@@ -11,16 +18,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
-import com.example.foodplanner.features.common.entities.MealDetailsEntity;
+import com.example.foodplanner.features.common.entities.MealEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
 import com.example.foodplanner.features.common.models.Meal;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
@@ -30,23 +31,26 @@ import com.example.foodplanner.features.mealdetails.adapters.IngredientsAdapter;
 import com.example.foodplanner.features.mealdetails.models.MealDetailsModelImpl;
 import com.example.foodplanner.features.mealdetails.presenter.MealDetailsPresenter;
 import com.google.android.material.chip.Chip;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+
 import java.util.List;
 
 
 public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     private RecyclerView recyclerView;
-    IngredientsAdapter listAdapter;
-    ConstraintLayout constraintLayout;
-    Flow flow;
-    VideoView videoView;
-    TextView mealName;
-    TextView mealCategory;
-    TextView mealArea;
-    TextView mealInstructions;
-    VideoView youtube;
-    ImageView mealThumbnail;
-    TextView mealSource;
+    private IngredientsAdapter listAdapter;
+    private ConstraintLayout constraintLayout;
+    private Flow flow;
+    private TextView mealName;
+    private TextView mealCategory;
+    private TextView mealArea;
+    private TextView mealInstructions;
+    private YouTubePlayerView youtube;
+    private ImageView mealThumbnail;
+    private TextView mealSource;
 
 
     private static final String TAG = "MealDetailsFragment";
@@ -59,6 +63,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        String mealId = MealDetailsFragmentArgs.fromBundle(requireArguments()).getMealId();
+
         recyclerView = view.findViewById(R.id.ingredients_recycler);
         mealName = view.findViewById(R.id.meal_name_tv);
         mealArea = view.findViewById(R.id.country_tv);
@@ -72,41 +79,21 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
                 getViewLifecycleOwner(),
                 this,
                 new MealDetailsModelImpl(savedInstanceState,
+                        mealId,
                         new MealDetailsRepository(
                                 MealRemoteService.create(),
                                 AppDatabase.getInstance(requireContext()).mealDetailsDAO(),
-                                new BaseMapper<>(Meal.class, MealDetailsEntity.class)
+                                new BaseMapper<>(Meal.class, MealEntity.class)
                         )
                 )
         );
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        IngredientsAdapter listAdapter;
         listAdapter = new IngredientsAdapter();
         recyclerView.setAdapter(listAdapter);
-        //listAdapter.updateList(itemList());
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         constraintLayout = view.findViewById(R.id.constraintLayout);
         flow = view.findViewById(R.id.flow);
-        VideoView videoView;
-        videoView = view.findViewById(R.id.videoView);
-        //videoView.setVideoPath("android.resource://" + getActivity().getPackageName() + "/" + R.raw.video);
-        MediaController mediaController = new MediaController(getContext());
-        mediaController.setAnchorView(videoView);
-        videoView.setMediaController(mediaController);
-
+        getViewLifecycleOwner().getLifecycle().addObserver(youtube);
     }
-
-   /* private List<Meal.Ingredient> itemList() {
-        List<Meal.Ingredient> ChildItemList = new ArrayList<>(4);
-        ChildItemList.add(new Meal.Ingredient("Butter", "20g"));
-        ChildItemList.add(new Meal.Ingredient("Tomato", "40g"));
-        ChildItemList.add(new Meal.Ingredient("Oil", "30g"));
-        ChildItemList.add(new Meal.Ingredient("Ginger", "20g"));
-        return ChildItemList;
-
-    }
-    */
-
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -123,9 +110,12 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         mealCategory.setText(meal.getCategory());
         mealArea.setText(meal.getArea());
         mealInstructions.setText(meal.getInstructions());
-        youtube.setVideoPath(meal.getYoutube());
-        videoView.start();
-        mealThumbnail.setImageBitmap(BitmapFactory.decodeFile(meal.getThumbnail()));
+        setupVideoPlayer(meal.getYoutube());
+        Glide.with(mealThumbnail)
+                .load(meal.getThumbnail())
+                .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
+                .error(R.drawable.ic_launcher_background) // TODO: change
+                .into(mealThumbnail);
         mealSource.setText(meal.getSource());
         List<String> tags = meal.getTags();
         for (int i = 0; i < tags.size(); i++) {
@@ -135,6 +125,31 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
             chip.setId(View.generateViewId());
             constraintLayout.addView(chip);
             flow.addView(chip);
+        }
+    }
+
+    private void setupVideoPlayer(String youtubeUrl) {
+        final String videoId;
+        if (youtubeUrl != null) {
+            Uri uri = Uri.parse(youtubeUrl);
+            videoId = uri.getQueryParameter("v");
+        } else {
+            videoId = null;
+        }
+        if (videoId != null) {
+            if (Boolean.TRUE.equals(youtube.getTag())) {
+                return;
+            }
+            youtube.setVisibility(View.VISIBLE);
+            youtube.setTag(true);
+            youtube.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                @Override
+                public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                    youTubePlayer.cueVideo(videoId, 0);
+                }
+            });
+        } else {
+            youtube.setVisibility(View.GONE);
         }
     }
 

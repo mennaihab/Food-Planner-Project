@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -85,7 +86,7 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
 
             @Override
             public void onClick(MealItem item) {
-                // TODO navigate to MealDetails
+                Navigation.findNavController(view).navigate(SearchResultsFragmentDirections.actionGlobalMeal(item.getId()));
             }
         });
         list.setAdapter(listAdapter);

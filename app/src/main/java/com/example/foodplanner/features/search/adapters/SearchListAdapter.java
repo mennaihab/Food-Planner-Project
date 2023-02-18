@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,6 +73,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     };
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private final CardView card;
         private final ImageView image;
         private final TextView name;
         private final Button favourite;
@@ -81,6 +83,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
             image = itemView.findViewById(R.id.meal_img);
             name = itemView.findViewById(R.id.meal_name);
             favourite = itemView.findViewById(R.id.meal_favourite);
+            card = itemView.findViewById(R.id.meal_card);
         }
 
         private void bind(MealItem item) {
@@ -101,7 +104,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
                         }
                     });
 
-            itemView.setOnClickListener(e -> clickListener.onClick(item));
+            card.setOnClickListener(e -> clickListener.onClick(item));
             favourite.setOnClickListener(e -> clickListener.onFavourite(item));
         }
     }

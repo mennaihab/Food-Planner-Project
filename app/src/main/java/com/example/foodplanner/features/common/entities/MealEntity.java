@@ -8,7 +8,7 @@ import com.example.foodplanner.features.common.models.Meal;
 
 import java.util.List;
 @Entity
-public class MealDetailsEntity {
+public class MealEntity {
 
 
     @PrimaryKey

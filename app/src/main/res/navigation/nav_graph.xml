@@ -27,9 +27,6 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/launching_fragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_launching_fragment_to_mealDetailsFragment"
-            app:destination="@id/mealDetailsFragment" />
     </fragment>
 
     <fragment
@@ -119,13 +116,13 @@
             app:argType="com.example.foodplanner.features.search.helpers.SearchCriteria" />
     </fragment>
     <fragment
-        android:id="@+id/mealDetailsFragment"
+        android:id="@+id/mealDetails_fragment"
         android:name="com.example.foodplanner.features.mealdetails.views.MealDetailsFragment"
         android:label="fragment_meal_details"
         tools:layout="@layout/fragment_meal_details" >
-        <action
-            android:id="@+id/action_mealDetailsFragment_to_searchResults_fragment"
-            app:destination="@id/searchResults_fragment" />
+        <argument
+            android:name="mealId"
+            app:argType="string" />
     </fragment>
     <dialog
         android:id="@+id/loading_fragment"
@@ -147,4 +144,7 @@
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_meal"
+        app:destination="@id/mealDetails_fragment" />
 </navigation>
