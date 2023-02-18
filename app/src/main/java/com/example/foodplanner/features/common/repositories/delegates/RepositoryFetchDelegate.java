@@ -1,6 +1,6 @@
 package com.example.foodplanner.features.common.repositories.delegates;
 
-import com.example.foodplanner.features.common.helpers.RemoteModelWrapper;
+import com.example.foodplanner.features.common.helpers.RemoteListWrapper;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
 
 import java.util.Collections;
@@ -14,13 +14,13 @@ import io.reactivex.rxjava3.core.Single;
 
 public class RepositoryFetchDelegate<Arg, M, E> {
 
-    private final Function<Arg, Single<? extends RemoteModelWrapper<M>>> remoteService;
+    private final Function<Arg, Single<? extends RemoteListWrapper<M>>> remoteService;
     private final Function<List<M>, Completable> remoteCacheService;
     private final Function<Arg, Flowable<List<E>>> localService;
     private final Function<List<E>, Completable> localCacheService;
     private final BaseMapper<M, E> mapper;
 
-    public RepositoryFetchDelegate(Function<Arg, Single<? extends RemoteModelWrapper<M>>> remoteService,
+    public RepositoryFetchDelegate(Function<Arg, Single<? extends RemoteListWrapper<M>>> remoteService,
                                    Function<Arg, Flowable<List<E>>> localService,
                                    Function<List<M>, Completable> remoteCacheService,
                                    Function<List<E>, Completable> localCacheService,
@@ -66,7 +66,7 @@ public class RepositoryFetchDelegate<Arg, M, E> {
     }
 
     private Flowable<List<M>> fetchFromRemoteImpl(Arg arg) {
-        return remoteService.apply(arg).map(RemoteModelWrapper::getItems)
+        return remoteService.apply(arg).map(RemoteListWrapper::getItems)
                 .map(list -> {
                     if (list == null) return Collections.<M>emptyList();
                     return list;

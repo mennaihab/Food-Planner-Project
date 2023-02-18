@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RemoteMealWrapper<T> implements RemoteModelWrapper<T> {
+public class RemoteMealListWrapper<T> implements RemoteListWrapper<T> {
     @SerializedName("meals")
     private final List<T> items;
 
-    public RemoteMealWrapper(List<T> meals) {
+    public RemoteMealListWrapper(List<T> meals) {
         this.items = meals;
     }
 
