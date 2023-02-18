@@ -84,7 +84,6 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         }
 
         private void bind(MealItem item) {
-            Log.d("TAG", "Updated!!!" + item.getName());
             name.setText(item.getName());
             Glide.with(itemView)
                     .asBitmap()

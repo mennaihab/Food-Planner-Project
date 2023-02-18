@@ -9,12 +9,14 @@ import com.example.foodplanner.features.common.repositories.IngredientRepository
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class SearchIngredientsModelImpl implements SearchIngredientsModel {
     private static final String INGREDIENTS = "INGREDIENTS";
     private final ListModelDelegate<Ingredient> delegate;
     public SearchIngredientsModelImpl(Bundle savedInstanceState, IngredientRepository ingredientService) {
-        delegate = new ListModelDelegate<>(savedInstanceState, INGREDIENTS, ingredientService.getAll());
+        delegate = new ListModelDelegate<>(savedInstanceState, INGREDIENTS, ingredientService.getAll().firstOrError());
     }
 
     @Override
@@ -23,7 +25,7 @@ public class SearchIngredientsModelImpl implements SearchIngredientsModel {
     }
 
     @Override
-    public Flowable<List<Ingredient>> getIngredients() {
+    public Single<List<Ingredient>> getIngredients() {
         return delegate.getData();
     }
 

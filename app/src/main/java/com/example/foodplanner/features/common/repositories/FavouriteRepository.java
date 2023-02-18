@@ -48,9 +48,9 @@ public class FavouriteRepository {
 
     public Completable removeFromFavourite(MealItem mealItem, String userId) {
         FavouriteMealEntity entity = new FavouriteMealEntity();
-        entity.active = true;
+        entity.active = false;
         entity.mealId = mealItem.getId();
         entity.userId = userId;
-        return favouriteMealDAO.delete(entity).subscribeOn(Schedulers.io());
+        return favouriteMealDAO.updateAll(entity).subscribeOn(Schedulers.io());
     }
 }

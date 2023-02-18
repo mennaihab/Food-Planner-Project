@@ -43,7 +43,7 @@ public class RepositoryFetchDelegate<Arg, M, E> {
     }
 
     private Flowable<List<M>> fetchFromRemote(Arg arg) {
-        Flowable<List<M>> fromRemote = fetchFromRemoteImpl(arg).toFlowable();
+        Flowable<List<M>> fromRemote = fetchFromRemoteImpl(arg);
         if (localCacheService != null) {
             fromRemote = fromRemote.flatMap(list -> cacheRemoteResults(list).andThen(Flowable.just(list)));
         }
@@ -65,12 +65,12 @@ public class RepositoryFetchDelegate<Arg, M, E> {
         return fetchFromLocalImpl(arg);
     }
 
-    private Single<List<M>> fetchFromRemoteImpl(Arg arg) {
+    private Flowable<List<M>> fetchFromRemoteImpl(Arg arg) {
         return remoteService.apply(arg).map(RemoteModelWrapper::getItems)
                 .map(list -> {
-                    if (list == null) return Collections.emptyList();
+                    if (list == null) return Collections.<M>emptyList();
                     return list;
-                });
+                }).toFlowable();
     }
 
     private Flowable<List<M>> fetchFromLocalImpl(Arg arg) {
