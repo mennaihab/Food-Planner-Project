@@ -1,5 +1,6 @@
 package com.example.foodplanner.features.main;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;

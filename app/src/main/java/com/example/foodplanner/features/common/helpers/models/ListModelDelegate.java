@@ -8,29 +8,37 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ListModelDelegate<T extends Parcelable> {
-    protected final Flowable<List<T>> data;
+    protected final Single<List<T>> data;
+    private final List<T> latestData = new ArrayList<>();
     private final String key;
 
-    public ListModelDelegate(Bundle savedInstanceState, String key, Flowable<List<T>> source) {
+    public ListModelDelegate(Bundle savedInstanceState,
+                             String key,
+                             Single<List<T>> source) {
         this.key = key;
         if (savedInstanceState != null && savedInstanceState.containsKey(key)) {
-            data = Flowable.just(savedInstanceState.getParcelableArrayList(key));
+            latestData.addAll(savedInstanceState.getParcelableArrayList(key));
+            data = Single.just(latestData);
         } else {
-            data = source.subscribeOn(Schedulers.io());
+            data = source.subscribeOn(Schedulers.io()).doOnSuccess(data -> {
+                latestData.clear();
+                latestData.addAll(data);
+            });
         }
     }
 
-    public Flowable<List<T>> getData() {
+    public Single<List<T>> getData() {
         return data;
     }
 
     public void saveInstance(Bundle outBundle) {
-        List<T> ingredients = this.data.onErrorReturnItem(Collections.emptyList()).blockingSingle();
-        if (!ingredients.isEmpty()) {
-            outBundle.putParcelableArrayList(key, new ArrayList<>(ingredients));
+        if (!latestData.isEmpty()) {
+            outBundle.putParcelableArrayList(key, new ArrayList<>(latestData));
         }
     }
 }

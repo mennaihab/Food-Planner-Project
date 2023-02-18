@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.MapInfo;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.foodplanner.features.common.entities.FavouriteMealEntity;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
@@ -30,6 +31,12 @@ public interface FavouriteMealDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(List<FavouriteMealEntity> days);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Completable updateAll(FavouriteMealEntity... days);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    Completable updateAll(List<FavouriteMealEntity> days);
 
     @Delete
     Completable delete(FavouriteMealEntity day);

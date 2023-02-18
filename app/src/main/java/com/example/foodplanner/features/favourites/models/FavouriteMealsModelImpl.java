@@ -8,18 +8,19 @@ import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.repositories.FavouriteRepository;
 import com.example.foodplanner.features.common.services.AuthenticationManager;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
-import kotlinx.coroutines.flow.Flow;
 
 public class FavouriteMealsModelImpl implements FavouriteMealsModel {
     private static final String FAVOURITES = "FAVOURITES";
+    private final Flowable<List<MealItem>> source;
 
-    private final ListModelDelegate<MealItem> delegate;
+    private final List<MealItem> latestData = new ArrayList<>();
+
     private final AuthenticationManager authenticationManager;
     private final FavouriteRepository favouriteRepository;
 
@@ -28,24 +29,32 @@ public class FavouriteMealsModelImpl implements FavouriteMealsModel {
                                    FavouriteRepository favouriteRepository) {
         this.authenticationManager = authenticationManager;
         this.favouriteRepository = favouriteRepository;
-        delegate = new ListModelDelegate<>(
-                savedInstanceState,
-                FAVOURITES,
-                authenticationManager.getCurrentUserObservable()
-                        .toFlowable(BackpressureStrategy.LATEST)
-                        .flatMap(user -> {
-                            String userId = UserUtils.getUserId(user);
-                            if (userId == null) {
-                                return Flowable.error(new Exception("You have to be logged in.")); // TODO
-                            }
-                            return favouriteRepository.getAllForUser(userId);
-                        })
-        );
+        Flowable<List<MealItem>> source = authenticationManager.getCurrentUserObservable()
+                .toFlowable(BackpressureStrategy.LATEST)
+                .flatMap(user -> {
+                    String userId = UserUtils.getUserId(user);
+                    if (userId == null) {
+                        return Flowable.error(new Exception("You have to be logged in.")); // TODO
+                    }
+                    return favouriteRepository.getAllForUser(userId);
+                }).doOnNext(mealItems -> {
+                    latestData.clear();
+                    latestData.addAll(mealItems);
+                });
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(FAVOURITES)) {
+            latestData.addAll(savedInstanceState.getParcelableArrayList(FAVOURITES));
+            source = source.startWithItem(latestData);
+        }
+
+        this.source = source;
     }
 
     @Override
     public void saveInstance(Bundle outBundle) {
-        delegate.saveInstance(outBundle);
+        if (!latestData.isEmpty()) {
+            outBundle.putParcelableArrayList(FAVOURITES, new ArrayList<>(latestData));
+        }
     }
 
     @Override
@@ -67,7 +76,7 @@ public class FavouriteMealsModelImpl implements FavouriteMealsModel {
 
     @Override
     public Flowable<List<MealItem>> getMeals() {
-        return delegate.getData();
+        return source;
     }
 
 }

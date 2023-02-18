@@ -123,7 +123,6 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
 
     @Override
     public void updateResults(Optional<List<MealItem>> results) {
-        Log.d(TAG, "Updated!!!");
         if (results.isPresent()) {
             list.setVisibility(View.VISIBLE);
             listAdapter.updateIngredients(results.get());
