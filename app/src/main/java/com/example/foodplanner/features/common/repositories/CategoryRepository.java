@@ -22,7 +22,7 @@ public class CategoryRepository {
                 a -> mealRemoteService.listCategories(),
                 b -> categoryDAO.getAll(),
                 null,
-                categoryDAO::insertAll,
+                (arg, list) -> categoryDAO.insertAll(list),
                 mapper
         );
     }

@@ -34,6 +34,9 @@ public interface MealRemoteService {
     @GET("json/v1/1/search.php")
     Single<RemoteMealListWrapper<MealItem>> searchByName(@Query("s") String name);
 
+    @GET("json/v1/1/random.php")
+    Single<RemoteMealItemWrapper<MealItem>> randomMeal();
+
     @GET("json/v1/1/filter.php")
     Single<RemoteMealListWrapper<MealItem>> searchByIngredient(@Query("i") String ingredient);
 

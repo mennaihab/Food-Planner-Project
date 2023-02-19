@@ -22,7 +22,7 @@ public class AreaRepository {
                 a -> mealRemoteService.listAreas(),
                 b -> areaDAO.getAll(),
                 null,
-                areaDAO::insertAll,
+                (arg, list) -> areaDAO.insertAll(list),
                 mapper
         );
     }

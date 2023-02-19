@@ -20,10 +20,13 @@ import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.helpers.mappers.FavouriteMealMapper;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.remote.impl.FavouritesBackupServiceImpl;
 import com.example.foodplanner.features.common.repositories.FavouriteRepository;
 import com.example.foodplanner.features.common.repositories.MealItemRepository;
 import com.example.foodplanner.features.common.services.AppDatabase;
@@ -52,11 +55,10 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         SearchCriteria criteria = SearchResultsFragmentArgs.fromBundle(requireArguments()).getCriteria();
-
         presenter = new SearchResultsPresenter(
-                getViewLifecycleOwner(),
                 this,
                 new SearchResultsModelImpl(
                         savedInstanceState,
@@ -69,30 +71,35 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
                         ),
                         new FavouriteRepository(
                                 AppDatabase.getInstance(requireContext()).favouriteMealDAO(),
-                                new BaseMapper<>(MealItem.class, MealItemEntity.class)
+                                AppDatabase.getInstance(requireContext()).mealItemDAO(),
+                                new FavouritesBackupServiceImpl(FoodPlannerApplication.from(requireContext()).getFirestore()),
+                                new FavouriteMealMapper(new BaseMapper<>(MealItem.class, MealItemEntity.class))
                         )
                 )
         );
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        SearchCriteria criteria = presenter.getCriteria();
         list = view.findViewById(R.id.items_list);
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 16), 2, LinearLayoutManager.VERTICAL)
         );
         listAdapter = new SearchListAdapter(new SearchClickListener() {
             @Override
-            public void onFavourite(MealItem item) {
+            public void onFavourite(FavouriteMealItem item) {
                 presenter.updateFavourite(item);
             }
 
             @Override
-            public void onClick(MealItem item) {
-                Navigation.findNavController(view).navigate(SearchResultsFragmentDirections.actionGlobalMeal(item.getId()));
+            public void onClick(FavouriteMealItem item) {
+                Navigation.findNavController(view).navigate(SearchResultsFragmentDirections.actionGlobalToMeal(item.getMeal().getId()));
             }
         });
         list.setAdapter(listAdapter);
         LinearLayoutManager ingredientsLayout = new GridLayoutManager(requireContext(), 2);
         list.setLayoutManager(ingredientsLayout);
-
         TextInputLayout searchBarLayout = view.findViewById(R.id.search_edl);
         EditText searchBar = view.findViewById(R.id.search_edv);
         Chip criteriaChip = view.findViewById(R.id.search_criteria);
@@ -112,8 +119,10 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
         } else {
             searchBarLayout.setVisibility(View.GONE);
             criteriaChip.setCloseIconVisible(false);
-            criteriaChip.setText(criteria.getCriteria());
+            criteriaChip.setText(presenter.getCriteria().getCriteria());
         }
+
+        presenter.init(getViewLifecycleOwner());
     }
 
     @Override
@@ -123,7 +132,7 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     }
 
     @Override
-    public void updateResults(Optional<List<MealItem>> results) {
+    public void updateResults(Optional<List<FavouriteMealItem>> results) {
         if (results.isPresent()) {
             list.setVisibility(View.VISIBLE);
             listAdapter.updateIngredients(results.get());
@@ -139,12 +148,12 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     }
 
     @Override
-    public void onFavouriteSuccess(MealItem mealItem) {
+    public void onFavouriteSuccess(FavouriteMealItem mealItem) {
 
     }
 
     @Override
-    public void onFavouriteFailure(MealItem mealItem, Throwable error) {
+    public void onFavouriteFailure(FavouriteMealItem mealItem, Throwable error) {
         Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }

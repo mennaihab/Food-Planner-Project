@@ -2,7 +2,10 @@ package com.example.foodplanner.features.search.models;
 
 import android.os.Bundle;
 
+import androidx.core.util.Pair;
+
 import com.example.foodplanner.core.utils.UserUtils;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.repositories.FavouriteRepository;
 import com.example.foodplanner.features.common.repositories.MealItemRepository;
@@ -59,26 +62,36 @@ public class SearchResultsModelImpl implements SearchResultsModel {
     }
 
     @Override
-    public Flowable<Optional<List<MealItem>>> getResults() {
-        Flowable<List<String>> favourites = authenticationManager
+    public Flowable<Optional<List<FavouriteMealItem>>> getResults() {
+        Flowable<Pair<String, List<String>>> favourites = authenticationManager
                 .getCurrentUserObservable()
                 .toFlowable(BackpressureStrategy.LATEST)
-                .flatMap(user -> favouriteRepository
-                        .getAllForUser(UserUtils.getUserId(user))
-                        .map(items -> items.stream()
-                                .map(MealItem::getId)
-                                .collect(Collectors.toList()))
-                );
+                .flatMap(user -> {
+                    String userId = UserUtils.getUserId(user);
+                    return favouriteRepository.getAllIdsForUser(userId).map(ids -> {
+                        return Pair.create(userId, ids);
+                    });
+                });
         return searchResults.toFlowable(BackpressureStrategy.LATEST).flatMap(mealItems -> {
+            Flowable<Optional<List<FavouriteMealItem>>> result;
             if (mealItems.isPresent()) {
-                return favourites.map(favouritesIds -> {
+                result = favourites.map(favouritesIds -> {
                    return mealItems.map(meals -> meals.stream().map(meal -> {
-                       return meal.setFavourite(favouritesIds.contains(meal.getId()));
+                       return new FavouriteMealItem(favouritesIds.first, favouritesIds.second.contains(meal.getId()), meal);
                    }).collect(Collectors.toList()));
                 });
+            } else {
+                result =  Flowable.just(mealItems.map(items -> {
+                    return items.stream().map(item -> new FavouriteMealItem(null, false, item)).collect(Collectors.toList());
+                }));
             }
-            return Flowable.just(mealItems);
+            return result;
         });
+    }
+
+    @Override
+    public SearchCriteria getCriteria() {
+        return criteria;
     }
 
     @Override
@@ -106,19 +119,16 @@ public class SearchResultsModelImpl implements SearchResultsModel {
     }
 
     @Override
-    public Single<MealItem> updateFavourite(MealItem mealItem) {
+    public Single<FavouriteMealItem> updateFavourite(FavouriteMealItem mealItem) {
         String userId = UserUtils.getUserId(authenticationManager.getCurrentUser());
         if (userId == null) {
             return Single.error(new Exception("You have to be logged in.")); // TODO
         }
+        FavouriteMealItem item = mealItem.copy();
         if (mealItem.isFavourite()) {
-            return favouriteRepository.removeFromFavourite(mealItem, userId).andThen(Single.create(emitter -> {
-                emitter.onSuccess(mealItem.setFavourite(false));
-            }));
+            return favouriteRepository.removeFromFavourite(mealItem, userId);
         } else {
-            return favouriteRepository.addToFavourite(mealItem, userId).andThen(Single.create(emitter -> {
-                emitter.onSuccess(mealItem.setFavourite(true));
-            }));
+            return favouriteRepository.addToFavourite(mealItem, userId);
         }
     }
 

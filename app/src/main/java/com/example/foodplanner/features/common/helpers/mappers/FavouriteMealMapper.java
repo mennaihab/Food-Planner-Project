@@ -1,15 +1,17 @@
 package com.example.foodplanner.features.common.helpers.mappers;
 
+import com.example.foodplanner.features.common.entities.FavouriteMealEntity;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.entities.PlanDayEntity;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.models.PlanMealItem;
 
-public class PlanMealMapper extends BaseMapper<PlanMealItem, PlanDayEntity.Full> {
+public class FavouriteMealMapper extends BaseMapper<FavouriteMealItem, FavouriteMealEntity.Full> {
     private final BaseMapper<MealItem, MealItemEntity> mealMapper;
 
-    public PlanMealMapper(BaseMapper<MealItem, MealItemEntity> mealMapper) {
-        super(PlanMealItem.class, PlanDayEntity.Full.class);
+    public FavouriteMealMapper(BaseMapper<MealItem, MealItemEntity> mealMapper) {
+        super(FavouriteMealItem.class, FavouriteMealEntity.Full.class);
         this.mealMapper = mealMapper;
     }
 

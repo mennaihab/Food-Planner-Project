@@ -21,7 +21,7 @@ public class IngredientRepository {
                 a -> mealRemoteService.listIngredients(),
                 b -> ingredientDAO.getAll(),
                 null,
-                ingredientDAO::insertAll,
+                (arg, list) -> ingredientDAO.insertAll(list),
                 mapper
         );
     }

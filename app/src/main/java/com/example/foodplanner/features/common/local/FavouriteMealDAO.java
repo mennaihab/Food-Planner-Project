@@ -14,17 +14,25 @@ import com.example.foodplanner.features.common.entities.MealItemEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 
 @Dao
 public interface FavouriteMealDAO {
-    @Query("SELECT * FROM favouritemealentityview WHERE userId = :userId AND active = 1")
-    Flowable<List<MealItemEntity>> getAllActive(String userId);
 
     @Query("SELECT * FROM favouritemealentityview WHERE userId = :userId")
     Flowable<List<FavouriteMealEntity.Full>> getAll(String userId);
+
+    @Query("SELECT * FROM favouritemealentityview WHERE userId = :userId AND active = 1")
+    Flowable<List<FavouriteMealEntity.Full>> getAllActive(String userId);
+
+    @Query("SELECT id FROM favouritemealentityview WHERE userId = :userId AND active = 1")
+    Flowable<List<String>> getAllActiveIds(String userId);
+
+    @Query("SELECT * FROM favouritemealentityview WHERE userId = :userId AND id = :mealId")
+    Flowable<Optional<FavouriteMealEntity.Full>> getById(String userId, String mealId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(FavouriteMealEntity... days);

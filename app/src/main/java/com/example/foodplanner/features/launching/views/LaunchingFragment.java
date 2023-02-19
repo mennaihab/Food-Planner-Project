@@ -68,7 +68,7 @@ public class LaunchingFragment extends Fragment {
                 (user, ignored) -> user).observeOn(AndroidSchedulers.mainThread()).subscribe(user -> {
             if (user.isPresent() && !user.get().isAnonymous()) {
                 Navigation.findNavController(view)
-                        .navigate(LaunchingFragmentDirections.actionGlobalToHome());
+                        .navigate(LaunchingFragmentDirections.actionGlobalMainGraph());
             } else if (Objects.equals(settingsManager.hasShownLanding(), true)){
                 Navigation.findNavController(view)
                         .navigate(LaunchingFragmentDirections.actionLaunchingToAuthentication());

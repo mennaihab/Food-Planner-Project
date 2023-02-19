@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestFutureTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.foodplanner.R;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
-    private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+    private final AsyncListDiffer<FavouriteMealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
     private final SearchClickListener clickListener;
 
@@ -56,18 +57,18 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         return mDiffer.getCurrentList().size();
     }
 
-    public void updateIngredients(List<MealItem> list) {
+    public void updateIngredients(List<FavouriteMealItem> list) {
         mDiffer.submitList(list);
     }
 
-    private static final DiffUtil.ItemCallback<MealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MealItem>() {
+    private static final DiffUtil.ItemCallback<FavouriteMealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<FavouriteMealItem>() {
         @Override
-        public boolean areItemsTheSame(@NonNull MealItem oldIng, @NonNull MealItem newIng) {
-            return oldIng.getId().equals(newIng.getId());
+        public boolean areItemsTheSame(@NonNull FavouriteMealItem oldIng, @NonNull FavouriteMealItem newIng) {
+            return oldIng.getMeal().getId().equals(newIng.getMeal().getId());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull MealItem oldIng, @NonNull MealItem newIng) {
+        public boolean areContentsTheSame(@NonNull FavouriteMealItem oldIng, @NonNull FavouriteMealItem newIng) {
             return oldIng.equals(newIng);
         }
     };
@@ -86,11 +87,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
             card = itemView.findViewById(R.id.meal_card);
         }
 
-        private void bind(MealItem item) {
-            name.setText(item.getName());
+        private void bind(FavouriteMealItem item) {
+            name.setText(item.getMeal().getName());
             Glide.with(itemView)
                     .asBitmap()
-                    .load(item.getThumbnail() + "/preview") // TODO: extract
+                    .load(item.getMeal().getThumbnail() + "/preview") // TODO: extract
                     .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
                     .error(R.drawable.ic_launcher_background) // TODO: change
                     .into(image);

@@ -21,14 +21,14 @@ import io.reactivex.rxjava3.core.Flowable;
 
 @Dao
 public interface PlanDayDAO {
-    @Query("SELECT * FROM plandayentity WHERE userId = :userId AND active = 1")
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND active = 1")
     @MapInfo(keyColumn = "day")
     Flowable<Map<LocalDate, List<MealItemEntity>>> getAllActive(String userId);
 
-    @Query("SELECT * FROM plandayentity WHERE userId = :userId")
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId")
     Flowable<List<PlanDayEntity.Full>> getAll(String userId);
 
-    @Query("SELECT * FROM plandayentity WHERE userId = :userId AND day >= :start AND day <= :end")
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND day >= :start AND day <= :end")
     Flowable<List<PlanDayEntity.Full>> getAll(String userId, LocalDate start, LocalDate end);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
