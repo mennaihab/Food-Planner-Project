@@ -24,7 +24,11 @@ public class BaseMapper<M, E> {
         return map(entity, model);
     }
 
-    private static <From, To> To map(From from, Class<To> toClass) {
+    protected <From, To> To mapValue(From from, Class<To> toClass) {
+        return (To) from;
+    }
+
+    protected <From, To> To map(From from, Class<To> toClass) {
         try {
             To model = toClass.newInstance();
             for (Field field: from.getClass().getDeclaredFields()) {
@@ -36,7 +40,10 @@ public class BaseMapper<M, E> {
                         Field eField = model.getClass().getDeclaredField(field.getName());
                         field.setAccessible(true);
                         eField.setAccessible(true);
-                        eField.set(model, field.get(from));
+                        Object value = field.get(from);
+                        if (value != null) {
+                            eField.set(model, mapValue(value, value.getClass()));
+                        }
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         Log.e(TAG, null, e);
                     }

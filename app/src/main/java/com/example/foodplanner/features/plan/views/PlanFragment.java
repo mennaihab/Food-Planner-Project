@@ -1,14 +1,11 @@
 package com.example.foodplanner.features.plan.views;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,8 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.foodplanner.R;
-
-import com.example.foodplanner.features.common.views.OnBackPressedListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

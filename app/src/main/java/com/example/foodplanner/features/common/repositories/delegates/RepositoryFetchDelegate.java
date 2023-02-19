@@ -2,6 +2,7 @@ package com.example.foodplanner.features.common.repositories.delegates;
 
 import com.example.foodplanner.features.common.helpers.RemoteListWrapper;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.helpers.mappers.PlanMealMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,7 @@ public class RepositoryFetchDelegate<Arg, M, E> {
         this.localCacheService = localCacheService;
         this.mapper = mapper;
     }
+
 
     public Flowable<List<M>> fetch(Arg arg) {
         Flowable<List<M>> accumulation;
