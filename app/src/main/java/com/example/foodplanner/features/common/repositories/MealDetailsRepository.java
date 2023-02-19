@@ -23,7 +23,7 @@ public class MealDetailsRepository {
                     return mealEntity.orElseThrow(Exception::new); // TODO
                 }),
                 null,
-                mealDetailsDAO::insertAll,
+                (arg, item) -> mealDetailsDAO.insertAll(item),
                 mapper
         );
     }

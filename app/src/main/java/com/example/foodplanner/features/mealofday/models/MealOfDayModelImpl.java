@@ -2,10 +2,12 @@ package com.example.foodplanner.features.mealofday.models;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 
 import com.example.foodplanner.core.utils.UserUtils;
 import com.example.foodplanner.features.common.helpers.models.ListModelDelegate;
 import com.example.foodplanner.features.common.models.Area;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.Meal;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.repositories.AreaRepository;
@@ -28,7 +30,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class MealOfDayModelImpl implements MealOfDayModel {
     private static final String MEAL_OF_DAY = "MEAL_OF_DAY";
 
-    protected final Flowable<MealItem> data;
+    protected final Flowable<FavouriteMealItem> data;
     private Optional<MealItem> meal = Optional.empty();;
 
     public MealOfDayModelImpl(Bundle savedInstanceState,
@@ -58,11 +60,12 @@ public class MealOfDayModelImpl implements MealOfDayModel {
 
         this.data = data.toFlowable().flatMap(meal -> userStream.flatMap(user -> {
             if (UserUtils.isPresent(user)) {
-                return favouriteRepository.isFavouriteForUser(UserUtils.getUserId(user), meal);
+                String userId = UserUtils.getUserId(user);
+                return favouriteRepository.isFavouriteForUser(userId, meal).map(isFavourite -> Pair.create(userId, isFavourite));
             } else {
-                return Flowable.just(false);
+                return Flowable.just(Pair.<String, Boolean>create(null, false));
             }
-        }).map(meal::setFavourite)).subscribeOn(Schedulers.io());
+        }).map(isFavourite -> new FavouriteMealItem(isFavourite.first, isFavourite.second, meal)));
     }
 
     @Override
@@ -71,7 +74,7 @@ public class MealOfDayModelImpl implements MealOfDayModel {
     }
 
     @Override
-    public Flowable<MealItem> getMeal() {
+    public Flowable<FavouriteMealItem> getMeal() {
         return data;
     }
 

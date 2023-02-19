@@ -42,6 +42,12 @@ public interface MealItemDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(List<MealItemEntity> meals);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    Completable insertAllNew(MealItemEntity... meals);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    Completable insertAllNew(List<MealItemEntity> meals);
+
     @Delete
     Completable delete(MealItemEntity meal);
 }

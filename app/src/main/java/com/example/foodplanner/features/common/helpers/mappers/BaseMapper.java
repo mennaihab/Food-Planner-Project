@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BaseMapper<M, E> {
     private static final String TAG = "BaseMapper";
@@ -24,9 +26,14 @@ public class BaseMapper<M, E> {
         return map(entity, model);
     }
 
-    private static <From, To> To map(From from, Class<To> toClass) {
+    protected <From, To> To mapValue(From from, Class<To> toClass) {
+        return (To) from;
+    }
+
+    protected <From, To> To map(From from, Class<To> toClass) {
         try {
             To model = toClass.newInstance();
+            List<Field> notFoundFields = new LinkedList<>();
             for (Field field: from.getClass().getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     MapperInfo mapperInfo = field.getAnnotation(MapperInfo.class);
@@ -36,11 +43,19 @@ public class BaseMapper<M, E> {
                         Field eField = model.getClass().getDeclaredField(field.getName());
                         field.setAccessible(true);
                         eField.setAccessible(true);
-                        eField.set(model, field.get(from));
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        Object value = field.get(from);
+                        if (value != null) {
+                            eField.set(model, mapValue(value, eField.getType()));
+                        }
+                    } catch (IllegalAccessException e) {
                         Log.e(TAG, null, e);
+                    } catch (NoSuchFieldException ignored) {
+                        notFoundFields.add(field);
                     }
                 }
+            }
+            if (!notFoundFields.isEmpty()) {
+                Log.d(TAG, "map: notFoundFields: " + notFoundFields);
             }
             return model;
         } catch (IllegalAccessException | InstantiationException e) {

@@ -24,5 +24,13 @@ public class FavouriteMealEntity {
         @Embedded
         public MealItemEntity meal;
         public boolean active = true;
+
+        public FavouriteMealEntity toEntity() {
+            FavouriteMealEntity entity = new FavouriteMealEntity();
+            entity.userId = userId;
+            entity.mealId = meal.id;
+            entity.active = active;
+            return entity;
+        }
     }
 }

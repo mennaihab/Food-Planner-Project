@@ -28,28 +28,28 @@ public class MealItemRepository {
                 mealRemoteService::searchByName,
                 mealItemDAO::getAllWhereNameContains,
                 null,
-                mealItemDAO::insertAll,
+                (arg, list) -> mealItemDAO.insertAll(list),
                 mapper
         );
         fetchByCategoryDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByCategory,
                 null,
                 null,
-                mealItemDAO::insertAll,
+                (arg, list) -> mealItemDAO.insertAll(list),
                 mapper
         );
         fetchByAreaDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByArea,
                 null,
                 null,
-                mealItemDAO::insertAll,
+                (arg, list) -> mealItemDAO.insertAll(list),
                 mapper
         );
         fetchByIngredientDelegate = new RepositoryFetchDelegate<>(
                 mealRemoteService::searchByIngredient,
                 null,
                 null,
-                mealItemDAO::insertAll,
+                (arg, list) -> mealItemDAO.insertAll(list),
                 mapper
         );
         randomDelegate = new RepositoryItemDelegate<>(
@@ -58,7 +58,7 @@ public class MealItemRepository {
                     return mealItem.orElseThrow(Exception::new); // TODO
                 }),
                 null,
-                mealItemDAO::insertAll,
+                (arg, list) -> mealItemDAO.insertAll(list),
                 mapper
         );
     }

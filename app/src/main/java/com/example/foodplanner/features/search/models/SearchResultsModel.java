@@ -2,6 +2,7 @@ package com.example.foodplanner.features.search.models;
 
 import android.os.Bundle;
 
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 
@@ -15,10 +16,10 @@ public interface SearchResultsModel {
     /**
      * @return A flowable of optional list of items: empty optional means new data are being loaded.
      */
-    Flowable<Optional<List<MealItem>>> getResults();
+    Flowable<Optional<List<FavouriteMealItem>>> getResults();
     SearchCriteria getCriteria();
     void filter(SearchCriteria criteria);
-    Single<MealItem> updateFavourite(MealItem mealItem);
+    Single<FavouriteMealItem> updateFavourite(FavouriteMealItem mealItem);
     void saveInstance(Bundle outBundle);
     void close();
 

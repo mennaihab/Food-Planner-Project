@@ -26,6 +26,9 @@ public interface PlanDayDAO {
     @Query("SELECT * FROM plandayentityview WHERE userId = :userId")
     Flowable<List<PlanDayEntity.Full>> getAll(String userId);
 
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND day >= :start AND day <= :end")
+    Flowable<List<PlanDayEntity.Full>> getAll(String userId, LocalDate start, LocalDate end);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(PlanDayEntity... days);
 

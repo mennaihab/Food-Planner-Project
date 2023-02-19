@@ -15,13 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
 
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouritesViewHolder> {
 
-    private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+    private final AsyncListDiffer<FavouriteMealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
 
     private final FavouriteClickListener clickListener;
     private final boolean enableRemove;
@@ -31,7 +32,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         this.enableRemove = enableRemove;
     }
 
-    public void updateList(List<MealItem> items) {
+    public void updateList(List<FavouriteMealItem> items) {
         mDiffer.submitList(items);
     }
 
@@ -70,23 +71,23 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
             }
         }
 
-        private void bindData(MealItem item) {
-            name.setText(item.getName());
-            Glide.with(img).load(item.getThumbnail()).into(img);
+        private void bindData(FavouriteMealItem item) {
+            name.setText(item.getMeal().getName());
+            Glide.with(img).load(item.getMeal().getThumbnail()).into(img);
             itemView.setOnClickListener(e -> clickListener.onClick(item));
             remove.setOnClickListener(e -> clickListener.onFavourite(item));
         }
     }
 
 
-    private static final DiffUtil.ItemCallback<MealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MealItem>() {
+    private static final DiffUtil.ItemCallback<FavouriteMealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<FavouriteMealItem>() {
         @Override
-        public boolean areItemsTheSame(@NonNull MealItem oldArea, @NonNull MealItem newArea) {
-            return oldArea.getId().equals(newArea.getId());
+        public boolean areItemsTheSame(@NonNull FavouriteMealItem oldArea, @NonNull FavouriteMealItem newArea) {
+            return oldArea.getMeal().getId().equals(newArea.getMeal().getId());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull MealItem oldArea, @NonNull MealItem newArea) {
+        public boolean areContentsTheSame(@NonNull FavouriteMealItem oldArea, @NonNull FavouriteMealItem newArea) {
             return oldArea.equals(newArea);
         }
     };

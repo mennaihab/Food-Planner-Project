@@ -15,15 +15,15 @@ import io.reactivex.rxjava3.core.Single;
 public class RepositoryFetchDelegate<Arg, M, E> {
 
     private final Function<Arg, Single<? extends RemoteListWrapper<M>>> remoteService;
-    private final Function<List<M>, Completable> remoteCacheService;
+    private final Backup<Arg, M> remoteCacheService;
     private final Function<Arg, Flowable<List<E>>> localService;
-    private final Function<List<E>, Completable> localCacheService;
+    private final Backup<Arg, E> localCacheService;
     private final BaseMapper<M, E> mapper;
 
     public RepositoryFetchDelegate(Function<Arg, Single<? extends RemoteListWrapper<M>>> remoteService,
                                    Function<Arg, Flowable<List<E>>> localService,
-                                   Function<List<M>, Completable> remoteCacheService,
-                                   Function<List<E>, Completable> localCacheService,
+                                   Backup<Arg, M> remoteCacheService,
+                                   Backup<Arg, E> localCacheService,
                                    BaseMapper<M, E> mapper) {
         this.remoteService = remoteService;
         this.localService = localService;
@@ -45,7 +45,7 @@ public class RepositoryFetchDelegate<Arg, M, E> {
     private Flowable<List<M>> fetchFromRemote(Arg arg) {
         Flowable<List<M>> fromRemote = fetchFromRemoteImpl(arg);
         if (localCacheService != null) {
-            fromRemote = fromRemote.flatMap(list -> cacheRemoteResults(list).andThen(Flowable.just(list)));
+            fromRemote = fromRemote.flatMap(list -> cacheRemoteResults(arg, list).andThen(Flowable.just(list)));
         }
         if (localService != null) {
             fromRemote = fromRemote.onErrorResumeWith(getRemoteFallback(arg));
@@ -56,7 +56,7 @@ public class RepositoryFetchDelegate<Arg, M, E> {
     private Flowable<List<M>> fetchFromLocal(Arg arg) {
         Flowable<List<M>> fromLocal = fetchFromLocalImpl(arg);
         if (remoteCacheService != null) {
-            fromLocal = fromLocal.flatMap(list -> cacheLocalResults(list).andThen(Flowable.just(list)));
+            fromLocal = fromLocal.flatMap(list -> cacheLocalResults(arg, list).andThen(Flowable.just(list)));
         }
         return fromLocal;
     }
@@ -78,14 +78,20 @@ public class RepositoryFetchDelegate<Arg, M, E> {
                 .map(mapper::toModel).collect(Collectors.toList()));
     }
 
-    private Completable cacheRemoteResults(List<M> objects) {
-        return localCacheService.apply(
+    private Completable cacheRemoteResults(Arg arg, List<M> objects) {
+        return localCacheService.backup(
+                arg,
                 objects.stream().map(mapper::toEntity)
                         .collect(Collectors.toList())
         );
     }
 
-    private Completable cacheLocalResults(List<M> objects) {
-        return remoteCacheService.apply(objects);
+    private Completable cacheLocalResults(Arg arg, List<M> objects) {
+        return remoteCacheService.backup(arg, objects);
+    }
+
+    @FunctionalInterface
+    public interface Backup<Arg, T> {
+        Completable backup(Arg arg, List<T> data);
     }
 }
