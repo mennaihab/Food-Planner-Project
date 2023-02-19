@@ -82,6 +82,11 @@ public class SearchResultsModelImpl implements SearchResultsModel {
     }
 
     @Override
+    public SearchCriteria getCriteria() {
+        return criteria;
+    }
+
+    @Override
     public void filter(SearchCriteria criteria) {
         setCurrent(mealItemRepository.filter(criteria));
         this.criteria = criteria;

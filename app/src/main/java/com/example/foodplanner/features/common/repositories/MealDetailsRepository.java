@@ -19,7 +19,9 @@ public class MealDetailsRepository {
 
         fetchDelegate = new RepositoryItemDelegate<>(
                 mealRemoteService::listMealDetails,
-                mealDetailsDAO::getById,
+                id -> mealDetailsDAO.getById(id).map(mealEntity -> {
+                    return mealEntity.orElseThrow(Exception::new); // TODO
+                }),
                 null,
                 mealDetailsDAO::insertAll,
                 mapper

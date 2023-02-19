@@ -6,9 +6,11 @@ import com.example.foodplanner.features.common.local.MealItemDAO;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.common.repositories.delegates.RepositoryFetchDelegate;
+import com.example.foodplanner.features.common.repositories.delegates.RepositoryItemDelegate;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.rxjava3.core.Flowable;
 
@@ -17,6 +19,7 @@ public class MealItemRepository {
     private final RepositoryFetchDelegate<String, MealItem, MealItemEntity> fetchByCategoryDelegate;
     private final RepositoryFetchDelegate<String, MealItem, MealItemEntity> fetchByAreaDelegate;
     private final RepositoryFetchDelegate<String, MealItem, MealItemEntity> fetchByIngredientDelegate;
+    private final RepositoryItemDelegate<Void, MealItem, MealItemEntity> randomDelegate;
 
     public MealItemRepository(MealRemoteService mealRemoteService,
                               MealItemDAO mealItemDAO,
@@ -49,6 +52,15 @@ public class MealItemRepository {
                 mealItemDAO::insertAll,
                 mapper
         );
+        randomDelegate = new RepositoryItemDelegate<>(
+                a -> mealRemoteService.randomMeal(),
+                a -> mealItemDAO.getRandom().map(mealItem -> {
+                    return mealItem.orElseThrow(Exception::new); // TODO
+                }),
+                null,
+                mealItemDAO::insertAll,
+                mapper
+        );
     }
 
     public Flowable<List<MealItem>> filter(SearchCriteria criteria) {
@@ -64,5 +76,9 @@ public class MealItemRepository {
             default:
                 throw new RuntimeException("Missing switch case " + criteria.getType());
         }
+    }
+
+    public Flowable<MealItem> randomMeal() {
+        return randomDelegate.fetch(null);
     }
 }

@@ -1,29 +1,28 @@
-package com.example.foodplanner.features.search.presenters;
+package com.example.foodplanner.features.mealofday.presenters;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-
-import com.example.foodplanner.features.search.models.SearchIngredientsModel;
-import com.example.foodplanner.features.search.views.SearchIngredientsView;
+import com.example.foodplanner.features.mealofday.models.MealOfDayModel;
+import com.example.foodplanner.features.mealofday.views.MealOfDayView;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class SearchIngredientsPresenter implements LifecycleEventObserver {
+public class MealOfDayPresenter implements LifecycleEventObserver {
 
-    private final SearchIngredientsView view;
-    private final SearchIngredientsModel ingredientsModel;
+    private final MealOfDayView view;
+    private final MealOfDayModel mealOfDayModel;
     private Disposable disposable;
 
-    public SearchIngredientsPresenter(SearchIngredientsView view, SearchIngredientsModel ingredientsModel) {
+    public MealOfDayPresenter(MealOfDayView view, MealOfDayModel mealOfDayModel) {
         this.view = view;
-        this.ingredientsModel = ingredientsModel;
+        this.mealOfDayModel = mealOfDayModel;
     }
 
     public void init(LifecycleOwner lifecycleOwner) {
@@ -40,19 +39,19 @@ public class SearchIngredientsPresenter implements LifecycleEventObserver {
     }
 
     private void init() {
-        disposable = ingredientsModel.getIngredients()
+        disposable = mealOfDayModel.getMeal()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::updateIngredients, view::onLoadFailure);
+                .subscribe(view::updateMeal, view::onLoadFailure);
     }
 
-    private void close(LifecycleOwner source) {
-        source.getLifecycle().removeObserver(this);
+    private void close(LifecycleOwner lifecycleOwner) {
+        lifecycleOwner.getLifecycle().removeObserver(this);
         if (disposable != null) {
             disposable.dispose();
         }
     }
 
     public void saveInstance(Bundle outState) {
-        ingredientsModel.saveInstance(outState);
+        mealOfDayModel.saveInstance(outState);
     }
 }

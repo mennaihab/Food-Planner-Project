@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,12 +20,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.foodplanner.MainGraphDirections;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.features.common.views.LoadingFragmentDirections;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
 import com.example.foodplanner.features.common.views.OperationSink;
@@ -73,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(homeFragmentsIds).build();
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.main_nav_host);
         navController = Objects.requireNonNull(navHostFragment).getNavController();
+
+        if (savedInstanceState == null) {
+            navController.navigate(MainGraphDirections.actionGlobalToLaunching());
+        }
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
@@ -156,9 +164,7 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
                 return;
             }
         }
-        if (!navController.popBackStack()) {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override

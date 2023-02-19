@@ -9,6 +9,7 @@ import androidx.room.Query;
 import com.example.foodplanner.features.common.entities.AreaEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
@@ -19,7 +20,7 @@ public interface AreaDAO {
     Flowable<List<AreaEntity>> getAll();
 
     @Query("SELECT * FROM areaentity WHERE name == :name LIMIT 1")
-    Flowable<AreaEntity> getByName(String name);
+    Flowable<Optional<AreaEntity>> getByName(String name);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(AreaEntity... areas);

@@ -9,6 +9,7 @@ import androidx.room.Query;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
@@ -27,7 +28,13 @@ public interface MealItemDAO {
     Flowable<List<MealItemEntity>> getAllWhereNameContains(String name);
 
     @Query("SELECT * FROM mealitementity WHERE id == :id LIMIT 1")
-    Flowable<MealItemEntity> getById(String id);
+    Flowable<Optional<MealItemEntity>> getById(String id);
+
+    @Query("SELECT * FROM mealitementity ORDER BY RANDOM() LIMIT 1")
+    Flowable<Optional<MealItemEntity>> getRandom();
+
+    @Query("SELECT * FROM mealitementity ORDER BY RANDOM() LIMIT :count")
+    Flowable<List<MealItemEntity>> getRandom(int count);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(MealItemEntity... meals);

@@ -20,9 +20,12 @@ public class FavouritesPresenter implements LifecycleEventObserver {
     private final FavouriteMealsModel favouritesModel;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    public FavouritesPresenter(LifecycleOwner lifecycleOwner, FavouritesView view, FavouriteMealsModel favouritesModel) {
+    public FavouritesPresenter(FavouritesView view, FavouriteMealsModel favouritesModel) {
         this.view = view;
         this.favouritesModel = favouritesModel;
+    }
+
+    public void init(LifecycleOwner lifecycleOwner) {
         lifecycleOwner.getLifecycle().addObserver(this);
     }
 
@@ -31,7 +34,7 @@ public class FavouritesPresenter implements LifecycleEventObserver {
         if (event == Lifecycle.Event.ON_CREATE) {
             init();
         } else if (event == Lifecycle.Event.ON_DESTROY) {
-            close();
+            close(source);
         }
     }
 
@@ -47,8 +50,9 @@ public class FavouritesPresenter implements LifecycleEventObserver {
                 .subscribe(view::updateFavourites, view::onLoadFailure));
     }
 
-    private void close() {
-        disposable.dispose();
+    private void close(LifecycleOwner source) {
+        source.getLifecycle().removeObserver(this);
+        disposable.clear();
     }
 
     public void saveInstance(Bundle outState) {

@@ -9,10 +9,10 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
-import com.example.foodplanner.features.search.models.SearchIngredientsModel;
 import com.example.foodplanner.features.search.models.SearchResultsModel;
-import com.example.foodplanner.features.search.views.SearchIngredientsView;
 import com.example.foodplanner.features.search.views.SearchResultsView;
+
+import java.util.concurrent.Flow;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -22,9 +22,13 @@ public class SearchResultsPresenter implements LifecycleEventObserver {
     private final SearchResultsModel searchResultsModel;
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    public SearchResultsPresenter(LifecycleOwner lifecycleOwner, SearchResultsView view, SearchResultsModel searchResultsModel) {
+    public SearchResultsPresenter(SearchResultsView view, SearchResultsModel searchResultsModel) {
         this.view = view;
         this.searchResultsModel = searchResultsModel;
+
+    }
+
+    public void init(LifecycleOwner lifecycleOwner) {
         lifecycleOwner.getLifecycle().addObserver(this);
     }
 
@@ -33,7 +37,7 @@ public class SearchResultsPresenter implements LifecycleEventObserver {
         if (event == Lifecycle.Event.ON_CREATE) {
             init();
         } else if (event == Lifecycle.Event.ON_DESTROY) {
-            close();
+            close(source);
         }
     }
 
@@ -53,12 +57,17 @@ public class SearchResultsPresenter implements LifecycleEventObserver {
                 .subscribe(view::updateResults, view::onLoadFailure));
     }
 
-    private void close() {
-        disposable.dispose();
+    private void close(LifecycleOwner source) {
+        source.getLifecycle().removeObserver(this);
+        disposable.clear();
         searchResultsModel.close();
     }
 
     public void saveInstance(Bundle outState) {
         searchResultsModel.saveInstance(outState);
+    }
+
+    public SearchCriteria getCriteria() {
+        return searchResultsModel.getCriteria();
     }
 }
