@@ -43,10 +43,9 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         presenter = new SearchIngredientsPresenter(
-                getViewLifecycleOwner(),
                 this,
                 new SearchIngredientsModelImpl(
                         savedInstanceState,
@@ -57,7 +56,10 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
                         )
                 )
         );
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         list = view.findViewById(R.id.items_list);
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 4), 1, LinearLayoutManager.HORIZONTAL)
@@ -68,6 +70,8 @@ public class SearchIngredientsFragment extends Fragment implements SearchIngredi
         list.setAdapter(listAdapter);
         LinearLayoutManager ingredientsLayout = new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false);
         list.setLayoutManager(ingredientsLayout);
+
+        presenter.init(getViewLifecycleOwner());
     }
 
     @Override

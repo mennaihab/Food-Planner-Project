@@ -43,9 +43,9 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         presenter = new SearchAreasPresenter(
-                getViewLifecycleOwner(),
                 this,
                 new SearchAreasModelImpl(savedInstanceState,
                         new AreaRepository(
@@ -55,7 +55,10 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
                         )
                 )
         );
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         list = view.findViewById(R.id.items_list);
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 8), 1, LinearLayoutManager.HORIZONTAL)
@@ -68,6 +71,8 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
         list.setAdapter(listAdapter);
         LinearLayoutManager areasLayout = new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false);
         list.setLayoutManager(areasLayout);
+
+        presenter.init(getViewLifecycleOwner());
     }
 
     @Override

@@ -11,17 +11,20 @@ import com.example.foodplanner.features.search.models.SearchCategoriesModel;
 import com.example.foodplanner.features.search.views.SearchCategoriesView;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class SearchCategoriesPresenter implements LifecycleEventObserver {
 
     private final SearchCategoriesView view;
     private final SearchCategoriesModel categoriesModel;
-    private final CompositeDisposable disposable = new CompositeDisposable();
+    private Disposable disposable;
 
-    public SearchCategoriesPresenter(LifecycleOwner lifecycleOwner, SearchCategoriesView view, SearchCategoriesModel categoriesModel) {
+    public SearchCategoriesPresenter(SearchCategoriesView view, SearchCategoriesModel categoriesModel) {
         this.view = view;
         this.categoriesModel = categoriesModel;
+    }
+
+    public void init(LifecycleOwner lifecycleOwner) {
         lifecycleOwner.getLifecycle().addObserver(this);
     }
 
@@ -30,18 +33,21 @@ public class SearchCategoriesPresenter implements LifecycleEventObserver {
         if (event == Lifecycle.Event.ON_CREATE) {
             init();
         } else if (event == Lifecycle.Event.ON_DESTROY) {
-            close();
+            close(source);
         }
     }
 
     private void init() {
-        disposable.add(categoriesModel.getCategories()
+        disposable = categoriesModel.getCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::updateCategories, view::onLoadFailure));
+                .subscribe(view::updateCategories, view::onLoadFailure);
     }
 
-    private void close() {
-        disposable.dispose();
+    private void close(LifecycleOwner source) {
+        source.getLifecycle().removeObserver(this);
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     public void saveInstance(Bundle outState) {

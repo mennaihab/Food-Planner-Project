@@ -108,7 +108,7 @@ public class AuthenticationFragment extends Fragment implements AuthenticationVi
     public void onAuthResult(AppAuthResult authResult) {
         Log.d(TAG, "onAuthResult: " + authResult);
         if (authResult instanceof AppAuthResult.Success) {
-            Navigation.findNavController(requireView()).navigate(AuthenticationFragmentDirections.actionGlobalToHome());
+            Navigation.findNavController(requireView()).navigate(AuthenticationFragmentDirections.actionGlobalMainGraph());
         } else if (authResult instanceof AppAuthResult.Failure) {
             Throwable error = ((AppAuthResult.Failure) authResult).getError();
             if (error != null) {

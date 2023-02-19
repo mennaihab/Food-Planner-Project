@@ -42,9 +42,9 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         presenter = new SearchCategoriesPresenter(
-                getViewLifecycleOwner(),
                 this,
                 new SearchCategoriesModelImpl(savedInstanceState,
                         new CategoryRepository(
@@ -54,6 +54,11 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
                         )
                 )
         );
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
 
         list = view.findViewById(R.id.items_list);
         list.addItemDecoration(
@@ -67,6 +72,8 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
         list.setAdapter(listAdapter);
         GridLayoutManager categoriesLayout = new GridLayoutManager(requireContext(), 2);
         list.setLayoutManager(categoriesLayout);
+
+        presenter.init(getViewLifecycleOwner());
     }
 
     @Override

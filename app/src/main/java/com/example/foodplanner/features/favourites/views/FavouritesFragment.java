@@ -52,11 +52,9 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         presenter = new FavouritesPresenter(
-                getViewLifecycleOwner(),
                 this,
                 new FavouriteMealsModelImpl(
                         savedInstanceState,
@@ -67,6 +65,11 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
                         )
                 )
         );
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         String selectionResultKey = FavouritesFragmentArgs.fromBundle(requireArguments()).getSelectionResultKey();
 
@@ -86,7 +89,7 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
             @Override
             public void onClick(MealItem item) {
                 if (selectionResultKey == null) {
-                    Navigation.findNavController(view).navigate(FavouritesFragmentDirections.actionGlobalMeal(item.getId()));
+                    Navigation.findNavController(view).navigate(FavouritesFragmentDirections.actionGlobalToMeal(item.getId()));
                 } else {
                     NavigationUtils.setResult(view, selectionResultKey, item);
                     NavigationUtils.navigateUp(view);
@@ -96,6 +99,8 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
         recyclerView.setAdapter(ItemAdapter);
         recyclerView.setLayoutManager(layoutManager);
+
+        presenter.init(getViewLifecycleOwner());
     }
 
     @Override

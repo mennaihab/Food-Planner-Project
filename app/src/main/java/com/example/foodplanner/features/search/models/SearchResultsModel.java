@@ -16,8 +16,10 @@ public interface SearchResultsModel {
      * @return A flowable of optional list of items: empty optional means new data are being loaded.
      */
     Flowable<Optional<List<MealItem>>> getResults();
+    SearchCriteria getCriteria();
     void filter(SearchCriteria criteria);
     Single<MealItem> updateFavourite(MealItem mealItem);
     void saveInstance(Bundle outBundle);
     void close();
+
 }

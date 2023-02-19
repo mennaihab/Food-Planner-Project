@@ -8,6 +8,8 @@ import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.repositories.delegates.RepositoryFetchDelegate;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -36,6 +38,11 @@ public class FavouriteRepository {
                 .map(mealItem -> mealItem.setFavourite(true))
                 .collect(Collectors.toList())
         );
+    }
+
+    public Flowable<Boolean> isFavouriteForUser(String userId, MealItem meal) {
+        return favouriteMealDAO.getById(userId, meal.getId())
+                .map(Optional::isPresent);
     }
 
     public Completable addToFavourite(MealItem mealItem, String userId) {
