@@ -1,11 +1,9 @@
 package com.example.foodplanner.features.main;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,15 +18,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.foodplanner.MainGraphDirections;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
-import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.features.common.views.LoadingFragmentDirections;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
 import com.example.foodplanner.features.common.views.OperationSink;
@@ -40,7 +35,6 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.subjects.CompletableSubject;
 
 @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
 public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink {
@@ -79,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
         navController = Objects.requireNonNull(navHostFragment).getNavController();
 
         if (savedInstanceState == null) {
-            navController.navigate(MainGraphDirections.actionGlobalToLaunching());
+            navController.navigate(R.id.action_global_to_launching);
         }
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
