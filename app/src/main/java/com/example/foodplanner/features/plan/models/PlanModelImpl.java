@@ -3,13 +3,11 @@ package com.example.foodplanner.features.plan.models;
 import android.os.Bundle;
 
 import com.example.foodplanner.core.utils.UserUtils;
-import com.example.foodplanner.features.common.helpers.MealCalenderHelper;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.models.PlanMealItem;
-import com.example.foodplanner.features.common.repositories.PlanDayArguments;
+import com.example.foodplanner.features.common.helpers.PlanDayArguments;
 import com.example.foodplanner.features.common.repositories.PlanRepository;
 import com.example.foodplanner.features.common.services.AuthenticationManager;
-import com.example.foodplanner.features.common.helpers.CalendarPermissionHolder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

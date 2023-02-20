@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.entities.PlanDayEntity;
 import com.example.foodplanner.features.common.helpers.MealCalenderHelper;
+import com.example.foodplanner.features.common.helpers.PlanDayArguments;
 import com.example.foodplanner.features.common.helpers.mappers.PlanMealMapper;
 import com.example.foodplanner.features.common.local.MealItemDAO;
 import com.example.foodplanner.features.common.local.PlanDayDAO;
@@ -44,7 +45,10 @@ public class PlanRepository {
         fetchPlanDelegate = new RepositoryFetchDelegate<>(
                 null,
                 a -> planDayDAO.getAllActive(a.getUserId(), a.getStartDay(), a.getEndDay()),
-                null,
+                (userId, items) -> {
+                    planBackupService.insertForUser(userId.getUserId(), items).subscribe();
+                    return Completable.complete();
+                },
                 null,
                 mapper
         );
@@ -131,7 +135,7 @@ public class PlanRepository {
 
     private Completable backupToRemote(String userId, List<PlanMealItem> items) {
         Log.d(TAG, "backupToRemote: backing up");
-        return planBackupService.insertForUser(userId, items).subscribeOn(Schedulers.io());
+        return planBackupService.insertForUser(userId, items).onErrorComplete().subscribeOn(Schedulers.io());
     }
 
     public Completable getBackupFromRemote(String userId) {

@@ -43,7 +43,10 @@ public class FavouriteRepository {
         fetchFavouritesDelegate = new RepositoryFetchDelegate<>(
                 null,
                 favouriteMealDAO::getAllActive,
-                favouritesBackupService::insertForUser,
+                (userId, items) -> {
+                    favouritesBackupService.insertForUser(userId, items).subscribe();
+                    return Completable.complete();
+                },
                 null,
                 mapper
         );
@@ -121,7 +124,7 @@ public class FavouriteRepository {
 
     private Completable backupToRemote(String userId, List<FavouriteMealItem> items) {
         Log.d(TAG, "backupToRemote: backing up");
-        return favouritesBackupService.insertForUser(userId, items).subscribeOn(Schedulers.io());
+        return favouritesBackupService.insertForUser(userId, items).onErrorComplete().subscribeOn(Schedulers.io());
     }
 
     public Completable getBackupFromRemote(String userId) {

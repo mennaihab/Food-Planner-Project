@@ -16,6 +16,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 public class FoodPlannerApplication extends Application {
 
@@ -32,6 +33,11 @@ public class FoodPlannerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         FirebaseApp.initializeApp(this);
+//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+//                .setPersistenceEnabled(true)
+//                .build();
+//        FirebaseFirestore.getInstance().setFirestoreSettings(settings);
+
         AppEventsLogger.activateApp(this);
         authenticationManager = new AuthenticationManagerImpl(getFirebaseAuth());
         settingsManager = SettingsRepository.create(this);

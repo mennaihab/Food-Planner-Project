@@ -1,4 +1,4 @@
-package com.example.foodplanner.features.common.repositories;
+package com.example.foodplanner.features.common.helpers;
 
 import java.time.LocalDate;
 

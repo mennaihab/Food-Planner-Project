@@ -1,5 +1,7 @@
 package com.example.foodplanner.core.utils;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -73,6 +75,7 @@ public abstract class FirestoreUtils {
                     batch.set(collectionRef.document(getId.apply(item)), item);
                 });
             }).addOnCompleteListener(task -> {
+                Log.d("TAG", "insertAll: " + task.getException());
                 if (task.isSuccessful()) {
                     emitter.onComplete();
                 } else {
