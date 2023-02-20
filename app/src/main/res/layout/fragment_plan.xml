@@ -10,7 +10,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rigth_btn"
-        style="@style/Theme.FoodPlanner.Button.Icon"
+        style="@style/Widget.FoodPlanner.Button.Icon"
         android:layout_width="48dp"
         android:layout_height="60dp"
         android:layout_marginEnd="16dp"
@@ -36,7 +36,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/left_btn"
-        style="@style/Theme.FoodPlanner.Button.Icon"
+        style="@style/Widget.FoodPlanner.Button.Icon"
         android:layout_width="48dp"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"

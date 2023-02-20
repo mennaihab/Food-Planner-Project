@@ -142,7 +142,7 @@
         <item name="background">@color/material_grey_900</item>
     </style>
 
-    <style name="Theme.FoodPlanner.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+    <style name="Widget.FoodPlanner.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.BottomNavigationView
         </item>
         <item name="labelVisibilityMode">labeled</item>
@@ -154,7 +154,7 @@
     </style>
 
 
-    <style name="Theme.FoodPlanner.ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
+    <style name="Widget.FoodPlanner.ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.ToolbarStyle</item>
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
         <item name="subtitleTextAppearance">@style/TextAppearance.MaterialComponents.Subtitle1
@@ -168,7 +168,7 @@
         <item name="colorOnPrimary">@color/white</item>
     </style>
 
-    <style name="Theme.FoodPlanner.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="Widget.FoodPlanner.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.TextInputLayout</item>
         <item name="shapeAppearanceOverlay">
             @style/ThemeOverlay.FoodPlanner.TextInputLayout.ShapeAppearanceOverlay
@@ -191,7 +191,7 @@
         <item name="android:textColorPrimary">@color/black</item>
     </style>
 
-    <style name="Theme.FoodPlanner.TextInputLayout.Search" parent="">
+    <style name="Widget.FoodPlanner.TextInputLayout.Search" parent="">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.TextInputLayout.Search</item>
         <item name="shapeAppearanceOverlay">
             @style/ThemeOverlay.FoodPlanner.TextInputLayout.Search.ShapeAppearanceOverlay
@@ -209,7 +209,7 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="Theme.FoodPlanner.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="Widget.FoodPlanner.Button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button</item>
         <item name="shapeAppearanceOverlay">
             @style/ThemeOverlay.FoodPlanner.Button.ShapeAppearanceOverlay
@@ -224,11 +224,11 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="Theme.FoodPlanner.Button.Fat" parent="">
+    <style name="Widget.FoodPlanner.Button.Fat" parent="">
         <item name="android:padding">18dp</item>
     </style>
 
-    <style name="Theme.FoodPlanner.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="Widget.FoodPlanner.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button.Text</item>
         <item name="elevation">10dp</item>
     </style>
@@ -237,7 +237,7 @@
         <item name="colorPrimary">?attr/colorSecondary</item>
     </style>
 
-    <style name="Theme.FoodPlanner.Button.Icon" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+    <style name="Widget.FoodPlanner.Button.Icon" parent="Widget.MaterialComponents.Button.TextButton.Icon">
 <!--        <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button.Icon</item>-->
         <item name="elevation">10dp</item>
         <item name="iconGravity">textTop</item>
@@ -248,7 +248,7 @@
 <!--        <item name="colorOnPrimary">?attr/colorSecondary</item>-->
 <!--    </style>-->
 
-    <style name="Theme.FoodPlanner.CardView" parent="Widget.MaterialComponents.CardView">
+    <style name="Widget.FoodPlanner.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.CardView</item>
         <item name="shapeAppearance">@style/ShapeAppearance.FoodPlanner.CardView</item>
         <item name="cardElevation">10dp</item>
@@ -264,13 +264,24 @@
         <item name="colorSurface">@color/light_grey</item>
     </style>
 
-    <style name="Theme.FoodPlanner.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+    <style name="Widget.FoodPlanner.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
         <item name="maxHeight">16dp</item>
     </style>
 
-    <style name="Theme.FoodPlanner.Chip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
+    <style name="Widget.FoodPlanner.Chip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
     </style>
 
+    <style name="ThemeOverlay.FoodPlanner.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/light_grey</item>
+        <item name="colorSecondary">@color/pale_orange</item>
+        <item name="colorSurface">@color/light_grey</item>
+        <item name="colorOnSurface">@color/pale_orange</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.FoodPlanner</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.FoodPlanner.Title.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.FoodPlanner.Button.Text.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.FoodPlanner.Button.Text.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.FoodPlanner.Button.Text.Dialog.Negative</item>
+    </style>
 
     <style name="MaterialAlertDialog.FoodPlanner" parent="MaterialAlertDialog.MaterialComponents">
         <item name="shapeAppearance">@style/ShapeAppearance.FoodPlanner.MediumComponent</item>
@@ -280,9 +291,12 @@
         <item name="android:textColor">@color/dark_orange</item>
     </style>
 
-    <style name="Widget.FoodPlanner.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.Button.Text</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.FoodPlanner.SmallComponent</item>
+    <style name="Widget.FoodPlanner.Button.Text.Dialog">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Widget.FoodPlanner.Button.Text.Dialog.Negative">
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
 
 </resources>
