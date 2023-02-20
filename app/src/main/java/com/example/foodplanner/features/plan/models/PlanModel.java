@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 
@@ -18,4 +19,6 @@ public interface PlanModel {
     Flowable<Map<LocalDate, List<PlanMealItem>>> getDayMeals();
     void saveInstance(Bundle outBundle);
 
+    Single<PlanMealItem> addPlanMeal(MealItem mealItem, LocalDate date);
 }
+

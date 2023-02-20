@@ -22,7 +22,7 @@ public class LocalDateConvertor {
         if (date == null) {
             return null;
         } else {
-            return Instant.from(date).toEpochMilli();
+            return date.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
         }
     }
 }

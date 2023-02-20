@@ -26,6 +26,11 @@ public abstract class NavigationUtils {
                 .getSavedStateHandle().set(key, result);
     }
 
+    public static <T> void setValue(View view, String key, T result) {
+        Objects.requireNonNull(Navigation.findNavController(view).getCurrentBackStackEntry())
+                .getSavedStateHandle().set(key, result);
+    }
+
     public static <T> void maybeSetResult(View view, String key, T result) {
         NavBackStackEntry entry = Navigation.findNavController(view).getPreviousBackStackEntry();
         if (entry != null) {
@@ -33,7 +38,7 @@ public abstract class NavigationUtils {
         }
     }
 
-    public static <T> LiveData<T> getResult(View view, String key) {
+    public static <T> LiveData<T> getValue(View view, String key) {
         return Objects.requireNonNull(Navigation.findNavController(view).getCurrentBackStackEntry())
                 .getSavedStateHandle().getLiveData(key);
     }

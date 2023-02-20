@@ -11,24 +11,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
 import com.example.foodplanner.features.common.helpers.mappers.PlanMealMapper;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.models.PlanMealItem;
-import com.example.foodplanner.features.common.repositories.FavouriteRepository;
-import com.example.foodplanner.features.common.repositories.PlanDayArguments;
 import com.example.foodplanner.features.common.repositories.PlanRepository;
 import com.example.foodplanner.features.common.services.AppDatabase;
-import com.example.foodplanner.features.favourites.helpers.FavouritesAdapter;
-import com.example.foodplanner.features.favourites.models.FavouriteMealsModelImpl;
-import com.example.foodplanner.features.favourites.presenters.FavouritesPresenter;
-import com.example.foodplanner.features.plan.adapters.DayMealsAdapter;
 import com.example.foodplanner.features.plan.adapters.WeekDayAdapter;
 import com.example.foodplanner.features.plan.helpers.DayData;
 import com.example.foodplanner.features.plan.models.PlanModelImpl;
@@ -43,9 +40,13 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
     private static final String TAG = "WeekFragment";
     private PlanPresenter presenter;
     private RecyclerView recyclerView;
-    private DayMealsAdapter ItemAdapter;
+    WeekDayAdapter parentItemAdapter;
     private static final String WEEK_DAY = "WEEK_DAY";
-    PlanDayArguments planDayArguments;
+    private static final String SELECTED_ITEM = "SELECTED_ITEM";
+    private static final String SELECTED_DAY = "SELECTED_DAY";
+    LocalDate weekStart;
+
+
 
 
     public static WeekFragment newInstance(LocalDate startOfWeek) {
@@ -84,15 +85,11 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        LocalDate weekStart = (LocalDate) requireArguments().getSerializable(WEEK_DAY);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        WeekDayAdapter parentItemAdapter = new WeekDayAdapter();
-        parentItemAdapter.submitList(parentItemList(weekStart));
-        recyclerView.setAdapter(parentItemAdapter);
-        recyclerView.setLayoutManager(layoutManager);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        weekStart = (LocalDate) requireArguments().getSerializable(WEEK_DAY);
         presenter = new PlanPresenter(
-                getViewLifecycleOwner(),
                 this,
                 new PlanModelImpl(
                         savedInstanceState,
@@ -100,29 +97,30 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
                         new PlanRepository(
                                 AppDatabase.getInstance(requireContext()).planDayDAO(),
                                 new PlanMealMapper((new BaseMapper<>(MealItem.class, MealItemEntity.class))
-                        )
-                ),planDayArguments));
+                                )
+                        ), weekStart));
+
     }
 
-    private List<DayData> parentItemList(LocalDate weekStart) {
-        List<DayData> itemList = new ArrayList<>(7);
-        for (int i = 0; i < 7; i++) {
-            LocalDate current = weekStart.plusDays(i);
-            DayData item = new DayData(current, childItemList());
-            //put all meals in the day
-            itemList.add(item);
-        }
-        return itemList;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        NavigationUtils.<MealItem>getValue(view,SELECTED_ITEM).observe(getViewLifecycleOwner(), (Observer<MealItem>) mealItem -> {
+          LocalDate date =NavigationUtils.<LocalDate>getValue(view,SELECTED_DAY).getValue();
+            presenter.addPlanMeal(mealItem,date);
+
+
+        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        parentItemAdapter = new WeekDayAdapter(day->{
+            NavigationUtils.setValue(view,SELECTED_DAY,day);
+            Navigation.findNavController(view).navigate(PlanFragmentDirections.actionPlanToFavourites().setSelectionResultKey(SELECTED_ITEM));
+        });
+        recyclerView.setAdapter(parentItemAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        presenter.init(getViewLifecycleOwner());
     }
 
-    private List<MealItem> childItemList() {
-        List<MealItem> ChildItemList = new ArrayList<>(4);
-        ChildItemList.add(new MealItem("food 1", "food1", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));
-        ChildItemList.add(new MealItem("food 2", "food2", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));
-        ChildItemList.add(new MealItem("food 3", "food3", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));
-        ChildItemList.add(new MealItem("food 4", "food4", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"));
-        return ChildItemList;
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -131,9 +129,22 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
     }
 
     @Override
-    public void updatePlan(List<PlanMealItem> products) {
+    public void updatePlan(Map<LocalDate,List<PlanMealItem>> products) {
         recyclerView.setVisibility(View.VISIBLE);
        // ItemAdapter.updateList(products);
+        List<DayData> itemList = new ArrayList<>(7);
+        for (int i=0;i<7;i++) {
+            LocalDate current = weekStart.plusDays(i);
+            List<PlanMealItem> meals = new ArrayList<>();
+            if(products.containsKey(current))
+            {
+                meals.addAll(products.get(current));
+            }
+            DayData item = new DayData(current,meals);
+            //put all meals in the day
+            itemList.add(item);
+        }
+        parentItemAdapter.submitList(itemList);
     }
 
     @Override
@@ -143,12 +154,23 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
     }
 
     @Override
-    public void onFavouriteSuccess(MealItem mealItem) {
+    public void onItemAdded(PlanMealItem planMealItem) {
 
     }
 
     @Override
-    public void onFavouriteFailure(MealItem mealItem, Throwable error) {
+    public void onItemRemoved(PlanMealItem planMealItem) {
+
+    }
+
+    @Override
+    public void onAddFailure(MealItem mealItem, Throwable error) {
+        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRemoveFailure(MealItem mealItem, Throwable error) {
+        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
 
     }
 

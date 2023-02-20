@@ -3,11 +3,16 @@ package com.example.foodplanner.features.plan.views;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.models.PlanMealItem;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface WeekFragmentView {
-    void updatePlan(List<PlanMealItem> products);
+     void updatePlan(Map<LocalDate,List<PlanMealItem>> products) ;
     void onLoadFailure(Throwable error);
-    void onFavouriteSuccess(MealItem mealItem);
-    void onFavouriteFailure(MealItem mealItem, Throwable error);
+    void onItemAdded(PlanMealItem planMealItem);
+    void onItemRemoved(PlanMealItem planMealItem);
+    void onAddFailure(MealItem mealItem, Throwable error);
+    void onRemoveFailure(MealItem mealItem, Throwable error);
+
 }

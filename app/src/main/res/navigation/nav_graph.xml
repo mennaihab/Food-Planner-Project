@@ -92,7 +92,11 @@
         android:id="@+id/home_plan_fragment"
         android:name="com.example.foodplanner.features.plan.views.PlanFragment"
         android:label="@string/title_home_plan"
-        tools:layout="@layout/fragment_plan" />
+        tools:layout="@layout/fragment_plan" >
+        <action
+            android:id="@+id/action_plan_to_favourites"
+            app:destination="@id/home_favourites_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/home_favourites_fragment"
         android:name="com.example.foodplanner.features.favourites.views.FavouritesFragment"

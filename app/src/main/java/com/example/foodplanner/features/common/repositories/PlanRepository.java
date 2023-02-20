@@ -27,7 +27,7 @@ public class PlanRepository {
         this.planDayDAO = planDayDAO;
         fetchPlanDelegate = new RepositoryFetchDelegate<>(
                 null,
-                a -> planDayDAO.getAll(a.userId,a.startDay,a.endDay),
+                a -> planDayDAO.getAll(a.getUserId(),a.getStartDay(),a.getEndDay()),
                 null,
                 null,
                 mapper
