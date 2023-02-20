@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 
@@ -57,12 +59,14 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     }
 
     public class FavouritesViewHolder extends RecyclerView.ViewHolder {
+        private final CardView card;
         private final TextView name;
         private final ImageView img;
         private final Button remove;
 
         private FavouritesViewHolder(View itemView) {
             super(itemView);
+            card = itemView.findViewById(R.id.meal_card);
             name = itemView.findViewById(R.id.meal_name);
             img = itemView.findViewById(R.id.meal_img);
             remove = itemView.findViewById(R.id.meal_remove);
@@ -73,8 +77,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
         private void bindData(FavouriteMealItem item) {
             name.setText(item.getMeal().getName());
-            Glide.with(img).load(item.getMeal().getThumbnail()).into(img);
-            itemView.setOnClickListener(e -> clickListener.onClick(item));
+            ViewUtils.loadImageInto(item.getMeal().getPreview(), img);
+            card.setOnClickListener(e -> clickListener.onClick(item));
             remove.setOnClickListener(e -> clickListener.onFavourite(item));
         }
     }

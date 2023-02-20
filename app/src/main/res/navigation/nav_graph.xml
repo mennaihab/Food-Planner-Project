@@ -9,7 +9,7 @@
         android:id="@+id/launching_fragment"
         android:name="com.example.foodplanner.features.launching.views.LaunchingFragment"
         android:label="fragment_launching"
-        tools:layout="@layout/fragment_launching" >
+        tools:layout="@layout/fragment_launching">
         <action
             android:id="@+id/action_launching_to_landing"
             app:destination="@id/landing_fragment"
@@ -28,7 +28,7 @@
         android:id="@+id/landing_fragment"
         android:name="com.example.foodplanner.features.landing.views.LandingFragment"
         android:label="LandingFragment"
-        tools:layout="@layout/fragment_landing" >
+        tools:layout="@layout/fragment_landing">
         <action
             android:id="@+id/action_landing_to_authentication"
             app:destination="@id/authentication_fragment"
@@ -88,26 +88,40 @@
         android:name="com.example.foodplanner.features.mealofday.views.MealOfDayFragment"
         android:label="@string/title_home_meal"
         tools:layout="@layout/fragment_placeholder" />
+
     <fragment
         android:id="@+id/home_plan_fragment"
         android:name="com.example.foodplanner.features.plan.views.PlanFragment"
         android:label="@string/title_home_plan"
-        tools:layout="@layout/fragment_plan" >
+        tools:layout="@layout/fragment_plan">
         <action
-            android:id="@+id/action_plan_to_favourites"
-            app:destination="@id/home_favourites_fragment" />
+            android:id="@+id/action_plan_to_pickItem"
+            app:destination="@id/pickItem_fragment">
+        </action>
     </fragment>
+
     <fragment
         android:id="@+id/home_favourites_fragment"
         android:name="com.example.foodplanner.features.favourites.views.FavouritesFragment"
         android:label="@string/title_home_favourites"
         tools:layout="@layout/fragment_favourites">
         <argument
-            android:name="selectionResultKey"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="pickItem"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
+
+    <fragment
+        android:id="@+id/pickItem_fragment"
+        android:name="com.example.foodplanner.features.favourites.views.FavouritesFragment"
+        android:label="@string/title_home_favourites"
+        tools:layout="@layout/fragment_favourites">
+        <argument
+            android:name="pickItem"
+            app:argType="boolean"
+            android:defaultValue="true" />
+    </fragment>
+
     <fragment
         android:id="@+id/home_search_fragment"
         android:name="com.example.foodplanner.features.search.views.SearchFragment"
@@ -131,7 +145,7 @@
         android:id="@+id/loading_fragment"
         android:name="com.example.foodplanner.features.common.views.LoadingFragment"
         android:label="LoadingFragment"
-        tools:layout="@layout/fragment_loading" >
+        tools:layout="@layout/fragment_loading">
         <argument
             android:name="operationKey"
             app:argType="integer" />
@@ -163,7 +177,7 @@
     <action
         android:id="@+id/action_global_main_graph"
         app:destination="@id/home_meal_fragment"
+        app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph"
-        app:popUpToInclusive="true"
-        app:launchSingleTop="true" />
+        app:popUpToInclusive="true" />
 </navigation>

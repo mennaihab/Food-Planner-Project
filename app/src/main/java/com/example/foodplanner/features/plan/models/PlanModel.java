@@ -20,5 +20,7 @@ public interface PlanModel {
     void saveInstance(Bundle outBundle);
 
     Single<PlanMealItem> addPlanMeal(MealItem mealItem, LocalDate date);
+
+    Single<PlanMealItem> removePlanMeal(PlanMealItem item);
 }
 

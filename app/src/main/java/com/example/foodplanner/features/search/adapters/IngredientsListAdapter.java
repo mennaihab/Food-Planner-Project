@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.helpers.ItemClickListener;
 import com.example.foodplanner.features.common.models.Ingredient;
 
@@ -89,27 +90,21 @@ public class IngredientsListAdapter extends RecyclerView.Adapter<IngredientsList
             itemView.setOnClickListener(e -> {
                 itemListener.onClick(ingredient);
             });
-            Glide.with(itemView)
-                    .asBitmap()
-                    .load("https://www.themealdb.com/images/ingredients/" + ingredient.getName() + "-Small.png") // TODO: extract
-                    .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
-                    .error(R.drawable.ic_launcher_background) // TODO: change
-                    .listener(new RequestListener<Bitmap>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                            return false;
-                        }
+            ViewUtils.loadImageInto(ingredient.getSmallIcon(), image, new RequestListener<Bitmap>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                    return false;
+                }
 
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            if (resource != null) {
-                                Palette palette = Palette.from(resource).generate();
-                                imageWrapper.setCardBackgroundColor(palette.getDominantColor(itemView.getContext().getColor(android.R.color.transparent)));
-                            }
-                            return false;
-                        }
-                    })
-                    .into(image);
+                @Override
+                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                    if (resource != null) {
+                        Palette palette = Palette.from(resource).generate();
+                        imageWrapper.setCardBackgroundColor(palette.getDominantColor(itemView.getContext().getColor(android.R.color.transparent)));
+                    }
+                    return false;
+                }
+            });
         }
     }
 }

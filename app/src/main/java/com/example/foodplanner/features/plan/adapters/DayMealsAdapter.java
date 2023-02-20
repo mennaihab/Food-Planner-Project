@@ -3,10 +3,12 @@ package com.example.foodplanner.features.plan.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +23,11 @@ import java.util.List;
 public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMealViewHolder> {
 
     private final AsyncListDiffer<PlanMealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+    private final PlanMealClickListener clickListener;
+
+    public DayMealsAdapter(PlanMealClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
 
     public void updateList(List<PlanMealItem> items) {
         mDiffer.submitList(items);
@@ -44,19 +51,25 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
         return mDiffer.getCurrentList().size();
     }
 
-    public static class DayMealViewHolder extends RecyclerView.ViewHolder {
+    public class DayMealViewHolder extends RecyclerView.ViewHolder {
+        private final CardView card;
         private final TextView name;
         private final ImageView img;
+        private final Button remove;
 
         private DayMealViewHolder(View itemView) {
             super(itemView);
+            card = itemView.findViewById(R.id.meal_card);
             name = itemView.findViewById(R.id.meal_name);
             img = itemView.findViewById(R.id.meal_img);
+            remove = itemView.findViewById(R.id.meal_remove);
         }
 
         private void bindData(PlanMealItem item) {
             name.setText(item.getMeal().getName());
-            ViewUtils.loadImageInto(item.getMeal().getThumbnail(),img);
+            ViewUtils.loadImageInto(item.getMeal().getPreview(),img);
+            remove.setOnClickListener(v -> clickListener.onRemoveItem(item));
+            card.setOnClickListener(v -> clickListener.onClick(item));
         }
     }
 

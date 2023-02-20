@@ -1,8 +1,12 @@
 package com.example.foodplanner.features.plan.views;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -15,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.features.common.helpers.CalendarPermissionHolder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,21 +28,37 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 
-public class PlanFragment extends Fragment {
-
+public class PlanFragment extends Fragment implements CalendarPermissionHolder {
+    private static final String PERMISSIONS_RESULT = "PERMISSIONS_RESULT";
+    private static final String[] permissions = new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR};
 
     private ViewPager2 viewPager;
+    private boolean hasCalenderPermissions = false;
 
     public PlanFragment() {
         super(R.layout.fragment_plan);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ActivityResultLauncher<String[]> permissionsRequest = requireActivity().getActivityResultRegistry().register(PERMISSIONS_RESULT, getViewLifecycleOwner(), new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+            @Override
+            public void onActivityResult(Map<String, Boolean> result) {
+                hasCalenderPermissions = result.values().stream().allMatch(Predicate.isEqual(true));
+            }
+        });
+
+        if (savedInstanceState != null) {
+            hasCalenderPermissions = savedInstanceState.getBoolean(PERMISSIONS_RESULT, false);
+        }
+        if (!hasCalenderPermissions) {
+            permissionsRequest.launch(permissions);
+        }
 
         viewPager = view.findViewById(R.id.week_pager);
 
@@ -48,7 +69,7 @@ public class PlanFragment extends Fragment {
 
         WeekSlideAdapter adapter = new WeekSlideAdapter(weekStart);
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(WeekSlideAdapter.START_INDEX);
+        viewPager.setCurrentItem(WeekSlideAdapter.START_INDEX, false);
 
         TextView tv = view.findViewById(R.id.week_tv);
         Button rightBtn = view.findViewById(R.id.rigth_btn);
@@ -78,6 +99,17 @@ public class PlanFragment extends Fragment {
         leftBtn.setOnClickListener(v -> {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(PERMISSIONS_RESULT, hasCalenderPermissions);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean hasPermissions() {
+        return hasCalenderPermissions;
     }
 
     private class WeekSlideAdapter extends FragmentStateAdapter {

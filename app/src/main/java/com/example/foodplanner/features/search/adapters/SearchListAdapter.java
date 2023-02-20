@@ -1,5 +1,6 @@
 package com.example.foodplanner.features.search.adapters;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,17 +13,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.RequestFutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 
@@ -89,22 +96,8 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
         private void bind(FavouriteMealItem item) {
             name.setText(item.getMeal().getName());
-            Glide.with(itemView)
-                    .asBitmap()
-                    .load(item.getMeal().getThumbnail() + "/preview") // TODO: extract
-                    .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
-                    .error(R.drawable.ic_launcher_background) // TODO: change
-                    .into(image);
-
-            Glide.with(favourite)
-                    .load(item.isFavourite() ? R.drawable.favourite : R.drawable.ic_favorite_border)
-                    .into(new RequestFutureTarget<Drawable>(favourite.getWidth(), favourite.getHeight()) {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            favourite.setBackground(resource);
-                        }
-                    });
-
+            ViewUtils.loadImageInto(item.getMeal().getPreview(), image);
+            ViewUtils.loadImageInto((item.isFavourite() ? R.drawable.favourite : R.drawable.ic_favorite_border), favourite);
             card.setOnClickListener(e -> clickListener.onClick(item));
             favourite.setOnClickListener(e -> clickListener.onFavourite(item));
         }

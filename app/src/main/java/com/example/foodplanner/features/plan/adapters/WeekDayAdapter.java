@@ -24,11 +24,11 @@ import java.util.List;
 public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.DayViewHolder> {
 
     private final AsyncListDiffer<DayData> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
-    private final ItemClickListener<LocalDate> onAddItem;
+    private final PlanClickListener clickListener;
     private final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 
-    public WeekDayAdapter(ItemClickListener<LocalDate> onAddItem) {
-        this.onAddItem = onAddItem;
+    public WeekDayAdapter(PlanClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
     public void submitList(List<DayData> list) {
@@ -56,7 +56,6 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.DayViewH
     public class DayViewHolder extends RecyclerView.ViewHolder {
         private final TextView dayName;
         private final Button addButton;
-        private final RecyclerView mealsList;
         private final DayMealsAdapter childItemAdapter;
 
 
@@ -64,8 +63,8 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.DayViewH
             super(itemView);
             dayName = itemView.findViewById(R.id.dayName);
             addButton = itemView.findViewById(R.id.add_btn);
-            mealsList = itemView.findViewById(R.id.child_recyclerview);
-            childItemAdapter = new DayMealsAdapter();
+            RecyclerView mealsList = itemView.findViewById(R.id.child_recyclerview);
+            childItemAdapter = new DayMealsAdapter(clickListener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
             mealsList.addItemDecoration(
                     new MarginItemDecoration(ViewUtils.dpToPx(mealsList.getContext(), 16), 1, LinearLayoutManager.HORIZONTAL)
@@ -78,7 +77,7 @@ public class WeekDayAdapter extends RecyclerView.Adapter<WeekDayAdapter.DayViewH
 
         public void bindData(DayData parentItem) {
             dayName.setText(parentItem.getDay().getDayOfWeek().name());
-            addButton.setOnClickListener(v -> onAddItem.onClick(parentItem.getDay()));
+            addButton.setOnClickListener(v -> clickListener.onAddItem(parentItem.getDay()));
             childItemAdapter.updateList(parentItem.getMeals());
         }
     }

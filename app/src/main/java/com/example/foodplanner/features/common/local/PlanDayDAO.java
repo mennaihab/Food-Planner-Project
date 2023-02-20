@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.foodplanner.features.common.entities.FavouriteMealEntity;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.entities.PlanDayEntity;
 
@@ -28,8 +27,8 @@ public interface PlanDayDAO {
     @Query("SELECT * FROM plandayentityview WHERE userId = :userId")
     Flowable<List<PlanDayEntity.Full>> getAll(String userId);
 
-    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND day >= :start AND day <= :end")
-    Flowable<List<PlanDayEntity.Full>> getAll(String userId, LocalDate start, LocalDate end);
+    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND active = 1 AND day >= :start AND day <= :end")
+    Flowable<List<PlanDayEntity.Full>> getAllActive(String userId, LocalDate start, LocalDate end);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertAll(PlanDayEntity... days);

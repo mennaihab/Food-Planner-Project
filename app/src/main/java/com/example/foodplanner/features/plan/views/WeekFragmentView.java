@@ -13,6 +13,6 @@ public interface WeekFragmentView {
     void onItemAdded(PlanMealItem planMealItem);
     void onItemRemoved(PlanMealItem planMealItem);
     void onAddFailure(MealItem mealItem, Throwable error);
-    void onRemoveFailure(MealItem mealItem, Throwable error);
+    void onRemoveFailure(PlanMealItem mealItem, Throwable error);
 
 }

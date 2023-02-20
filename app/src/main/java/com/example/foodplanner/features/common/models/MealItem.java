@@ -67,6 +67,13 @@ public class MealItem implements Parcelable {
         return thumbnail;
     }
 
+    public String getPreview() {
+        if (thumbnail != null) {
+            return thumbnail + "/preview";
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -34,7 +34,6 @@ public class FavouriteRepository {
     private final FavouriteMealDAO favouriteMealDAO;
     private final MealItemDAO mealItemDAO;
     private final FavouritesBackupService favouritesBackupService;
-    private final BaseMapper<FavouriteMealItem, FavouriteMealEntity.Full> mapper;
 
     public FavouriteRepository(FavouriteMealDAO favouriteMealDAO,
                                MealItemDAO mealItemDAO,
@@ -43,7 +42,6 @@ public class FavouriteRepository {
         this.favouriteMealDAO = favouriteMealDAO;
         this.mealItemDAO = mealItemDAO;
         this.favouritesBackupService = favouritesBackupService;
-        this.mapper = mapper;
         fetchFavouritesDelegate = new RepositoryFetchDelegate<>(
                 null,
                 favouriteMealDAO::getAllActive,

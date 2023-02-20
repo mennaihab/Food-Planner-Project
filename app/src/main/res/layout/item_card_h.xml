@@ -20,6 +20,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
+
             app:srcCompat="@mipmap/ic_launcher" />
 
         <TextView

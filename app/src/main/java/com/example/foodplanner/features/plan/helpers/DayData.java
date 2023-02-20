@@ -1,6 +1,5 @@
 package com.example.foodplanner.features.plan.helpers;
 
-import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.models.PlanMealItem;
 
 import java.time.LocalDate;

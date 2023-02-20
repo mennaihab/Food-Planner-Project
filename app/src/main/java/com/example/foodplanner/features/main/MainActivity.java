@@ -24,8 +24,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
-import com.example.foodplanner.features.common.services.AuthenticationManager;
 import com.example.foodplanner.features.common.views.LoadingFragmentDirections;
+import com.example.foodplanner.features.common.views.NavigatorProvider;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
 import com.example.foodplanner.features.common.views.OperationSink;
 import com.example.foodplanner.features.common.views.WindowPainter;
@@ -38,7 +38,7 @@ import java.util.Objects;
 import io.reactivex.rxjava3.core.Completable;
 
 @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
-public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink {
+public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink, NavigatorProvider {
     private static final String TAG = "MainActivity";
 
     private NavHostFragment navHostFragment;
@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
                 R.id.home_favourites_fragment,
                 R.id.home_plan_fragment
         };
+        int[] toolbarViews = new int[] {
+                R.id.home_meal_fragment,
+                R.id.home_favourites_fragment,
+        };
         int[] dialogsIds = new int[] {
                 R.id.requiredAuth_fragment,
                 R.id.loading_fragment,
@@ -88,7 +92,8 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
             boolean changeNothing = Arrays.stream(dialogsIds).anyMatch(id -> navDestination.getId() == id);
             if (!changeNothing) {
                 boolean decorShouldShow = Arrays.stream(homeFragmentsIds).anyMatch(id -> navDestination.getId() == id);
-                setToolbarVisibility(decorShouldShow);
+                boolean toolbarShouldShow = Arrays.stream(toolbarViews).anyMatch(id -> navDestination.getId() == id);
+                setToolbarVisibility(toolbarShouldShow);
                 setBottomNavVisibility(decorShouldShow);
                 if (decorShouldShow) {
                     setStatusBarVisibility(true);
@@ -119,6 +124,11 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
                     }
             );
         }
+    }
+
+    @Override
+    public NavController getNavController() {
+        return navController;
     }
 
     @Override
@@ -190,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
         return FoodPlannerApplication.from(this)
                 .getOperationManager().retrieve(operationKey);
     }
+
 
 
 }

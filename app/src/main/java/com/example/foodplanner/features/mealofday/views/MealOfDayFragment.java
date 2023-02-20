@@ -37,7 +37,7 @@ import java.util.List;
 
 public class MealOfDayFragment extends Fragment {
     private static final String TAG = "MealOfDayFragment";
-    private static final int FRAGMENTS_COUNT = 3;
+    private static final int FRAGMENTS_COUNT = 5;
     private static final String FRAGMENTS = "FRAGMENTS";
 
     private final List<Fragment> fragments = new ArrayList<>(FRAGMENTS_COUNT);
@@ -148,7 +148,7 @@ public class MealOfDayFragment extends Fragment {
         @Override
         public void updateMeal(FavouriteMealItem meal) {
             name.setText(meal.getMeal().getName());
-            ViewUtils.loadImageInto(meal.getMeal().getThumbnail(), image);
+            ViewUtils.loadImageInto(meal.getMeal().getPreview(), image);
             cardView.setOnClickListener(v -> {
                 Navigation.findNavController(v).navigate(MealOfDayFragmentDirections.actionGlobalToMeal(meal.getMeal().getId()));
             });

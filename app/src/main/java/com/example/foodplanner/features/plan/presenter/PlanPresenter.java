@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.foodplanner.features.common.models.MealItem;
+import com.example.foodplanner.features.common.models.PlanMealItem;
 import com.example.foodplanner.features.plan.models.PlanModel;
 import com.example.foodplanner.features.plan.views.WeekFragmentView;
 
@@ -52,6 +53,12 @@ public class PlanPresenter implements LifecycleEventObserver {
                 .subscribe(view::onItemAdded, (e) -> view.onAddFailure(mealItem,e)));
     }
 
+    public void removePlanMeal(PlanMealItem item) {
+        disposable.add(planModel.removePlanMeal(item)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(view::onItemRemoved, (e) -> view.onRemoveFailure(item, e)));
+    }
+
     private void close(LifecycleOwner source) {
         source.getLifecycle().removeObserver(this);
         disposable.clear();
@@ -61,6 +68,7 @@ public class PlanPresenter implements LifecycleEventObserver {
     public void saveInstance(Bundle outState) {
         planModel.saveInstance(outState);
     }
+
 
 
 }

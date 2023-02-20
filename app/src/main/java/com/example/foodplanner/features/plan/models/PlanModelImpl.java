@@ -3,11 +3,13 @@ package com.example.foodplanner.features.plan.models;
 import android.os.Bundle;
 
 import com.example.foodplanner.core.utils.UserUtils;
+import com.example.foodplanner.features.common.helpers.MealCalenderHelper;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.models.PlanMealItem;
 import com.example.foodplanner.features.common.repositories.PlanDayArguments;
 import com.example.foodplanner.features.common.repositories.PlanRepository;
 import com.example.foodplanner.features.common.services.AuthenticationManager;
+import com.example.foodplanner.features.common.helpers.CalendarPermissionHolder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +29,10 @@ public class PlanModelImpl implements PlanModel {
     private final PlanRepository planRepository;
     private final List<PlanMealItem> latestData = new ArrayList<>();
 
-    public PlanModelImpl(Bundle savedInstanceState, AuthenticationManager authenticationManager, PlanRepository planRepository, LocalDate weekStart) {
+    public PlanModelImpl(Bundle savedInstanceState,
+                         AuthenticationManager authenticationManager,
+                         PlanRepository planRepository,
+                         LocalDate weekStart) {
         this.authenticationManager = authenticationManager;
         this.planRepository = planRepository;
         Flowable<List<PlanMealItem>> source = authenticationManager.getCurrentUserObservable()
@@ -58,7 +63,20 @@ public class PlanModelImpl implements PlanModel {
 
     @Override
     public Single<PlanMealItem> addPlanMeal(MealItem mealItem, LocalDate date) {
-        return null;
+        String userId = UserUtils.getUserId(authenticationManager.getCurrentUser());
+        if (userId == null) {
+            return Single.error(new Exception("You have to be logged in to access your plan"));
+        }
+        return planRepository.addToPlan(mealItem, userId, date);
+    }
+
+    @Override
+    public Single<PlanMealItem> removePlanMeal(PlanMealItem item) {
+        String userId = UserUtils.getUserId(authenticationManager.getCurrentUser());
+        if (userId == null) {
+            return Single.error(new Exception("You have to be logged in to access your plan"));
+        }
+        return planRepository.removeFromPlan(item);
     }
 
     @Override

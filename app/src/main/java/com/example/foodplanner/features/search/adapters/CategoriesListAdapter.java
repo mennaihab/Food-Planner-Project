@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.helpers.ItemClickListener;
 import com.example.foodplanner.features.common.models.Category;
 
@@ -83,37 +84,31 @@ public class CategoriesListAdapter extends RecyclerView.Adapter<CategoriesListAd
             itemView.setOnClickListener(e -> {
                 itemListener.onClick(category);
             });
-            Glide.with(itemView)
-                    .asBitmap()
-                 .load(category.getThumbnail())
-                 .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
-                 .error(R.drawable.ic_launcher_background) // TODO: change
-                    .listener(new RequestListener<Bitmap>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                            return false;
-                        }
+            ViewUtils.loadImageInto(category.getThumbnail(), image, 300, new RequestListener<Bitmap>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                    return false;
+                }
 
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            if (resource != null) {
-                                Palette palette = Palette.from(resource).generate();
-                                Palette.Swatch swatch = palette.getDominantSwatch();
-                                if (swatch == null) {
-                                    swatch = palette.getVibrantSwatch();
-                                }
-                                if (swatch == null) {
-                                    swatch = palette.getSwatches().stream().findFirst().orElse(null);
-                                }
-                                if (swatch != null) {
-                                    itemWrapper.setCardBackgroundColor(swatch.getRgb());
-                                    name.setTextColor(swatch.getTitleTextColor());
-                                }
-                            }
-                            return false;
+                @Override
+                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                    if (resource != null) {
+                        Palette palette = Palette.from(resource).generate();
+                        Palette.Swatch swatch = palette.getDominantSwatch();
+                        if (swatch == null) {
+                            swatch = palette.getVibrantSwatch();
                         }
-                    })
-                 .into(image);
+                        if (swatch == null) {
+                            swatch = palette.getSwatches().stream().findFirst().orElse(null);
+                        }
+                        if (swatch != null) {
+                            itemWrapper.setCardBackgroundColor(swatch.getRgb());
+                            name.setTextColor(swatch.getTitleTextColor());
+                        }
+                    }
+                    return false;
+                }
+            });
         }
     }
 }

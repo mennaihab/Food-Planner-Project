@@ -44,7 +44,9 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     @Override
     public Optional<FirebaseUser> getCurrentUser() {
-        return currentUser.getValue();
+        Optional<FirebaseUser> user = currentUser.getValue();
+        if (user != null) return user;
+        return Optional.empty();
     }
 
     @Override

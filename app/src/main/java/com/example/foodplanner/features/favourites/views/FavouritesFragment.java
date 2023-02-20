@@ -36,6 +36,7 @@ import java.util.List;
 
 public class FavouritesFragment extends Fragment implements FavouritesView {
     private static final String TAG = "FavouritesFragment";
+    public static final String SELECTED_MEAL = "SELECTED_MEAL";
 
     private FavouritesPresenter presenter;
     private RecyclerView recyclerView;
@@ -67,7 +68,7 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String selectionResultKey = FavouritesFragmentArgs.fromBundle(requireArguments()).getSelectionResultKey();
+        boolean pickItem = FavouritesFragmentArgs.fromBundle(requireArguments()).getPickItem();
 
         recyclerView = view.findViewById(R.id.items_list);
         recyclerView.addItemDecoration(
@@ -76,7 +77,7 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
 
-        itemAdapter = new FavouritesAdapter(selectionResultKey == null, new FavouriteClickListener() {
+        itemAdapter = new FavouritesAdapter(!pickItem, new FavouriteClickListener() {
             @Override
             public void onFavourite(FavouriteMealItem item) {
                 presenter.updateFavourite(item);
@@ -84,10 +85,11 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
             @Override
             public void onClick(FavouriteMealItem item) {
-                if (selectionResultKey == null) {
+                Log.d(TAG, "onClick: " + item);
+                if (!pickItem) {
                     Navigation.findNavController(view).navigate(FavouritesFragmentDirections.actionGlobalToMeal(item.getMeal().getId()));
                 } else {
-                    NavigationUtils.setResult(view, selectionResultKey, item.getMeal());
+                    NavigationUtils.setResult(view, SELECTED_MEAL, item.getMeal());
                     NavigationUtils.navigateUp(view);
                 }
             }
