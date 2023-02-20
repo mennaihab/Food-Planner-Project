@@ -8,17 +8,19 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.mealofday.models.MealOfDayModel;
 import com.example.foodplanner.features.mealofday.views.MealOfDayView;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class MealOfDayPresenter implements LifecycleEventObserver {
 
     private final MealOfDayView view;
     private final MealOfDayModel mealOfDayModel;
-    private Disposable disposable;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public MealOfDayPresenter(MealOfDayView view, MealOfDayModel mealOfDayModel) {
         this.view = view;
@@ -39,19 +41,23 @@ public class MealOfDayPresenter implements LifecycleEventObserver {
     }
 
     private void init() {
-        disposable = mealOfDayModel.getMeal()
+        disposable.add(mealOfDayModel.getMeal()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::updateMeal, view::onLoadFailure);
+                .subscribe(view::updateMeal, view::onLoadFailure));
+    }
+
+    public void updateFavourite() {
+        disposable.add(mealOfDayModel.updateFavourite().subscribe());
     }
 
     private void close(LifecycleOwner lifecycleOwner) {
         lifecycleOwner.getLifecycle().removeObserver(this);
-        if (disposable != null) {
-            disposable.dispose();
-        }
+            disposable.clear();
     }
 
     public void saveInstance(Bundle outState) {
         mealOfDayModel.saveInstance(outState);
     }
+
+
 }

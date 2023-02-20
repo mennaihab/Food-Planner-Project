@@ -2,6 +2,8 @@ package com.example.foodplanner.features.search.views;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
+import com.example.foodplanner.core.utils.GeneralUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.AreaEntity;
 import com.example.foodplanner.features.common.entities.CategoryEntity;
@@ -34,6 +37,8 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     private static final String TAG = "SearchIngredientsFragment";
 
     private RecyclerView list;
+    private ProgressBar loader;
+    private TextView errorTv;
     private CategoriesListAdapter listAdapter;
     private SearchCategoriesPresenter presenter;
 
@@ -58,9 +63,9 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-
         list = view.findViewById(R.id.items_list);
+        loader = view.findViewById(R.id.items_loader);
+        errorTv = view.findViewById(R.id.items_error_tv);
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 8), 2)
         );
@@ -85,11 +90,17 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     @Override
     public void updateCategories(List<Category> products) {
         list.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.GONE);
         listAdapter.updateCategories(products);
     }
 
     @Override
     public void onLoadFailure(Throwable error) {
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        list.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.VISIBLE);
+        errorTv.setText(GeneralUtils.getErrorMessage(error));
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,10 +4,12 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +21,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.utils.GeneralUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
@@ -40,10 +42,13 @@ import java.util.List;
 
 
 public class MealDetailsFragment extends Fragment implements MealDetailsView {
+    private static final String TAG = "MealDetailsFragment";
 
     private RecyclerView recyclerView;
     private IngredientsAdapter listAdapter;
-    private ConstraintLayout constraintLayout;
+    private ConstraintLayout mealDetailsRoot;
+    private ProgressBar loader;
+    private TextView errorTv;
     private Flow flow;
     private TextView mealName;
     private TextView mealCategory;
@@ -52,9 +57,6 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     private YouTubePlayerView youtube;
     private ImageView mealThumbnail;
     private TextView mealSource;
-
-
-    private static final String TAG = "MealDetailsFragment";
     private MealDetailsPresenter presenter;
 
     public MealDetailsFragment() {
@@ -66,7 +68,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         super.onViewCreated(view, savedInstanceState);
 
         String mealId = MealDetailsFragmentArgs.fromBundle(requireArguments()).getMealId();
-
+        mealDetailsRoot = view.findViewById(R.id.meal_details);
+        loader = view.findViewById(R.id.meal_loader);
+        errorTv = view.findViewById(R.id.meal_error_tv);
         recyclerView = view.findViewById(R.id.ingredients_recycler);
         mealName = view.findViewById(R.id.meal_name_tv);
         mealArea = view.findViewById(R.id.country_tv);
@@ -91,7 +95,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         listAdapter = new IngredientsAdapter();
         recyclerView.setAdapter(listAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        constraintLayout = view.findViewById(R.id.constraintLayout);
+
         flow = view.findViewById(R.id.flow);
         getViewLifecycleOwner().getLifecycle().addObserver(youtube);
     }
@@ -105,6 +109,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void updateMealDetails(Meal meal) {
+        mealDetailsRoot.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.GONE);
+
         recyclerView.setVisibility(View.VISIBLE);
         listAdapter.updateList(meal.getIngredients());
         mealName.setText(meal.getName());
@@ -112,7 +120,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         mealArea.setText(meal.getArea());
         mealInstructions.setText(meal.getInstructions());
         setupVideoPlayer(meal.getYoutube());
-        ViewUtils.loadImageInto(meal.getThumbnail(), mealThumbnail);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        ViewUtils.loadImageInto(meal.getThumbnail(), mealThumbnail, width);
         mealSource.setText(meal.getSource());
         List<String> tags = meal.getTags();
         for (int i = 0; i < tags.size(); i++) {
@@ -120,7 +131,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
             chip.setText(tags.get(i));
             chip.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
             chip.setId(View.generateViewId());
-            constraintLayout.addView(chip);
+            mealDetailsRoot.addView(chip);
             flow.addView(chip);
         }
     }
@@ -152,7 +163,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void onLoadFailure(Throwable error) {
-        Log.e(TAG, error.getLocalizedMessage(), error);
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        mealDetailsRoot.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.VISIBLE);
+        errorTv.setText(GeneralUtils.getErrorMessage(error));
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
 }

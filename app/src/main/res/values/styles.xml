@@ -188,6 +188,7 @@
 
     <style name="ThemeOverlay.FoodPlanner.TextInputLayout" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="colorOnSurface">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
 
     <style name="Theme.FoodPlanner.TextInputLayout.Search" parent="">
@@ -254,7 +255,7 @@
     </style>
 
     <style name="ThemeOverlay.FoodPlanner.CardView" parent="">
-        <item name="colorSurface">#C8C8C8</item>
+        <item name="colorSurface">@color/light_grey</item>
     </style>
 
     <style name="Theme.FoodPlanner.RatingBar" parent="Widget.AppCompat.RatingBar.Small">

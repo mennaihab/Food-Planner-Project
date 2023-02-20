@@ -112,6 +112,7 @@ public class LoginFragment extends Fragment implements AuthenticationView {
         );
         textView.setText(spannableString);
         TextUtils.makeClickable(textView);
+        textView.setVisibility(View.INVISIBLE);
     }
 
     @Override

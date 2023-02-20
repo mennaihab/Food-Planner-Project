@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 
 public class PlanModelImpl implements PlanModel {
     private static final String PLAN = "PLAN";
-    private final Flowable<List<PlanMealItem>> source;
+    private final BehaviorSubject<Map<LocalDate, List<PlanMealItem>>> source;
     private final AuthenticationManager authenticationManager;
     private final PlanRepository planRepository;
     private final List<PlanMealItem> latestData = new ArrayList<>();
@@ -52,7 +53,10 @@ public class PlanModelImpl implements PlanModel {
             latestData.addAll(savedInstanceState.getParcelableArrayList(PLAN));
             source = source.startWithItem(latestData);
         }
-        this.source = source;
+        this.source = source
+                .map(list -> list.stream()
+                        .collect(Collectors.groupingBy(PlanMealItem::getDay)))
+                .toObservable().subscribeWith(BehaviorSubject.create());
     }
 
     @Override
@@ -81,6 +85,6 @@ public class PlanModelImpl implements PlanModel {
 
     @Override
     public Flowable<Map<LocalDate, List<PlanMealItem>>> getDayMeals() {
-        return source.map(list -> list.stream().collect(Collectors.groupingBy(PlanMealItem::getDay)));
+        return source.toFlowable(BackpressureStrategy.LATEST);
     }
 }

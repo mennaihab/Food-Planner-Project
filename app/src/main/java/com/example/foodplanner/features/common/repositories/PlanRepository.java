@@ -90,7 +90,7 @@ public class PlanRepository {
         PlanMealItem item = new PlanMealItem(calenderId, userId, day, mealItem, true);
         return planDayDAO
                 .insertAll(entity)
-                .andThen(backupFromRemote(userId, Collections.singletonList(item)))
+                .andThen(backupToRemote(userId, Collections.singletonList(item)))
                 .andThen(Single.just(item))
                 .subscribeOn(Schedulers.io());
     }
@@ -107,7 +107,7 @@ public class PlanRepository {
         item.setActive(false);
         return planDayDAO
                 .updateAll(entity)
-                .andThen(backupFromRemote(mealItem.getUserId(), Collections.singletonList(item)))
+                .andThen(backupToRemote(mealItem.getUserId(), Collections.singletonList(item)))
                 .andThen(Single.just(item))
                 .doAfterSuccess(itemResult -> {
 
@@ -128,8 +128,8 @@ public class PlanRepository {
         }
     }
 
-    private Completable backupFromRemote(String userId, List<PlanMealItem> items) {
-        Log.d(TAG, "backupFromRemote: backing up");
+    private Completable backupToRemote(String userId, List<PlanMealItem> items) {
+        Log.d(TAG, "backupToRemote: backing up");
         return planBackupService.insertForUser(userId, items).subscribeOn(Schedulers.io());
     }
 

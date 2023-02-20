@@ -54,6 +54,16 @@ public abstract class ViewUtils {
                 .into(view);
     }
 
+    public static void loadImageInto(String imageUrl, ImageView view, int size) {
+        Glide.with(view)
+                .asBitmap()
+                .load(imageUrl)
+                .placeholder(placeholder)
+                .error(error)
+                .override(size)
+                .into(view);
+    }
+
     public static void loadImageInto(String imageUrl, ImageView view, RequestListener<Bitmap> requestListener) {
         Glide.with(view)
                 .asBitmap()
