@@ -105,7 +105,6 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
             }
         });
         list.setAdapter(listAdapter);
-        list.setHasFixedSize(true);
         LinearLayoutManager ingredientsLayout = new GridLayoutManager(requireContext(), 2);
         list.setLayoutManager(ingredientsLayout);
         TextInputLayout searchBarLayout = view.findViewById(R.id.search_edl);

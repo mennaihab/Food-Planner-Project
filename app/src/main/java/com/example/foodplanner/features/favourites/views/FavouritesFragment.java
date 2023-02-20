@@ -85,7 +85,6 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 16), 2, LinearLayoutManager.VERTICAL)
         );
-        list.setHasFixedSize(true);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
 
