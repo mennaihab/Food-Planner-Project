@@ -192,10 +192,16 @@
     </style>
 
     <style name="Theme.FoodPlanner.TextInputLayout.Search" parent="">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.FoodPlanner.TextInputLayout.Search</item>
         <item name="shapeAppearanceOverlay">
             @style/ThemeOverlay.FoodPlanner.TextInputLayout.Search.ShapeAppearanceOverlay
         </item>
+        <item name="hintTextColor">@color/dark_orange</item>
         <item name="boxBackgroundColor">@color/dark_grey</item>
+    </style>
+
+    <style name="ThemeOverlay.FoodPlanner.TextInputLayout.Search">
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 
     <style name="ThemeOverlay.FoodPlanner.TextInputLayout.Search.ShapeAppearanceOverlay" parent="">

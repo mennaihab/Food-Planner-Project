@@ -28,6 +28,7 @@ public class MealCalenderHelper {
     }
 
     public String addMeal(LocalDate date, MealItem meal) {
+        Log.d(TAG, "addMeal: has permission: " + calendarPermissionHolder.hasPermissions());
         if (calendarPermissionHolder.hasPermissions()) {
             Long calenderId = this.calenderId;
             if (calenderId == null) {
@@ -59,6 +60,7 @@ public class MealCalenderHelper {
 
     public void removeMeal(String uri) {
         if (calendarPermissionHolder.hasPermissions()) {
+            Log.d(TAG, "removeMeal: " + uri);
             Uri deleteUri = Uri.parse(uri);
             contentResolver.delete(deleteUri, null, null);
         }
@@ -69,7 +71,7 @@ public class MealCalenderHelper {
         String[] projection = {CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME};
         try (Cursor cursor = contentResolver.query(uri, projection, null, null, null)) {
             if (cursor != null) {
-                if (cursor.moveToFirst()) {
+                if (cursor.moveToNext()) {
                     @SuppressLint("Range")
                     Long calID = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID));
                     Log.d(TAG, "getCalenderId: " + calID);

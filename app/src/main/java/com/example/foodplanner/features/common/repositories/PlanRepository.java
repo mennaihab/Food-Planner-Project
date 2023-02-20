@@ -81,13 +81,14 @@ public class PlanRepository {
 
 
     public Single<PlanMealItem> addToPlan(MealItem mealItem, String userId, LocalDate day) {
+        String calendarUri = addToCalendar(mealItem, day);
         PlanDayEntity entity = new PlanDayEntity();
         entity.active = true;
         entity.mealId = mealItem.getId();
         entity.userId = userId;
         entity.day = day;
-        String calenderId = addToCalendar(mealItem, day);
-        PlanMealItem item = new PlanMealItem(calenderId, userId, day, mealItem, true);
+        entity.calendarUri = calendarUri;
+        PlanMealItem item = new PlanMealItem(calendarUri, userId, day, mealItem, true);
         return planDayDAO
                 .insertAll(entity)
                 .andThen(backupToRemote(userId, Collections.singletonList(item)))
