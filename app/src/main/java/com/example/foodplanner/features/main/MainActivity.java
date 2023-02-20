@@ -25,6 +25,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.features.common.views.LoadingFragmentDirections;
+import com.example.foodplanner.features.common.views.NavigatorProvider;
 import com.example.foodplanner.features.common.views.OnBackPressedListener;
 import com.example.foodplanner.features.common.views.OperationSink;
 import com.example.foodplanner.features.common.views.WindowPainter;
@@ -37,7 +38,7 @@ import java.util.Objects;
 import io.reactivex.rxjava3.core.Completable;
 
 @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
-public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink {
+public class MainActivity extends AppCompatActivity implements WindowPainter, OperationSink, NavigatorProvider {
     private static final String TAG = "MainActivity";
 
     private NavHostFragment navHostFragment;
@@ -68,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
                 R.id.home_favourites_fragment,
                 R.id.home_plan_fragment
         };
+        int[] toolbarViews = new int[] {
+                R.id.home_meal_fragment,
+                R.id.home_favourites_fragment,
+        };
+        int[] dialogsIds = new int[] {
+                R.id.requiredAuth_fragment,
+                R.id.loading_fragment,
+        };
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(homeFragmentsIds).build();
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.main_nav_host);
         navController = Objects.requireNonNull(navHostFragment).getNavController();
@@ -80,18 +89,30 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
         NavigationUI.setupWithNavController(navView, navController);
 
         navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
-            boolean decorShouldShow = Arrays.stream(homeFragmentsIds).anyMatch(id -> navDestination.getId() == id);
-            setToolbarVisibility(decorShouldShow);
-            setBottomNavVisibility(decorShouldShow);
-            if (decorShouldShow) {
-                setStatusBarVisibility(true);
-                clearStatusBarColor();
+            boolean changeNothing = Arrays.stream(dialogsIds).anyMatch(id -> navDestination.getId() == id);
+            if (!changeNothing) {
+                boolean decorShouldShow = Arrays.stream(homeFragmentsIds).anyMatch(id -> navDestination.getId() == id);
+                boolean toolbarShouldShow = Arrays.stream(toolbarViews).anyMatch(id -> navDestination.getId() == id);
+                setToolbarVisibility(toolbarShouldShow);
+                setBottomNavVisibility(decorShouldShow);
+                if (decorShouldShow) {
+                    setStatusBarVisibility(true);
+                    clearStatusBarColor();
+                }
             }
         });
 
         navView.setOnItemSelectedListener(item -> {
-            // TODO handle with regard to authentication
-            return NavigationUI.onNavDestinationSelected(item, navController);
+            boolean canNavigate = item.getItemId() == R.id.home_meal_fragment || item.getItemId() == R.id.home_search_fragment;
+            if (!canNavigate) {
+                canNavigate = FoodPlannerApplication.from(this).getAuthenticationManager().isAuthenticated();
+            }
+            if (canNavigate) {
+                canNavigate = NavigationUI.onNavDestinationSelected(item, navController);
+            } else {
+                navController.navigate(R.id.action_global_requiredAuth);
+            }
+            return canNavigate;
         });
 
         if (BuildCompat.isAtLeastT()) {
@@ -103,6 +124,11 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
                     }
             );
         }
+    }
+
+    @Override
+    public NavController getNavController() {
+        return navController;
     }
 
     @Override
@@ -174,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements WindowPainter, Op
         return FoodPlannerApplication.from(this)
                 .getOperationManager().retrieve(operationKey);
     }
+
 
 
 }

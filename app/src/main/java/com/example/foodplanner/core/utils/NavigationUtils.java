@@ -17,12 +17,18 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.foodplanner.R;
+import com.example.foodplanner.features.common.views.NavigatorProvider;
 
 import java.util.Objects;
 
 public abstract class NavigationUtils {
     public static <T> void setResult(View view, String key, T result) {
         Objects.requireNonNull(Navigation.findNavController(view).getPreviousBackStackEntry())
+                .getSavedStateHandle().set(key, result);
+    }
+
+    public static <T> void setValue(View view, String key, T result) {
+        Objects.requireNonNull(Navigation.findNavController(view).getCurrentBackStackEntry())
                 .getSavedStateHandle().set(key, result);
     }
 
@@ -33,8 +39,30 @@ public abstract class NavigationUtils {
         }
     }
 
-    public static <T> LiveData<T> getResult(View view, String key) {
+    public static <T> LiveData<T> getValue(View view, String key) {
         return Objects.requireNonNull(Navigation.findNavController(view).getCurrentBackStackEntry())
+                .getSavedStateHandle().getLiveData(key);
+    }
+
+    public static <T> void setResult(NavigatorProvider navigatorProvider, String key, T result) {
+        Objects.requireNonNull(navigatorProvider.getNavController().getPreviousBackStackEntry())
+                .getSavedStateHandle().set(key, result);
+    }
+
+    public static <T> void setValue(NavigatorProvider navigatorProvider, String key, T result) {
+        Objects.requireNonNull(navigatorProvider.getNavController().getCurrentBackStackEntry())
+                .getSavedStateHandle().set(key, result);
+    }
+
+    public static <T> void maybeSetResult(NavigatorProvider navigatorProvider, String key, T result) {
+        NavBackStackEntry entry = navigatorProvider.getNavController().getPreviousBackStackEntry();
+        if (entry != null) {
+            entry.getSavedStateHandle().set(key, result);
+        }
+    }
+
+    public static <T> LiveData<T> getValue(NavigatorProvider navigatorProvider, String key) {
+        return Objects.requireNonNull(navigatorProvider.getNavController().getCurrentBackStackEntry())
                 .getSavedStateHandle().getLiveData(key);
     }
 

@@ -17,6 +17,7 @@ public class PlanDayEntity {
     public LocalDate day;
     @NonNull
     public String mealId;
+    public String calendarUri;
     public boolean active = true;
 
     @DatabaseView(
@@ -29,6 +30,17 @@ public class PlanDayEntity {
         public LocalDate day;
         @Embedded
         public MealItemEntity meal;
+        public String calendarUri;
         public boolean active = true;
+
+        public PlanDayEntity toEntity() {
+            PlanDayEntity entity = new PlanDayEntity();
+            entity.userId = userId;
+            entity.day = day;
+            entity.mealId = meal.id;
+            entity.calendarUri = calendarUri;
+            entity.active = active;
+            return entity;
+        }
     }
 }

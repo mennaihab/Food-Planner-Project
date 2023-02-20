@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
+import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
 import com.example.foodplanner.features.common.models.Meal;
@@ -111,11 +112,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         mealArea.setText(meal.getArea());
         mealInstructions.setText(meal.getInstructions());
         setupVideoPlayer(meal.getYoutube());
-        Glide.with(mealThumbnail)
-                .load(meal.getThumbnail())
-                .placeholder(R.drawable.ic_launcher_foreground) // TODO: change
-                .error(R.drawable.ic_launcher_background) // TODO: change
-                .into(mealThumbnail);
+        ViewUtils.loadImageInto(meal.getThumbnail(), mealThumbnail);
         mealSource.setText(meal.getSource());
         List<String> tags = meal.getTags();
         for (int i = 0; i < tags.size(); i++) {

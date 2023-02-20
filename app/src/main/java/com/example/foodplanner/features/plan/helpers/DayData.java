@@ -1,6 +1,6 @@
 package com.example.foodplanner.features.plan.helpers;
 
-import com.example.foodplanner.features.common.models.MealItem;
+import com.example.foodplanner.features.common.models.PlanMealItem;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,9 +8,9 @@ import java.util.Objects;
 
 public class DayData {
     private final LocalDate day;
-    private final List<MealItem> meals;
+    private final List<PlanMealItem> meals;
 
-    public DayData(LocalDate day, List<MealItem> meals) {
+    public DayData(LocalDate day, List<PlanMealItem> meals) {
         this.day = day;
         this.meals = meals;
     }
@@ -19,7 +19,7 @@ public class DayData {
         return day;
     }
 
-    public List<MealItem> getMeals() {
+    public List<PlanMealItem> getMeals() {
         return meals;
     }
 

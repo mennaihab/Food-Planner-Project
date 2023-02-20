@@ -11,9 +11,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rigth_btn"
         style="@style/Theme.FoodPlanner.Button.Icon"
-        android:layout_width="60dp"
+        android:layout_width="48dp"
         android:layout_height="60dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         app:icon="@mipmap/right"
         app:layout_constraintBottom_toBottomOf="@+id/left_btn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,10 +37,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/left_btn"
         style="@style/Theme.FoodPlanner.Button.Icon"
-        android:layout_width="60dp"
+        android:layout_width="48dp"
         android:layout_height="60dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
         app:icon="@mipmap/left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +48,6 @@
         android:id="@+id/week_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

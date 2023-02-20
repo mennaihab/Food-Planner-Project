@@ -19,33 +19,28 @@ import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
-import com.example.foodplanner.features.common.entities.AreaEntity;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
-import com.example.foodplanner.features.common.models.Area;
-import com.example.foodplanner.features.common.models.Meal;
+import com.example.foodplanner.features.common.helpers.mappers.FavouriteMealMapper;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
-import com.example.foodplanner.features.common.remote.MealRemoteService;
-import com.example.foodplanner.features.common.repositories.AreaRepository;
+import com.example.foodplanner.features.common.remote.impl.FavouritesBackupServiceImpl;
 import com.example.foodplanner.features.common.repositories.FavouriteRepository;
 import com.example.foodplanner.features.common.services.AppDatabase;
 import com.example.foodplanner.features.favourites.helpers.FavouriteClickListener;
 import com.example.foodplanner.features.favourites.helpers.FavouritesAdapter;
 import com.example.foodplanner.features.favourites.models.FavouriteMealsModelImpl;
 import com.example.foodplanner.features.favourites.presenters.FavouritesPresenter;
-import com.example.foodplanner.features.search.models.SearchAreasModelImpl;
-import com.example.foodplanner.features.search.presenters.SearchAreasPresenter;
-import com.example.foodplanner.features.search.views.SearchResultsFragmentDirections;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FavouritesFragment extends Fragment implements FavouritesView {
     private static final String TAG = "FavouritesFragment";
+    public static final String SELECTED_MEAL = "SELECTED_MEAL";
 
     private FavouritesPresenter presenter;
     private RecyclerView recyclerView;
-    private FavouritesAdapter ItemAdapter;
+    private FavouritesAdapter itemAdapter;
 
     public FavouritesFragment() {
         super(R.layout.fragment_favourites);
@@ -61,7 +56,9 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
                         FoodPlannerApplication.from(requireContext()).getAuthenticationManager(),
                         new FavouriteRepository(
                                 AppDatabase.getInstance(requireContext()).favouriteMealDAO(),
-                                new BaseMapper<>(MealItem.class, MealItemEntity.class)
+                                AppDatabase.getInstance(requireContext()).mealItemDAO(),
+                                new FavouritesBackupServiceImpl(FoodPlannerApplication.from(requireContext()).getFirestore()),
+                                new FavouriteMealMapper(new BaseMapper<>(MealItem.class, MealItemEntity.class))
                         )
                 )
         );
@@ -71,7 +68,7 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String selectionResultKey = FavouritesFragmentArgs.fromBundle(requireArguments()).getSelectionResultKey();
+        boolean pickItem = FavouritesFragmentArgs.fromBundle(requireArguments()).getPickItem();
 
         recyclerView = view.findViewById(R.id.items_list);
         recyclerView.addItemDecoration(
@@ -80,24 +77,25 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
 
-        ItemAdapter = new FavouritesAdapter(selectionResultKey == null, new FavouriteClickListener() {
+        itemAdapter = new FavouritesAdapter(!pickItem, new FavouriteClickListener() {
             @Override
-            public void onFavourite(MealItem item) {
+            public void onFavourite(FavouriteMealItem item) {
                 presenter.updateFavourite(item);
             }
 
             @Override
-            public void onClick(MealItem item) {
-                if (selectionResultKey == null) {
-                    Navigation.findNavController(view).navigate(FavouritesFragmentDirections.actionGlobalToMeal(item.getId()));
+            public void onClick(FavouriteMealItem item) {
+                Log.d(TAG, "onClick: " + item);
+                if (!pickItem) {
+                    Navigation.findNavController(view).navigate(FavouritesFragmentDirections.actionGlobalToMeal(item.getMeal().getId()));
                 } else {
-                    NavigationUtils.setResult(view, selectionResultKey, item);
+                    NavigationUtils.setResult(view, SELECTED_MEAL, item.getMeal());
                     NavigationUtils.navigateUp(view);
                 }
             }
         });
 
-        recyclerView.setAdapter(ItemAdapter);
+        recyclerView.setAdapter(itemAdapter);
         recyclerView.setLayoutManager(layoutManager);
 
         presenter.init(getViewLifecycleOwner());
@@ -110,9 +108,9 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
     }
 
     @Override
-    public void updateFavourites(List<MealItem> products) {
+    public void updateFavourites(List<FavouriteMealItem> products) {
         recyclerView.setVisibility(View.VISIBLE);
-        ItemAdapter.updateList(products);
+        itemAdapter.updateList(products);
     }
 
     @Override
@@ -122,12 +120,12 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
     }
 
     @Override
-    public void onFavouriteSuccess(MealItem mealItem) {
+    public void onFavouriteSuccess(FavouriteMealItem mealItem) {
 
     }
 
     @Override
-    public void onFavouriteFailure(MealItem mealItem, Throwable error) {
+    public void onFavouriteFailure(FavouriteMealItem mealItem, Throwable error) {
         Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }

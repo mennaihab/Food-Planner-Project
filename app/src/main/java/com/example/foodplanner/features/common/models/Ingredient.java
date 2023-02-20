@@ -91,6 +91,10 @@ public class Ingredient implements Parcelable {
         this.type = type;
     }
 
+    public String getSmallIcon() {
+        return "https://www.themealdb.com/images/ingredients/" + name + "-Small.png";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

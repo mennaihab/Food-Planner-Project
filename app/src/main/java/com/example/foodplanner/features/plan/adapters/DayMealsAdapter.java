@@ -3,25 +3,33 @@ package com.example.foodplanner.features.plan.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodplanner.R;
-import com.example.foodplanner.features.common.models.MealItem;
+import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.models.PlanMealItem;
 
 import java.util.List;
 
 public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMealViewHolder> {
 
-    private final AsyncListDiffer<MealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+    private final AsyncListDiffer<PlanMealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+    private final PlanMealClickListener clickListener;
 
-    public void updateList(List<MealItem> items) {
+    public DayMealsAdapter(PlanMealClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public void updateList(List<PlanMealItem> items) {
         mDiffer.submitList(items);
     }
 
@@ -43,30 +51,36 @@ public class DayMealsAdapter extends RecyclerView.Adapter<DayMealsAdapter.DayMea
         return mDiffer.getCurrentList().size();
     }
 
-    public static class DayMealViewHolder extends RecyclerView.ViewHolder {
+    public class DayMealViewHolder extends RecyclerView.ViewHolder {
+        private final CardView card;
         private final TextView name;
         private final ImageView img;
+        private final Button remove;
 
         private DayMealViewHolder(View itemView) {
             super(itemView);
+            card = itemView.findViewById(R.id.meal_card);
             name = itemView.findViewById(R.id.meal_name);
             img = itemView.findViewById(R.id.meal_img);
+            remove = itemView.findViewById(R.id.meal_remove);
         }
 
-        private void bindData(MealItem item) {
-            name.setText(item.getName());
-            Glide.with(img).load(item.getThumbnail()).into(img);
+        private void bindData(PlanMealItem item) {
+            name.setText(item.getMeal().getName());
+            ViewUtils.loadImageInto(item.getMeal().getPreview(),img);
+            remove.setOnClickListener(v -> clickListener.onRemoveItem(item));
+            card.setOnClickListener(v -> clickListener.onClick(item));
         }
     }
 
-    private static final DiffUtil.ItemCallback<MealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<MealItem>() {
+    private static final DiffUtil.ItemCallback<PlanMealItem> DIFF_CALLBACK = new DiffUtil.ItemCallback<PlanMealItem>() {
         @Override
-        public boolean areItemsTheSame(@NonNull MealItem oldArea, @NonNull MealItem newArea) {
-            return oldArea.getId().equals(newArea.getId());
+        public boolean areItemsTheSame(@NonNull PlanMealItem oldArea, @NonNull PlanMealItem newArea) {
+            return oldArea.getMeal().getId().equals(newArea.getMeal().getId());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull MealItem oldArea, @NonNull MealItem newArea) {
+        public boolean areContentsTheSame(@NonNull PlanMealItem oldArea, @NonNull PlanMealItem newArea) {
             return oldArea.equals(newArea);
         }
     };

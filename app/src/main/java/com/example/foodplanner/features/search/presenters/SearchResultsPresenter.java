@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.search.helpers.SearchCriteria;
 import com.example.foodplanner.features.search.models.SearchResultsModel;
@@ -45,7 +46,7 @@ public class SearchResultsPresenter implements LifecycleEventObserver {
         searchResultsModel.filter(criteria);
     }
 
-    public void updateFavourite(MealItem mealItem) {
+    public void updateFavourite(FavouriteMealItem mealItem) {
         disposable.add(searchResultsModel.updateFavourite(mealItem)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(view::onFavouriteSuccess, (e) -> view.onFavouriteFailure(mealItem, e)));

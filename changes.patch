@@ -1,0 +1,123 @@
+diff --git a/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/BaseMapper.java b/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/BaseMapper.java
+index 1bea405..dd9693f 100644
+--- a/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/BaseMapper.java
++++ b/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/BaseMapper.java
+@@ -24,7 +24,11 @@ public class BaseMapper<M, E> {
+         return map(entity, model);
+     }
+ 
+-    private static <From, To> To map(From from, Class<To> toClass) {
++    protected <From, To> To mapValue(From from, Class<To> toClass) {
++        return (To) from;
++    }
++
++    protected <From, To> To map(From from, Class<To> toClass) {
+         try {
+             To model = toClass.newInstance();
+             for (Field field: from.getClass().getDeclaredFields()) {
+@@ -36,7 +40,10 @@ public class BaseMapper<M, E> {
+                         Field eField = model.getClass().getDeclaredField(field.getName());
+                         field.setAccessible(true);
+                         eField.setAccessible(true);
+-                        eField.set(model, field.get(from));
++                        Object value = field.get(from);
++                        if (value != null) {
++                            eField.set(model, mapValue(value, value.getClass()));
++                        }
+                     } catch (NoSuchFieldException | IllegalAccessException e) {
+                         Log.e(TAG, null, e);
+                     }
+diff --git a/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/PlanMealMapper.java b/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/PlanMealMapper.java
+new file mode 100644
+index 0000000..f4d5947
+--- /dev/null
++++ b/app/src/main/java/com/example/foodplanner/features/common/helpers/mappers/PlanMealMapper.java
+@@ -0,0 +1,25 @@
++package com.example.foodplanner.features.common.helpers.mappers;
++
++import com.example.foodplanner.features.common.entities.MealItemEntity;
++import com.example.foodplanner.features.common.entities.PlanDayEntity;
++import com.example.foodplanner.features.common.models.MealItem;
++import com.example.foodplanner.features.common.models.PlanMealItem;
++
++public class PlanMealMapper extends BaseMapper<PlanMealItem, PlanDayEntity.Full> {
++    private final BaseMapper<MealItem, MealItemEntity> mealMapper;
++
++    public PlanMealMapper(BaseMapper<MealItem, MealItemEntity> mealMapper) {
++        super(PlanMealItem.class, PlanDayEntity.Full.class);
++        this.mealMapper = mealMapper;
++    }
++
++    @Override
++    protected <From, To> To map(From from, Class<To> toClass) {
++        if (toClass.isAssignableFrom(MealItem.class)) {
++            return (To) mealMapper.toModel((MealItemEntity)from);
++        } else if (toClass.isAssignableFrom(MealItemEntity.class)) {
++            return (To) mealMapper.toEntity((MealItem)from);
++        }
++        return super.mapValue(from, toClass);
++    }
++}
+diff --git a/app/src/main/java/com/example/foodplanner/features/common/local/PlanDayDAO.java b/app/src/main/java/com/example/foodplanner/features/common/local/PlanDayDAO.java
+index 0c3dc6b..19ef86f 100644
+--- a/app/src/main/java/com/example/foodplanner/features/common/local/PlanDayDAO.java
++++ b/app/src/main/java/com/example/foodplanner/features/common/local/PlanDayDAO.java
+@@ -26,6 +26,9 @@ public interface PlanDayDAO {
+     @Query("SELECT * FROM plandayentityview WHERE userId = :userId")
+     Flowable<List<PlanDayEntity.Full>> getAll(String userId);
+ 
++    @Query("SELECT * FROM plandayentityview WHERE userId = :userId AND day >= :start AND day <= :end")
++    Flowable<List<PlanDayEntity.Full>> getAll(String userId, LocalDate start, LocalDate end);
++
+     @Insert(onConflict = OnConflictStrategy.REPLACE)
+     Completable insertAll(PlanDayEntity... days);
+ 
+diff --git a/app/src/main/java/com/example/foodplanner/features/common/models/PlanMealItem.java b/app/src/main/java/com/example/foodplanner/features/common/models/PlanMealItem.java
+new file mode 100644
+index 0000000..b644723
+--- /dev/null
++++ b/app/src/main/java/com/example/foodplanner/features/common/models/PlanMealItem.java
+@@ -0,0 +1,43 @@
++package com.example.foodplanner.features.common.models;
++
++import java.time.LocalDate;
++import java.util.Objects;
++
++public class PlanMealItem {
++    private LocalDate day;
++    private MealItem meal;
++
++    public PlanMealItem(LocalDate day, MealItem meal) {
++        this.day = day;
++        this.meal = meal;
++    }
++
++    public LocalDate getDay() {
++        return day;
++    }
++
++    public void setDay(LocalDate day) {
++        this.day = day;
++    }
++
++    public MealItem getMeal() {
++        return meal;
++    }
++
++    public void setMeal(MealItem meal) {
++        this.meal = meal;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        PlanMealItem that = (PlanMealItem) o;
++        return Objects.equals(day, that.day) && Objects.equals(meal, that.meal);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(day, meal);
++    }
++}

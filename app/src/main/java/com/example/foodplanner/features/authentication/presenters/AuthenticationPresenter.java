@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.helpers.LifecycleObservable;
 import com.example.foodplanner.features.authentication.helpers.AuthenticationHelper;
 import com.example.foodplanner.features.authentication.helpers.EmailLoginCredentials;
@@ -60,7 +61,7 @@ public class AuthenticationPresenter {
                                                  LifecycleOwner lifecycleOwner,
                                                  AuthenticationView view,
                                                  OperationSink operationSink) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FoodPlannerApplication.from(context).getFirebaseAuth();
         AuthenticationHelper authenticationHelper = AuthenticationHelper.create(firebaseAuth);
 
         return new AuthenticationPresenter(lifecycleOwner, view,

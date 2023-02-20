@@ -20,10 +20,13 @@ import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
 import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
+import com.example.foodplanner.features.common.helpers.mappers.FavouriteMealMapper;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.remote.impl.FavouritesBackupServiceImpl;
 import com.example.foodplanner.features.common.repositories.FavouriteRepository;
 import com.example.foodplanner.features.common.repositories.MealItemRepository;
 import com.example.foodplanner.features.common.services.AppDatabase;
@@ -68,7 +71,9 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
                         ),
                         new FavouriteRepository(
                                 AppDatabase.getInstance(requireContext()).favouriteMealDAO(),
-                                new BaseMapper<>(MealItem.class, MealItemEntity.class)
+                                AppDatabase.getInstance(requireContext()).mealItemDAO(),
+                                new FavouritesBackupServiceImpl(FoodPlannerApplication.from(requireContext()).getFirestore()),
+                                new FavouriteMealMapper(new BaseMapper<>(MealItem.class, MealItemEntity.class))
                         )
                 )
         );
@@ -83,13 +88,13 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
         );
         listAdapter = new SearchListAdapter(new SearchClickListener() {
             @Override
-            public void onFavourite(MealItem item) {
+            public void onFavourite(FavouriteMealItem item) {
                 presenter.updateFavourite(item);
             }
 
             @Override
-            public void onClick(MealItem item) {
-                Navigation.findNavController(view).navigate(SearchResultsFragmentDirections.actionGlobalToMeal(item.getId()));
+            public void onClick(FavouriteMealItem item) {
+                Navigation.findNavController(view).navigate(SearchResultsFragmentDirections.actionGlobalToMeal(item.getMeal().getId()));
             }
         });
         list.setAdapter(listAdapter);
@@ -127,7 +132,7 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     }
 
     @Override
-    public void updateResults(Optional<List<MealItem>> results) {
+    public void updateResults(Optional<List<FavouriteMealItem>> results) {
         if (results.isPresent()) {
             list.setVisibility(View.VISIBLE);
             listAdapter.updateIngredients(results.get());
@@ -143,12 +148,12 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     }
 
     @Override
-    public void onFavouriteSuccess(MealItem mealItem) {
+    public void onFavouriteSuccess(FavouriteMealItem mealItem) {
 
     }
 
     @Override
-    public void onFavouriteFailure(MealItem mealItem, Throwable error) {
+    public void onFavouriteFailure(FavouriteMealItem mealItem, Throwable error) {
         Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -20,8 +20,11 @@ import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
+import com.example.foodplanner.features.common.helpers.mappers.FavouriteMealMapper;
+import com.example.foodplanner.features.common.models.FavouriteMealItem;
 import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.MealRemoteService;
+import com.example.foodplanner.features.common.remote.impl.FavouritesBackupServiceImpl;
 import com.example.foodplanner.features.common.repositories.FavouriteRepository;
 import com.example.foodplanner.features.common.repositories.MealItemRepository;
 import com.example.foodplanner.features.common.services.AppDatabase;
@@ -34,7 +37,7 @@ import java.util.List;
 
 public class MealOfDayFragment extends Fragment {
     private static final String TAG = "MealOfDayFragment";
-    private static final int FRAGMENTS_COUNT = 3;
+    private static final int FRAGMENTS_COUNT = 5;
     private static final String FRAGMENTS = "FRAGMENTS";
 
     private final List<Fragment> fragments = new ArrayList<>(FRAGMENTS_COUNT);
@@ -120,7 +123,9 @@ public class MealOfDayFragment extends Fragment {
                             ),
                             new FavouriteRepository(
                                     AppDatabase.getInstance(requireContext()).favouriteMealDAO(),
-                                    new BaseMapper<>(MealItem.class, MealItemEntity.class)
+                                    AppDatabase.getInstance(requireContext()).mealItemDAO(),
+                                    new FavouritesBackupServiceImpl(FoodPlannerApplication.from(requireContext()).getFirestore()),
+                                    new FavouriteMealMapper(new BaseMapper<>(MealItem.class, MealItemEntity.class))
                             )
                     )
             );
@@ -141,11 +146,11 @@ public class MealOfDayFragment extends Fragment {
         }
 
         @Override
-        public void updateMeal(MealItem meal) {
-            name.setText(meal.getName());
-            ViewUtils.loadImageInto(meal.getThumbnail(), image);
+        public void updateMeal(FavouriteMealItem meal) {
+            name.setText(meal.getMeal().getName());
+            ViewUtils.loadImageInto(meal.getMeal().getPreview(), image);
             cardView.setOnClickListener(v -> {
-                Navigation.findNavController(v).navigate(MealOfDayFragmentDirections.actionGlobalToMeal(meal.getId()));
+                Navigation.findNavController(v).navigate(MealOfDayFragmentDirections.actionGlobalToMeal(meal.getMeal().getId()));
             });
         }
 

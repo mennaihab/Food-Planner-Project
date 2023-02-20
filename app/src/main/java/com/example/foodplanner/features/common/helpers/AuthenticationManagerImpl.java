@@ -2,6 +2,7 @@ package com.example.foodplanner.features.common.helpers;
 
 import android.util.Log;
 
+import com.example.foodplanner.core.utils.UserUtils;
 import com.example.foodplanner.features.authentication.helpers.AppAuthResult;
 import com.example.foodplanner.features.common.services.AuthenticationManager;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -33,7 +34,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     @Override
     public boolean isAuthenticated() {
-        return firebaseAuth.getCurrentUser() != null;
+        return UserUtils.isPresent(Optional.ofNullable(firebaseAuth.getCurrentUser()));
     }
 
     @Override
@@ -43,7 +44,9 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     @Override
     public Optional<FirebaseUser> getCurrentUser() {
-        return currentUser.getValue();
+        Optional<FirebaseUser> user = currentUser.getValue();
+        if (user != null) return user;
+        return Optional.empty();
     }
 
     @Override
