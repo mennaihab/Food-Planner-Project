@@ -13,8 +13,6 @@ import com.example.foodplanner.features.common.models.MealItem;
 import com.example.foodplanner.features.common.remote.FavouritesBackupService;
 import com.example.foodplanner.features.common.repositories.delegates.RepositoryFetchDelegate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -89,7 +87,7 @@ public class FavouriteRepository {
 
     public Flowable<Boolean> isFavouriteForUser(String userId, MealItem meal) {
         return favouriteMealDAO.getById(userId, meal.getId())
-                .map(Optional::isPresent).subscribeOn(Schedulers.io());
+                .map(optionalItem -> optionalItem.isPresent() && optionalItem.get().active).subscribeOn(Schedulers.io());
     }
 
     public Single<FavouriteMealItem> addToFavourite(FavouriteMealItem mealItem, String userId) {
@@ -101,7 +99,7 @@ public class FavouriteRepository {
         item.setFavourite(true);
         item.setUserId(userId);
         return favouriteMealDAO.insertAll(entity)
-                .andThen(backupFromRemote(userId, Collections.singletonList(item)))
+                .andThen(backupToRemote(userId, Collections.singletonList(item)))
                 .andThen(Single.just(item))
                 .subscribeOn(Schedulers.io());
     }
@@ -116,13 +114,13 @@ public class FavouriteRepository {
         item.setUserId(userId);
         return favouriteMealDAO
                 .updateAll(entity)
-                .andThen(backupFromRemote(userId, Collections.singletonList(item)))
+                .andThen(backupToRemote(userId, Collections.singletonList(item)))
                 .andThen(Single.just(item))
                 .subscribeOn(Schedulers.io());
     }
 
-    private Completable backupFromRemote(String userId, List<FavouriteMealItem> items) {
-        Log.d(TAG, "backupFromRemote: backing up");
+    private Completable backupToRemote(String userId, List<FavouriteMealItem> items) {
+        Log.d(TAG, "backupToRemote: backing up");
         return favouritesBackupService.insertForUser(userId, items).subscribeOn(Schedulers.io());
     }
 

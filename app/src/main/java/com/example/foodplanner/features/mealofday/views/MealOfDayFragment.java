@@ -3,7 +3,9 @@ package com.example.foodplanner.features.mealofday.views;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.core.utils.GeneralUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
 import com.example.foodplanner.features.common.helpers.mappers.BaseMapper;
@@ -32,7 +35,6 @@ import com.example.foodplanner.features.mealofday.models.MealOfDayModelImpl;
 import com.example.foodplanner.features.mealofday.presenters.MealOfDayPresenter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MealOfDayFragment extends Fragment {
@@ -98,10 +100,13 @@ public class MealOfDayFragment extends Fragment {
 
     public static class MealOfDayViewFragment extends Fragment implements MealOfDayView {
         private static final String TAG = "MealOfDayFirst";
-        private CardView cardView;
+        private CardView card;
         private TextView name;
         private ImageView image;
-
+        private CardView overlay;
+        private ProgressBar loader;
+        private TextView errorTv;
+        private Button favourite;
         private MealOfDayPresenter presenter;
 
         public MealOfDayViewFragment() {
@@ -133,9 +138,13 @@ public class MealOfDayFragment extends Fragment {
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            cardView = view.findViewById(R.id.meal_card);
+            overlay = view.findViewById(R.id.meal_overlay);
+            loader = view.findViewById(R.id.meal_loader);
+            errorTv = view.findViewById(R.id.meal_error_tv);
+            card = view.findViewById(R.id.meal_card);
             name = view.findViewById(R.id.meal_name);
             image = view.findViewById(R.id.meal_img);
+            favourite = view.findViewById(R.id.meal_favourite);
             presenter.init(getViewLifecycleOwner());
         }
 
@@ -147,17 +156,27 @@ public class MealOfDayFragment extends Fragment {
 
         @Override
         public void updateMeal(FavouriteMealItem meal) {
+            card.setVisibility(View.VISIBLE);
+            overlay.setVisibility(View.GONE);
+            loader.setVisibility(View.GONE);
+            errorTv.setVisibility(View.GONE);
             name.setText(meal.getMeal().getName());
             ViewUtils.loadImageInto(meal.getMeal().getPreview(), image);
-            cardView.setOnClickListener(v -> {
+            card.setOnClickListener(v -> {
                 Navigation.findNavController(v).navigate(MealOfDayFragmentDirections.actionGlobalToMeal(meal.getMeal().getId()));
             });
+            ViewUtils.loadImageInto((meal.isFavourite() ? R.drawable.favourite : R.drawable.ic_favorite_border), favourite);
+            favourite.setOnClickListener(e -> presenter.updateFavourite());
         }
 
         @Override
         public void onLoadFailure(Throwable error) {
-            Log.e(TAG, error.getLocalizedMessage(), error);
-            Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            card.setVisibility(View.INVISIBLE);
+            overlay.setVisibility(View.VISIBLE);
+            loader.setVisibility(View.GONE);
+            errorTv.setVisibility(View.VISIBLE);
+            errorTv.setText(GeneralUtils.getErrorMessage(error));
+            Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
         }
     }
 

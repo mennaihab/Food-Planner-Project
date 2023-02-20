@@ -1,5 +1,6 @@
 package com.example.foodplanner.features.mealofday.models;
 
+import android.media.browse.MediaBrowser;
 import android.os.Bundle;
 
 import com.example.foodplanner.features.common.models.FavouriteMealItem;
@@ -13,4 +14,5 @@ import io.reactivex.rxjava3.core.Single;
 public interface MealOfDayModel {
     Flowable<FavouriteMealItem> getMeal();
     void saveInstance(Bundle outBundle);
+    Single<FavouriteMealItem> updateFavourite();
 }

@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import com.example.foodplanner.features.common.helpers.convertors.LocalDateConvertor;
 import com.example.foodplanner.features.common.models.MealItem;
@@ -14,12 +15,14 @@ import java.time.LocalDate;
 import java.util.TimeZone;
 
 public class MealCalenderHelper {
+    private static final String TAG = "MealCalenderHelper";
     private final ContentResolver contentResolver;
     private final CalendarPermissionHolder calendarPermissionHolder;
     private Long calenderId;
 
     public MealCalenderHelper(ContentResolver contentResolver,
                               CalendarPermissionHolder calendarPermissionHolder) {
+        Log.d(TAG, "MealCalenderHelper: " + calendarPermissionHolder);
         this.contentResolver = contentResolver;
         this.calendarPermissionHolder = calendarPermissionHolder;
     }
@@ -47,6 +50,7 @@ public class MealCalenderHelper {
             values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
             Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
             if (uri != null) {
+                Log.d(TAG, "addMeal: " + uri);
                 return uri.toString();
             }
         }
@@ -68,6 +72,7 @@ public class MealCalenderHelper {
                 if (cursor.moveToFirst()) {
                     @SuppressLint("Range")
                     Long calID = cursor.getLong(cursor.getColumnIndex(CalendarContract.Calendars._ID));
+                    Log.d(TAG, "getCalenderId: " + calID);
                     return calID;
                 }
             }

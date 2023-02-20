@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -22,22 +23,16 @@ import com.example.foodplanner.features.common.models.MealItem;
 
 import java.util.List;
 
-public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouritesViewHolder> {
-
-    private final AsyncListDiffer<FavouriteMealItem> mDiffer = new AsyncListDiffer<>(this, DIFF_CALLBACK);
+public class FavouritesAdapter extends ListAdapter<FavouriteMealItem, FavouritesAdapter.FavouritesViewHolder> {
 
     private final FavouriteClickListener clickListener;
     private final boolean enableRemove;
 
     public FavouritesAdapter(boolean enableRemove, FavouriteClickListener itemListener) {
+        super(DIFF_CALLBACK);
         this.clickListener = itemListener;
         this.enableRemove = enableRemove;
     }
-
-    public void updateList(List<FavouriteMealItem> items) {
-        mDiffer.submitList(items);
-    }
-
 
     @NonNull
     @Override
@@ -50,12 +45,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
     @Override
     public void onBindViewHolder(final FavouritesAdapter.FavouritesViewHolder viewHolder, final int position) {
-        viewHolder.bindData(mDiffer.getCurrentList().get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDiffer.getCurrentList().size();
+        viewHolder.bindData(getCurrentList().get(position));
     }
 
     public class FavouritesViewHolder extends RecyclerView.ViewHolder {

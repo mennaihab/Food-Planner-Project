@@ -12,11 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
 import com.example.foodplanner.core.helpers.MarginItemDecoration;
+import com.example.foodplanner.core.utils.GeneralUtils;
 import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
@@ -39,7 +44,9 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
     public static final String SELECTED_MEAL = "SELECTED_MEAL";
 
     private FavouritesPresenter presenter;
-    private RecyclerView recyclerView;
+    private RecyclerView list;
+    private ProgressBar loader;
+    private TextView errorTv;
     private FavouritesAdapter itemAdapter;
 
     public FavouritesFragment() {
@@ -70,10 +77,15 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
         boolean pickItem = FavouritesFragmentArgs.fromBundle(requireArguments()).getPickItem();
 
-        recyclerView = view.findViewById(R.id.items_list);
-        recyclerView.addItemDecoration(
+        list = view.findViewById(R.id.items_list);
+        loader = view.findViewById(R.id.items_loader);
+        errorTv = view.findViewById(R.id.items_error_tv);
+
+        list.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 16), 2, LinearLayoutManager.VERTICAL)
         );
+        list.setHasFixedSize(true);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
 
@@ -95,8 +107,8 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
             }
         });
 
-        recyclerView.setAdapter(itemAdapter);
-        recyclerView.setLayoutManager(layoutManager);
+        list.setAdapter(itemAdapter);
+        list.setLayoutManager(layoutManager);
 
         presenter.init(getViewLifecycleOwner());
     }
@@ -109,14 +121,27 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
     @Override
     public void updateFavourites(List<FavouriteMealItem> products) {
-        recyclerView.setVisibility(View.VISIBLE);
-        itemAdapter.updateList(products);
+        Log.d(TAG, "updateFavourites: " + products);
+        if (products.isEmpty()) {
+            list.setVisibility(View.GONE);
+            loader.setVisibility(View.GONE);
+            errorTv.setVisibility(View.VISIBLE);
+            errorTv.setText(R.string.no_items_found);
+        } else {
+            list.setVisibility(View.VISIBLE);
+            loader.setVisibility(View.GONE);
+            errorTv.setVisibility(View.GONE);
+        }
+        itemAdapter.submitList(products);
     }
 
     @Override
     public void onLoadFailure(Throwable error) {
-        Log.e(TAG, error.getLocalizedMessage(), error);
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        list.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.VISIBLE);
+        errorTv.setText(GeneralUtils.getErrorMessage(error));
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -126,6 +151,6 @@ public class FavouritesFragment extends Fragment implements FavouritesView {
 
     @Override
     public void onFavouriteFailure(FavouriteMealItem mealItem, Throwable error) {
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
 }

@@ -26,18 +26,23 @@ import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 public class MealOfDayModelImpl implements MealOfDayModel {
+    private static final String TAG = "MealOfDayModelImpl";
     private static final String MEAL_OF_DAY = "MEAL_OF_DAY";
 
-    protected final Flowable<FavouriteMealItem> data;
+    protected final BehaviorSubject<FavouriteMealItem> data;
     private Optional<MealItem> meal = Optional.empty();;
+    private final AuthenticationManager authenticationManager;
+    private final FavouriteRepository favouriteRepository;
 
     public MealOfDayModelImpl(Bundle savedInstanceState,
                               AuthenticationManager authenticationManager,
                               MealItemRepository mealItemRepository,
                               FavouriteRepository favouriteRepository) {
-
+        this.authenticationManager = authenticationManager;
+        this.favouriteRepository = favouriteRepository;
         if (savedInstanceState != null && savedInstanceState.containsKey(MEAL_OF_DAY)) {
             meal = Optional.of(savedInstanceState.getParcelable(MEAL_OF_DAY));
         }
@@ -65,7 +70,8 @@ public class MealOfDayModelImpl implements MealOfDayModel {
             } else {
                 return Flowable.just(Pair.<String, Boolean>create(null, false));
             }
-        }).map(isFavourite -> new FavouriteMealItem(isFavourite.first, isFavourite.second, meal)));
+        }).map(isFavourite -> new FavouriteMealItem(isFavourite.first, isFavourite.second, meal)))
+                .toObservable().subscribeWith(BehaviorSubject.create());
     }
 
     @Override
@@ -75,7 +81,27 @@ public class MealOfDayModelImpl implements MealOfDayModel {
 
     @Override
     public Flowable<FavouriteMealItem> getMeal() {
-        return data;
+        return data.toFlowable(BackpressureStrategy.LATEST);
     }
 
+
+    @Override
+    public Single<FavouriteMealItem> updateFavourite() {
+        FavouriteMealItem meal = data.getValue();
+        Single<FavouriteMealItem> result;
+        if (meal != null) {
+            String userId = UserUtils.getUserId(authenticationManager.getCurrentUser());
+            if (userId == null) {
+                return Single.error(new Exception("You have to be logged in.")); // TODO
+            }
+            if (meal.isFavourite()) {
+                result = favouriteRepository.removeFromFavourite(meal, userId);
+            } else {
+                result = favouriteRepository.addToFavourite(meal, userId);
+            }
+        } else {
+            result = Single.error(new Exception("No item selected"));
+        }
+        return result;
+    }
 }

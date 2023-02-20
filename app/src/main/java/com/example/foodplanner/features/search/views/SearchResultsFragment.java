@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,7 +50,8 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
 
     private RecyclerView list;
     private SearchListAdapter listAdapter;
-
+    private ProgressBar loader;
+    private TextView errorTv;
     private SearchResultsPresenter presenter;
 
     public SearchResultsFragment() {
@@ -83,6 +87,9 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         SearchCriteria criteria = presenter.getCriteria();
         list = view.findViewById(R.id.items_list);
+        loader = view.findViewById(R.id.items_loader);
+        errorTv = view.findViewById(R.id.items_error_tv);
+        list.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 16), 2, LinearLayoutManager.VERTICAL)
         );
@@ -98,6 +105,7 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
             }
         });
         list.setAdapter(listAdapter);
+        list.setHasFixedSize(true);
         LinearLayoutManager ingredientsLayout = new GridLayoutManager(requireContext(), 2);
         list.setLayoutManager(ingredientsLayout);
         TextInputLayout searchBarLayout = view.findViewById(R.id.search_edl);
@@ -134,16 +142,30 @@ public class SearchResultsFragment extends Fragment implements SearchResultsView
     @Override
     public void updateResults(Optional<List<FavouriteMealItem>> results) {
         if (results.isPresent()) {
-            list.setVisibility(View.VISIBLE);
-            listAdapter.updateIngredients(results.get());
+            List<FavouriteMealItem> products = results.get();
+            if (products.isEmpty()) {
+                list.setVisibility(View.GONE);
+                loader.setVisibility(View.GONE);
+                errorTv.setVisibility(View.VISIBLE);
+                errorTv.setText(R.string.no_items_found);
+            } else {
+                list.setVisibility(View.VISIBLE);
+                loader.setVisibility(View.GONE);
+                errorTv.setVisibility(View.GONE);
+                listAdapter.updateIngredients(products);
+            }
         } else {
-            list.setVisibility(View.INVISIBLE);
+            list.setVisibility(View.GONE);
+            loader.setVisibility(View.VISIBLE);
+            errorTv.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onLoadFailure(Throwable error) {
-        list.setVisibility(View.INVISIBLE);
+        list.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        errorTv.setText(error.getLocalizedMessage());
         Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 

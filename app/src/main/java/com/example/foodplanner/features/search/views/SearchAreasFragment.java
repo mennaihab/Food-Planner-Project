@@ -3,6 +3,8 @@ package com.example.foodplanner.features.search.views;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,8 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
     private static final String TAG = "SearchAreasFragment";
 
     private RecyclerView list;
+    private ProgressBar loader;
+    private TextView errorTv;
     private AreasListAdapter listAdapter;
 
     private SearchAreasPresenter presenter;
@@ -60,6 +64,8 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         list = view.findViewById(R.id.items_list);
+        loader = view.findViewById(R.id.items_loader);
+        errorTv = view.findViewById(R.id.items_error_tv);
         list.addItemDecoration(
                 new MarginItemDecoration(ViewUtils.dpToPx(requireContext(), 8), 1, LinearLayoutManager.HORIZONTAL)
         );
@@ -84,12 +90,16 @@ public class SearchAreasFragment extends Fragment implements SearchAreasView {
     @Override
     public void updateAreas(List<String> products) {
         list.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.GONE);
         listAdapter.updateAreas(products);
     }
 
     @Override
     public void onLoadFailure(Throwable error) {
-        Log.e(TAG, error.getLocalizedMessage(), error);
+        list.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        errorTv.setText(error.getLocalizedMessage());
         Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     }
 }

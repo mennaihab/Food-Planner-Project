@@ -21,7 +21,9 @@ public class MealDetailsModelImpl implements MealDetailsModel {
             meal = savedInstanceState.getParcelable(MEAL_DETAILS);
             data = Single.just(meal);
         } else {
-            data = mealDetailsService.getById(mealId).subscribeOn(Schedulers.io()).firstOrError().doOnSuccess(meal -> {
+            data = mealDetailsService.getById(mealId)
+                    .subscribeOn(Schedulers.io())
+                    .firstOrError().doOnSuccess(meal -> {
                 this.meal = meal;
             });
         }

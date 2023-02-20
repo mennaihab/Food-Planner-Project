@@ -13,6 +13,7 @@
         android:id="@+id/meal_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:minWidth="300dp"
         android:clipChildren="true">
 
 
@@ -39,6 +40,7 @@
             android:layout_marginEnd="16dp"
             android:isIndicator="true"
             android:numStars="5"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"

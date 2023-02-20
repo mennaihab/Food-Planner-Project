@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,7 +18,9 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodplanner.R;
 import com.example.foodplanner.core.FoodPlannerApplication;
+import com.example.foodplanner.core.utils.GeneralUtils;
 import com.example.foodplanner.core.utils.NavigationUtils;
 import com.example.foodplanner.core.utils.ViewUtils;
 import com.example.foodplanner.features.common.entities.MealItemEntity;
@@ -45,13 +49,15 @@ import java.util.Objects;
 
 public class WeekFragment extends Fragment implements WeekFragmentView {
     private static final String TAG = "WeekFragment";
+    private static final String WEEK_DAY = "WEEK_DAY";
+    private static final String SELECTED_DAY = "SELECTED_DAY";
     private NavigatorProvider navigatorProvider;
     private CalendarPermissionHolder calendarPermissionHolder;
     private PlanPresenter presenter;
-    private RecyclerView recyclerView;
+    private RecyclerView list;
+    private ProgressBar loader;
+    private TextView errorTv;
     private WeekDayAdapter parentItemAdapter;
-    private static final String WEEK_DAY = "WEEK_DAY";
-    private static final String SELECTED_DAY = "SELECTED_DAY";
     private LocalDate weekStart;
 
 
@@ -61,6 +67,10 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
         args.putSerializable(WEEK_DAY, startOfWeek);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public WeekFragment() {
+        super(R.layout.items_list);
     }
 
     @Override
@@ -96,16 +106,20 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        recyclerView = new RecyclerView(requireActivity());
-        recyclerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        recyclerView.setClipToPadding(false);
-        recyclerView.setPadding(
+        View root = super.onCreateView(inflater, container, savedInstanceState);
+        assert root != null;
+        root.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        list = root.findViewById(R.id.items_list);
+        loader = root.findViewById(R.id.items_loader);
+        errorTv = root.findViewById(R.id.items_error_tv);
+        list.setClipToPadding(false);
+        list.setPadding(
                 0,
                 ViewUtils.dpToPx(requireContext(), 16),
                 0,
                 ViewUtils.dpToPx(requireContext(), 16)
         );
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        list.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView view, @NonNull MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -122,7 +136,7 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
             }
         });
-        return recyclerView;
+        return list;
     }
 
     @Override
@@ -154,8 +168,8 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
         });
 
 
-        recyclerView.setAdapter(parentItemAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setAdapter(parentItemAdapter);
+        list.setLayoutManager(new LinearLayoutManager(getContext()));
         presenter.init(getViewLifecycleOwner());
     }
 
@@ -168,7 +182,9 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
     @Override
     public void updatePlan(Map<LocalDate, List<PlanMealItem>> products) {
         Log.d(TAG, "updatePlan: " + products);
-        recyclerView.setVisibility(View.VISIBLE);
+        list.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.GONE);
         List<DayData> itemList = new ArrayList<>(7);
         for (int i = 0; i < 7; i++) {
             LocalDate current = weekStart.plusDays(i);
@@ -184,8 +200,11 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
 
     @Override
     public void onLoadFailure(Throwable error) {
-        Log.e(TAG, error.getLocalizedMessage(), error);
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        list.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        errorTv.setVisibility(View.VISIBLE);
+        errorTv.setText(GeneralUtils.getErrorMessage(error));
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -200,14 +219,11 @@ public class WeekFragment extends Fragment implements WeekFragmentView {
 
     @Override
     public void onAddFailure(MealItem mealItem, Throwable error) {
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRemoveFailure(PlanMealItem mealItem, Throwable error) {
-        Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(getActivity(), GeneralUtils.getErrorMessage(error), Toast.LENGTH_SHORT).show();
     }
-
-
 }
